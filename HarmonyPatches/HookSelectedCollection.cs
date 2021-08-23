@@ -1,5 +1,4 @@
 ﻿using BetterSongList.UI;
-using BetterSongList.Util;
 using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {

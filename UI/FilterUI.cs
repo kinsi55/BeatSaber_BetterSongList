@@ -8,7 +8,6 @@ using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
 using IPA.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +24,7 @@ namespace BetterSongList.UI {
 #pragma warning restore
 		[UIParams] readonly BSMLParserParams parserParams = null;
 
-		FilterUI() {}
+		FilterUI() { }
 
 		static Dictionary<string, ISorter> sortOptions = new Dictionary<string, ISorter>() {
 			{ "Song Name", SortMethods.alphabeticalSongname },

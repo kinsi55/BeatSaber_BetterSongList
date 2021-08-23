@@ -81,7 +81,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 					}
 				} else if(!SongDetailsUtil.attemptedToInit) {
 					SongDetailsUtil.TryGet().ContinueWith(
-						x => { if(x.Result != null) __instance.RefreshContent(); }, 
+						x => { if(x.Result != null) __instance.RefreshContent(); },
 						CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext()
 					);
 				}

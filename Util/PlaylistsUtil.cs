@@ -17,18 +17,18 @@ namespace BetterSongList.Util {
 			} else if(packName == "WIP Levels") {
 				return SongCore.Loader.WIPLevelsPack;
 			}
-			
+
 			if(builtinPacks == null) {
 				var p = Resources.FindObjectsOfTypeAll<BeatmapLevelsModel>().First(x => x.ostAndExtrasPackCollection != null);
 
-				builtinPacks = 
+				builtinPacks =
 					p.allLoadedBeatmapLevelWithoutCustomLevelPackCollection.beatmapLevelPacks
 					// There shouldnt be any duplicate name basegame playlists... But better be safe
 					.GroupBy(x => x.shortPackName)
 					.Select(x => x.First())
 					.ToDictionary(x => x.shortPackName, x => x);
 			}
-			
+
 			if(builtinPacks.ContainsKey(packName)) {
 				return builtinPacks[packName];
 			} else if(hasPlaylistLib) {

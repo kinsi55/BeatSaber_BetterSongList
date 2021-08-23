@@ -31,13 +31,17 @@
 						text='Re-select last song' bind-value='true' apply-on-change='true' value='ReselectLastSong'
 						hover-hint='Selecting a song causes a lagspike. If you dont care about selecting the last song you left from you can disable this'
 					/>
+					<toggle-setting
+						text='Auto-Filter Unowned' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
+						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
+					/>
 					<slider-setting 
 						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'
 						hover-hint='If a maps minimum JD is lower than this value a lock will be displayed next to the default JD'
 					/>
 				</macro.as-host>
 			</vertical>
-			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false' bg='round-rect-panel'>
+			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false'>
 				<vertical>
 					<primary-button text='Close' click-event='Close' min-width='20'/>
 				</vertical>

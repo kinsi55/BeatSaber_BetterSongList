@@ -3,7 +3,6 @@ using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using IPALogger = IPA.Logging.Logger;
 
 namespace BetterSongList {

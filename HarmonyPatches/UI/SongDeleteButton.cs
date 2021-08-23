@@ -3,7 +3,6 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using HarmonyLib;
 using HMUI;
-using Polyglot;
 using System;
 using System.Linq;
 using System.Reflection;
