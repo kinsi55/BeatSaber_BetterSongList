@@ -1,0 +1,13 @@
+﻿<horizontal xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+
+	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='Show' hide-event='Close' size-delta-x='60' size-delta-y='30'>
+		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad='4' child-expand-width='true' preferred-width='60' preferred-height='30'>
+			<text text='Do you really want to delete deez map?' align='Center' hover-hint=':tf:'/>
+			<horizontal spacing='5' pad-top='4'>
+				<primary-button text='Delete' on-click='Confirm' click-event='Close' min-width='20'/>
+				<button text='Cancel' click-event='Close' min-width='20'/>
+			</horizontal>
+		</vertical>
+	</modal>
+	
+</horizontal>
