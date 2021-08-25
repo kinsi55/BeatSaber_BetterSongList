@@ -11,14 +11,18 @@ namespace BetterSongList.SortModels {
 	class FolderDateSorter : ISorterWithLegend {
 		public bool isReady => wipTask == null && songTimes != null;
 
-		static ConcurrentDictionary<IPreviewBeatmapLevel, int> songTimes = null;
+		/*
+		 * TODO: For now, I need to use LevelId : int because I have to cast Playlists in LevelCollectionTableSet
+		 * once that is gone (Fixed BS Playlist Lib) I can go back to IPreviewBeatmapLevel : int
+		 */
+		static ConcurrentDictionary<string, int> songTimes = null;
 
 		static TaskCompletionSource<bool> wipTask = null;
 		static bool isLoading = false;
 		public Task Prepare(CancellationToken cancelToken) => Prepare(cancelToken, false);
 		public Task Prepare(CancellationToken cancelToken, bool fullReload) {
 			if(songTimes == null) {
-				songTimes = new ConcurrentDictionary<IPreviewBeatmapLevel, int>();
+				songTimes = new ConcurrentDictionary<string, int>();
 				SongCore.Loader.SongsLoadedEvent += (_, _2) => Prepare(CancellationToken.None);
 			}
 
@@ -34,10 +38,10 @@ namespace BetterSongList.SortModels {
 					xy.Start();
 
 					foreach(var song in SongCore.Loader.CustomLevels.Concat(SongCore.Loader.CustomWIPLevels)) {
-						if(songTimes.ContainsKey(song.Value) || fullReload)
+						if(songTimes.ContainsKey(song.Value.levelID) || fullReload)
 							continue;
 
-						songTimes[song.Value] = (int)Directory.GetCreationTimeUtc(song.Key).ToUnixTime();
+						songTimes[song.Value.levelID] = (int)Directory.GetCreationTimeUtc(song.Key).ToUnixTime();
 					}
 
 					Plugin.Log.Debug(string.Format("Getting SongFolder dates took {0}ms", xy.ElapsedMilliseconds));
@@ -51,7 +55,7 @@ namespace BetterSongList.SortModels {
 		}
 
 		int GetValueFor(IPreviewBeatmapLevel level) {
-			if(songTimes.TryGetValue(level, out var oVal))
+			if(songTimes.TryGetValue(level.levelID, out var oVal))
 				return Config.Instance.SortAsc ? oVal : -oVal;
 
 			return int.MaxValue;
@@ -64,10 +68,10 @@ namespace BetterSongList.SortModels {
 			var curUtc = DateTime.UtcNow.ToUnixTime();
 
 			return SongListLegendBuilder.BuildFor(levels, (level) => {
-				if(!songTimes.ContainsKey(level))
+				if(!songTimes.ContainsKey(level.levelID))
 					return null;
 
-				var months = (curUtc - songTimes[level]) / MONTH_SECS;
+				var months = (curUtc - songTimes[level.levelID]) / MONTH_SECS;
 
 				if(months < 1)
 					return "<1 M";
