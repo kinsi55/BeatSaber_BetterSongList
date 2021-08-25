@@ -150,8 +150,6 @@ namespace BetterSongList.UI {
 			if(!x.isActivated)
 				yield break;
 
-			//yield return new WaitForEndOfFrame();
-
 			_failTextLabel.text = text;
 			parserParams.EmitEvent("IncompatabilityNotice");
 		}
@@ -171,7 +169,7 @@ namespace BetterSongList.UI {
 			SetSortDirection(Config.Instance.SortAsc);
 
 			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed())
-				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed but no plugin thats using it. It is advised to remove it.");
+				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed but no Plugin which is using it. It's advised to remove it");
 		}
 
 		internal static void AttachTo(Transform target) {

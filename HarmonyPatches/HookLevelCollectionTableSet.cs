@@ -34,9 +34,9 @@ namespace BetterSongList.HarmonyPatches {
 		public static void Refresh(bool processAsync = false) {
 			if(lastInMapList == null)
 				return;
-
+#if TRACE
 			Plugin.Log.Warn(string.Format("Refresh({0})", processAsync));
-
+#endif
 			/*
 			 * This probably has problems in regards to race conditions / thread safety... We will see...
 			 * Pre-processes the desired songlist state in a second thread - This will then get stored in

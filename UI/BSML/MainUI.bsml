@@ -49,7 +49,7 @@
 					/>
 					<slider-setting 
 						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'
-						hover-hint='If a maps minimum JD is lower than this value a lock will be displayed next to the default JD'
+						hover-hint='If a maps minimum Jump Distance is lower than this value a lock will be displayed next to the default JD'
 					/>
 				</macro.as-host>
 			</vertical>
