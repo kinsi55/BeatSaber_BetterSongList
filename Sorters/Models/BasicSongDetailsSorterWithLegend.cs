@@ -35,7 +35,7 @@ namespace BetterSongList.SortModels {
 
 					var h = BeatmapsUtil.GetHashOfPreview(level);
 					if(h == null || !SongDetailsUtil.instance.songs.FindByHash(h, out var song))
-						return null;
+						return "N/A";
 
 					return legendValueTransformer(song);
 				});
@@ -54,11 +54,13 @@ namespace BetterSongList.SortModels {
 				//if(!GetSongFromBeatmap(x, out var song))
 				//	return Config.Instance.SortAsc ? 0 : 0;
 
+				var def = Config.Instance.SortAsc ? float.MaxValue : float.MinValue;
+
 				var h = BeatmapsUtil.GetHashOfPreview(x);
 				if(h == null || !SongDetailsUtil.instance.songs.FindByHash(h, out var song))
-					return Config.Instance.SortAsc ? 0 : 0;
+					return def;
 
-				return sortValueTransformer(song) ?? 0;
+				return sortValueTransformer(song) ?? def;
 			}
 
 			if(Config.Instance.SortAsc) {

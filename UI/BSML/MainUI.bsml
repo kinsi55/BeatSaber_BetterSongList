@@ -12,7 +12,7 @@
 		<clickable-text text='🎲' on-click='SelectRandom' font-size='6.5'/>
 		<clickable-text text='⚙' click-event='ShowSettings' font-size='7'/>
 	</horizontal>
-	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='true' ignore-layout='true'/>
+	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 
 	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='ShowSettings' hide-event='Close' size-delta-x='80' size-delta-y='60'>
 		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='55'>
@@ -34,6 +34,10 @@
 					<toggle-setting
 						text='Auto-Filter Unowned' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
+					/>
+					<toggle-setting
+						text='Enable Quickscroll bar' bind-value='true' apply-on-change='true' value='EnableAlphabetScrollbar'
+						hover-hint='Enables the "Quick scroll" / Alphabet bar on the left of the song list'
 					/>
 					<slider-setting 
 						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'

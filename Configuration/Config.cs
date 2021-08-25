@@ -16,7 +16,8 @@ namespace BetterSongList {
 
 		public bool AllowWipDelete { get; set; } = false;
 		public bool ReselectLastSong { get; set; } = true;
-		public bool AutoFilterUnowned { get; set; } = false;
+		public bool AutoFilterUnowned { get; set; } = true;
+		public bool EnableAlphabetScrollbar { get; set; } = true;
 		public float UnlockedJd { get; set; } = 20.0f;
 
 		/// <summary>
