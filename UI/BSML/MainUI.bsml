@@ -14,8 +14,8 @@
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 
-	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='ShowSettings' hide-event='Close' size-delta-x='80' size-delta-y='60'>
-		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='55'>
+	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='ShowSettings' hide-event='Close' size-delta-x='80' size-delta-y='75'>
+		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='70'>
 			<horizontal pad-bottom='4' pad-top='1'>
 				<horizontal bg='panel-top-gradient'>
 					<text text='BetterSongList - Settings' align='Center' font-size='4'/>
@@ -38,6 +38,14 @@
 					<toggle-setting
 						text='Enable Quickscroll bar' bind-value='true' apply-on-change='true' value='EnableAlphabetScrollbar'
 						hover-hint='Enables the "Quick scroll" / Alphabet bar on the left of the song list'
+					/>
+					<toggle-setting
+						text='Clear Sort and Filter in Playlists' bind-value='true' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'
+						hover-hint='Automatically removes the Sort and Filter when selecting a playlist - Is restored when you leave Playlists again'
+					/>
+					<toggle-setting
+						text='Improve Basegame search' bind-value='true' apply-on-change='true' value='ModBasegameSearch'
+						hover-hint='Adds searching by Mapper name and handling of Songs with spaces to the Basegame search'
 					/>
 					<slider-setting 
 						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'

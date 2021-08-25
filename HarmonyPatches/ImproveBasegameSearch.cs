@@ -7,6 +7,9 @@ namespace BetterSongList.HarmonyPatches {
 	static class ImproveBasegameSearch {
 		[HarmonyPriority(int.MinValue + 10)]
 		static bool Prefix(IPreviewBeatmapLevel beatmapLevel, ref string[] searchTexts, ref bool __result) {
+			if(Config.Instance.ModBasegameSearch)
+				return true;
+
 			if(searchTexts.Any(x => x.Length > 2 && beatmapLevel.levelAuthorName.IndexOf(x, 0, StringComparison.CurrentCultureIgnoreCase) != -1)) {
 				__result = true;
 				return false;
