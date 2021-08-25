@@ -61,29 +61,15 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 			deleteButton.interactable = false;
 			deleteButton.onClick.RemoveAllListeners();
-			bool isCustomLevel = ____level.levelID.StartsWith("custom_level_");
-
-			if(!isCustomLevel)
+			
+			if(!(____level is CustomPreviewBeatmapLevel custom))
 				return;
 
-			string songPath = null;
-
-			var allMaps = SongCore.Loader.CustomLevels.AsEnumerable();
-			if(Config.Instance.AllowWipDelete)
-				allMaps = allMaps.Concat(SongCore.Loader.CustomWIPLevels);
-
-			foreach(var x in allMaps) {
-				if(x.Value.levelID == ____level.levelID) {
-					songPath = x.Key;
-					break;
-				}
-			}
-
-			if(songPath == null)
+			if(!Config.Instance.AllowWipDelete && custom.levelID.Contains(" WIP"))
 				return;
 
 			deleteButton.interactable = true;
-			deleteButton.onClick.AddListener(() => DeleteConfirmHandler.instance.Value.ConfirmDelete(____level, songPath));
+			deleteButton.onClick.AddListener(() => DeleteConfirmHandler.instance.Value.ConfirmDelete(____level, custom.customLevelPath));
 		}
 	}
 }
