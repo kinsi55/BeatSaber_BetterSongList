@@ -62,14 +62,14 @@ namespace BetterSongList.UI {
 			}
 
 			Plugin.Log.Warn(string.Format("Setting Sort to {0}", selected));
-			if(HookLevelCollectionTableView.sorter != newSort) {
+			if(HookLevelCollectionTableSet.sorter != newSort) {
 				if(storeToConfig)
 					Config.Instance.LastSort = selected;
 
-				HookLevelCollectionTableView.sorter = newSort;
+				HookLevelCollectionTableSet.sorter = newSort;
 				RestoreTableScroll.ResetScroll();
 				if(refresh)
-					HookLevelCollectionTableView.Refresh(true);
+					HookLevelCollectionTableSet.Refresh(true);
 			}
 
 			XD.FunnyNull(persistentNuts._sortDropdown)?.SelectCellWithIdx(_sortOptions.IndexOf(selected));
@@ -91,34 +91,34 @@ namespace BetterSongList.UI {
 			}
 
 			Plugin.Log.Warn(string.Format("Setting Filter to {0}", selected));
-			if(HookLevelCollectionTableView.filter != filterOptions[selected]) {
+			if(HookLevelCollectionTableSet.filter != filterOptions[selected]) {
 				if(storeToConfig)
 					Config.Instance.LastFilter = selected;
 
-				HookLevelCollectionTableView.filter = filterOptions[selected];
+				HookLevelCollectionTableSet.filter = filterOptions[selected];
 				RestoreTableScroll.ResetScroll();
 				if(refresh)
-					HookLevelCollectionTableView.Refresh(true);
+					HookLevelCollectionTableSet.Refresh(true);
 			}
 
 			XD.FunnyNull(persistentNuts._filterDropdown)?.SelectCellWithIdx(_filterOptions.IndexOf(selected));
 		}
 
 		internal static void SetSortDirection(bool ascending, bool refresh = true) {
-			if(HookLevelCollectionTableView.sorter == null)
+			if(HookLevelCollectionTableSet.sorter == null)
 				return;
 
 			if(Config.Instance.SortAsc != ascending) {
 				Config.Instance.SortAsc = ascending;
 				if(refresh)
-					HookLevelCollectionTableView.Refresh(true);
+					HookLevelCollectionTableSet.Refresh(true);
 			}
 
 			XD.FunnyNull(persistentNuts._sortDirection)?.SetText(ascending ? "▲" : "▼");
 		}
 
 		static void ToggleSortDirection() {
-			if(HookLevelCollectionTableView.sorter == null)
+			if(HookLevelCollectionTableSet.sorter == null)
 				return;
 
 			SetSortDirection(!Config.Instance.SortAsc);
@@ -130,10 +130,10 @@ namespace BetterSongList.UI {
 			if(x == null)
 				return;
 
-			if(HookLevelCollectionTableView.lastInMapList.Length < 2)
+			if(HookLevelCollectionTableSet.lastInMapList.Length < 2)
 				return;
 
-			x.SelectLevel(HookLevelCollectionTableView.lastInMapList[UnityEngine.Random.Range(0, HookLevelCollectionTableView.lastInMapList.Length - 1)]);
+			x.SelectLevel(HookLevelCollectionTableSet.lastInMapList[UnityEngine.Random.Range(0, HookLevelCollectionTableSet.lastInMapList.Length - 1)]);
 		}
 
 		void ShowErrorASAP(string text) {

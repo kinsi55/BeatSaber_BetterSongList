@@ -16,7 +16,7 @@ using UnityEngine;
 namespace BetterSongList.HarmonyPatches {
 	// The main class that handles the modification of the data in the song list
 	[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.SetData))]
-	static class HookLevelCollectionTableView {
+	static class HookLevelCollectionTableSet {
 		public static ISorter sorter;
 		public static IFilter filter;
 
@@ -87,7 +87,7 @@ namespace BetterSongList.HarmonyPatches {
 
 				previewBeatmapLevels = outV.ToArray();
 
-				if(sorter is ISorterWithLegend)
+				if(sorter is ISorterWithLegend && Config.Instance.EnableAlphabetScrollbar)
 					customLegend = ((ISorterWithLegend)sorter).BuildLegend(previewBeatmapLevels);
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
@@ -139,9 +139,11 @@ namespace BetterSongList.HarmonyPatches {
 				return;
 			}
 
-			// Not exactly sure yet why I need to do an explicit cast here... But I do
+			// Playlistlib has its own custom wrapping class for Playlists so it can properly track duplicates, so we need to use its collection
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
-				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection)?.Cast<IPreviewBeatmapLevel>().ToArray() ?? previewBeatmapLevels;
+				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection)
+					//TODO: For now I need to explicitly cast due to a bug in PlaylistLib, remove when not needed any more
+					?.Cast<IPreviewBeatmapLevel>().ToArray() ?? previewBeatmapLevels;
 
 			lastInMapList = previewBeatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
@@ -149,6 +151,7 @@ namespace BetterSongList.HarmonyPatches {
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
+			// If this is true the default Alphabet scrollbar is processed / shown - We dont want that when we use a custom filter
 			if(sorter?.isReady == true)
 				beatmapLevelsAreSorted = false;
 

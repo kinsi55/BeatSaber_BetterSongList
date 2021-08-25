@@ -20,7 +20,7 @@ namespace BetterSongList.HarmonyPatches {
 			if(!addedToHierarchy || ____beatmapLevelToBeSelectedAfterPresent != null || !Config.Instance.ReselectLastSong)
 				return;
 
-			____beatmapLevelToBeSelectedAfterPresent = HookLevelCollectionTableView.lastOutMapList?.FirstOrDefault(x => x.levelID == Config.Instance.LastSong);
+			____beatmapLevelToBeSelectedAfterPresent = HookLevelCollectionTableSet.lastOutMapList?.FirstOrDefault(x => x.levelID == Config.Instance.LastSong);
 #if TRACE
 			Plugin.Log.Warn(string.Format("LevelCollectionNavigationController.DidActivate():Prefix ____beatmapLevelToBeSelectedAfterPresent {0}", ____beatmapLevelToBeSelectedAfterPresent));
 #endif
