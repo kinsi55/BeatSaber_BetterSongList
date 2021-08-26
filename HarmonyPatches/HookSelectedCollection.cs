@@ -17,7 +17,7 @@ namespace BetterSongList.HarmonyPatches {
 #endif
 
 			// If its a playlist we want to start off with no sorting and filtering - Requested by Pixel
-			if(annotatedBeatmapLevelCollection != null && annotatedBeatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
+			if(annotatedBeatmapLevelCollection != null && Config.Instance.ClearFiltersOnPlaylistSelect && annotatedBeatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
 				FilterUI.SetSort(null, false, false);
 				FilterUI.SetFilter(null, false, false);
 				// Restore previously used Sort and filter for non-playlists

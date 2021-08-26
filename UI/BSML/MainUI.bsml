@@ -32,7 +32,7 @@
 						hover-hint='Selecting a song causes a lagspike. If you dont care about selecting the last song you left from you can disable this'
 					/>
 					<toggle-setting
-						text='Auto-Filter Unowned' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
+						text='Auto-Filter Unowned DLC Songs' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
 					/>
 					<toggle-setting
