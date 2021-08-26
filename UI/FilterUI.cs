@@ -40,8 +40,9 @@ namespace BetterSongList.UI {
 		static Dictionary<string, IFilter> filterOptions = new Dictionary<string, IFilter>() {
 			{ "All", null },
 			{ "Ranked", FilterMethods.ranked },
-			{ "Unranked", FilterMethods.unranked },
-			{ "Unplayed", FilterMethods.unplayed }
+			{ "Qualified", FilterMethods.qualified },
+			{ "Unplayed", FilterMethods.unplayed },
+			{ "Unranked", FilterMethods.unranked }
 		};
 
 		[UIValue("_sortOptions")] static List<object> _sortOptions = sortOptions.Keys.ToList<object>();
@@ -178,7 +179,6 @@ namespace BetterSongList.UI {
 
 			(target as RectTransform).sizeDelta += new Vector2(0, 2);
 			target.GetChild(0).position -= new Vector3(0, 0.02f);
-			//(target.Find("LevelsTableView") as RectTransform).sizeDelta -= new Vector2(0, 10);
 		}
 
 		[UIAction("#post-parse")]
