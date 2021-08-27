@@ -1,4 +1,5 @@
 ﻿using BetterSongList.SortModels;
+using BetterSongList.Util;
 using System;
 using System.Linq;
 
@@ -20,16 +21,38 @@ namespace BetterSongList {
 		);
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
-		static float? StartsProcessor(SongDetailsCache.Structs.Song x) {
-			var y = x.difficulties;
+		static float? StarsProcessor(SongDetailsCache.Structs.Song x) {
+			if(x.rankedStatus != SongDetailsCache.Structs.RankedStatus.Ranked)
+				return null;
 
-			float retVal = Config.Instance.SortAsc ? y.Min(x => x.stars) : y.Max(x => x.stars);
+			float ret = 0;
 
-			return retVal <= 0 ? (float?)null : retVal;
+			for(var i = (int)x.diffOffset; i < x.diffOffset + x.diffCount; i++) {
+				var diff = SongDetailsUtil.instance.difficulties[i];
+
+				if(diff.stars == 0)
+					continue;
+
+				if(ret == 0) {
+					ret = diff.stars;
+					continue;
+				}
+
+				if(Config.Instance.SortAsc) {
+					if(ret < diff.stars)
+						continue;
+				} else if(ret > diff.stars) {
+					continue;
+				}
+
+				ret = diff.stars;
+			}
+
+			return ret == 0 ? (float?)null : ret;
 		}
 
-		public static readonly ISorter stars = new BasicSongDetailsSorterWithLegend(StartsProcessor, x => {
-			var y = StartsProcessor(x);
+		public static readonly ISorter stars = new BasicSongDetailsSorterWithLegend(StarsProcessor, x => {
+			var y = StarsProcessor(x);
 
 			if(y == null)
 				return null;
