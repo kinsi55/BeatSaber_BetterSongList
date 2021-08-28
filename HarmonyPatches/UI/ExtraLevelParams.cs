@@ -25,8 +25,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}");
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();
+
+				if(hhc == null)
+					hhc = Resources.FindObjectsOfTypeAll<HoverHintController>().FirstOrDefault();
+
 				// Normally zenjected, not here obviously. I dont think the Controller is ever destroyed so we dont need to explicit null check
-				ReflectionUtil.SetField(hhint, "_hoverHintController", hhc ??= Resources.FindObjectsOfTypeAll<HoverHintController>().FirstOrDefault());
+				ReflectionUtil.SetField(hhint, "_hoverHintController", hhc);
 				hhint.text = hoverHint;
 			}
 
