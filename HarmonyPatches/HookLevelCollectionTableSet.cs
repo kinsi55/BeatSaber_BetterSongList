@@ -186,16 +186,16 @@ namespace BetterSongList.HarmonyPatches {
 			 * made the great decision to unnecessarily lock down the scrollbar to only
 			 * use characters, not strings
 			 */
-			____alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data(x.Key[0], x.Value)).ToArray());
+			____alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data('?', x.Value)).ToArray());
 
 			// Now that all labels are there we can insert the text we want there...
 			var x = ReflectionUtil.GetField<List<TextMeshProUGUI>, AlphabetScrollbar>(____alphabetScrollbar, "_texts");
-			for(var i = 0; i < customLegend.Count; i++)
+			for(var i = customLegend.Count; i-- != 0;)
 				x[i].text = customLegend[i].Key;
 
 			customLegend = null;
 
-			// Move the table a bit to the right to accomodate for alphabet scollbar
+			// Move the table a bit to the right to accomodate for alphabet scollbar (Basegame behaviour)
 			((RectTransform)____tableView.transform).offsetMin = new Vector2(((RectTransform)____alphabetScrollbar.transform).rect.size.x + 1f, 0f);
 			____alphabetScrollbar.gameObject.SetActive(true);
 		}
