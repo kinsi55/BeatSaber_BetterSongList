@@ -10,6 +10,10 @@ namespace BetterSongList.HarmonyPatches {
 		static bool Prefix(LevelSearchViewController __instance, ref bool ____onlyFavorites, bool onlyFavorites) {
 			____onlyFavorites = onlyFavorites;
 
+#if DEBUG
+			Plugin.Log.Warn(string.Format("LevelSearchViewController.ResetFilterParams():Prefix isActiveAndEnabled: {0}, onlyFavorites: {1}", __instance.isActiveAndEnabled, onlyFavorites));
+#endif
+
 			return __instance.isActiveAndEnabled;
 		}
 	}

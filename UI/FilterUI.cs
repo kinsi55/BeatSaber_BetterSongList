@@ -134,7 +134,7 @@ namespace BetterSongList.UI {
 			if(HookLevelCollectionTableSet.lastInMapList.Length < 2)
 				return;
 
-			x.SelectLevel(HookLevelCollectionTableSet.lastInMapList[UnityEngine.Random.Range(0, HookLevelCollectionTableSet.lastInMapList.Length - 1)]);
+			x.SelectLevel(HookLevelCollectionTableSet.lastInMapList[Random.Range(0, HookLevelCollectionTableSet.lastInMapList.Length - 1)]);
 		}
 
 		void ShowErrorASAP(string text) {

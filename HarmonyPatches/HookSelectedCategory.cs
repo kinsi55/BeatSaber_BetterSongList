@@ -6,6 +6,9 @@ namespace BetterSongList.HarmonyPatches {
 	static class HookSelectedCategory {
 		// When switching categories we want to reset the table to the topp
 		static void Prefix(SelectLevelCategoryViewController __instance) {
+#if TRACE
+			Plugin.Log.Debug("SelectLevelCategoryViewController.LevelFilterCategoryIconSegmentedControlDidSelectCell():Prefix");
+#endif
 			if(Config.Instance.LastCategory == __instance.selectedLevelCategory.ToString())
 				return;
 #if TRACE
