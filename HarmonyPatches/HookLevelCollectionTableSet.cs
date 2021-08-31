@@ -141,9 +141,7 @@ namespace BetterSongList.HarmonyPatches {
 
 			// Playlistlib has its own custom wrapping class for Playlists so it can properly track duplicates, so we need to use its collection
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
-				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection)
-					//TODO: For now I need to explicitly cast due to a bug in PlaylistLib, remove when not needed any more
-					?.Cast<IPreviewBeatmapLevel>().ToArray() ?? previewBeatmapLevels;
+				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
 
 			lastInMapList = previewBeatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;

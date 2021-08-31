@@ -65,7 +65,7 @@ namespace BetterSongList.HarmonyPatches {
 					return;
 
 #if TRACE
-				Plugin.Log.Warn(string.Format("-> Scrolling to {0}", scrollToIndex));
+				Plugin.Log.Warn(string.Format("-> Scrolling to {0} (Specific map: {1})", scrollToIndex, specificMap));
 #endif
 
 				if(specificMap)
