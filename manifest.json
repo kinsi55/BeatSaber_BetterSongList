@@ -5,10 +5,10 @@
     "author": "Kinsi55",
     "version": "0.0.1",
     "description": "Adds Various improvements to the Basegame Map list like Filters, a persistent state and more",
-    "gameVersion": "1.16.1",
+    "gameVersion": "1.16.3",
     "dependsOn": {
-        "BSIPA": "^4.0.5",
-        "SongCore": "^3.1.0"
+        "BSIPA": "^4.2.0",
+        "SongCore": "^3.5.0"
     },
     "loadAfter": [
         "BeatSaberPlaylistsLib",
