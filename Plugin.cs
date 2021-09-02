@@ -34,7 +34,7 @@ namespace BetterSongList {
 				FilterUI.persistentNuts.ShowErrorASAP("Your version of PlaylistManager is outdated / incompatible with BetterSongList - It has been disabled, please update");
 
 			l = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlus");
-			if(l.HVersion <= new Hive.Versioning.Version("3.2.9"))
+			if(l != null && l.HVersion <= new Hive.Versioning.Version("3.2.9"))
 				FilterUI.persistentNuts.ShowErrorASAP("Your version of BeatSaberPlus contains a bug when deleting a map that was selected from Chat requests, please update");
 
 			PlaylistsUtil.Init();
