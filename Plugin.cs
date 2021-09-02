@@ -28,6 +28,11 @@ namespace BetterSongList {
 			harmony.PatchAll(Assembly.GetExecutingAssembly());
 			FilterUI.Init();
 
+			var l = IPA.Loader.PluginManager.GetPluginFromId("PlaylistManager");
+
+			if(l != null && l.HVersion <= new Hive.Versioning.Version("1.3.0"))
+				FilterUI.persistentNuts.ShowErrorASAP("Your version of PlaylistManager is outdated / incompatible with BetterSongList - It has been disabled, please update");
+
 			PlaylistsUtil.Init();
 		}
 
