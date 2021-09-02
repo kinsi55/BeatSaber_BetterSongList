@@ -140,7 +140,7 @@ namespace BetterSongList.UI {
 			if(ml.Length < 2)
 				return;
 
-			x.SelectLevel(ml[Random.Range(0, ml.Length - 1)]);
+			x.SelectLevel(ml[Random.Range(0, ml.Length)]);
 		}
 
 		Queue<string> warnings = new Queue<string>();
