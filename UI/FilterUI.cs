@@ -17,7 +17,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BetterSongList.UI {
-	public class FilterUI {
+#if DEBUG
+	public
+#endif
+	class FilterUI {
 		internal static readonly FilterUI persistentNuts = new FilterUI();
 #pragma warning disable 649
 		[UIComponent("root")] private RectTransform rootTransform;

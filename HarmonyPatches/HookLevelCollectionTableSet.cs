@@ -16,6 +16,9 @@ using UnityEngine;
 namespace BetterSongList.HarmonyPatches {
 	// The main class that handles the modification of the data in the song list
 	[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.SetData))]
+#if DEBUG
+	public
+#endif
 	static class HookLevelCollectionTableSet {
 		public static ISorter sorter;
 		public static IFilter filter;
@@ -133,8 +136,14 @@ namespace BetterSongList.HarmonyPatches {
 			LevelCollectionTableView __instance, TableView ____tableView,
 			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted
 		) {
+#if TRACE
+			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
+#endif
 			// If SetData is called with the literal same maplist as before we might as well ignore it
 			if(previewBeatmapLevels == lastInMapList) {
+#if TRACE
+				Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix => previewBeatmapLevels == lastInMapList");
+#endif
 				previewBeatmapLevels = lastOutMapList;
 				return;
 			}

@@ -3,6 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.SortModels {
+#if DEBUG
+	public
+#endif
 	interface ISorter : IComparer<IPreviewBeatmapLevel> {
 		public bool isReady { get; }
 		Task Prepare(CancellationToken cancelToken);
