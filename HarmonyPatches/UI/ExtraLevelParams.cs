@@ -91,25 +91,23 @@ namespace BetterSongList.HarmonyPatches.UI {
 				}
 
 				// Basegame maps have no NJS or JD
-				if(____selectedDifficultyBeatmap.noteJumpMovementSpeed > 0) {
-					fields[2].text = ____selectedDifficultyBeatmap.noteJumpMovementSpeed.ToString("0.0#");
-				} else {
-					fields[2].text = "?";
-				}
+				var njs = ____selectedDifficultyBeatmap.noteJumpMovementSpeed;
+				if(njs == 0)
+					njs = BeatmapDifficultyMethods.NoteJumpMovementSpeed(____selectedDifficultyBeatmap.difficulty);
 
-				var jd = Config.Instance.ShowMapJDInsteadOfOffset ? JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap) : ____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
+				fields[2].text = njs.ToString("0.0#");
 
-				if(____selectedDifficultyBeatmap.noteJumpMovementSpeed != 0) {
-					fields[3].text = jd.ToString("0.0");
+				var offset = Config.Instance.ShowMapJDInsteadOfOffset ? 
+					JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) : 
+					____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
 
-					var minJd = JumpDistanceCalculator.GetMinJd(____selectedDifficultyBeatmap);
+				fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
 
-					// Consider bpm locked if minimum is within 7%
-					if(minJd > Config.Instance.UnlockedJd)
-						fields[3].text += "<size=3>🔒";
-				} else {
-					fields[3].text = "?";
-				}
+				var minJd = JumpDistanceCalculator.GetMinJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs);
+
+				// Consider bpm locked if minimum is within 7%
+				if(minJd > Config.Instance.UnlockedJd)
+					fields[3].text += "<size=3>🔒";
 			}
 		}
 	}

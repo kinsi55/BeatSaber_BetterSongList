@@ -2,24 +2,24 @@
 
 namespace BetterSongList.Util {
 	static class JumpDistanceCalculator {
-		static float hjd(IDifficultyBeatmap lvl, float? overrideOffset = null) {
-			var noteJumpMovementSpeed = (lvl.noteJumpMovementSpeed * lvl.level.beatsPerMinute) / lvl.level.beatsPerMinute;
-			var num = 60f / lvl.level.beatsPerMinute;
+		static float hjd(float bpm, float njs, float offset) {
+			var noteJumpMovementSpeed = (njs * bpm) / bpm;
+			var num = 60f / bpm;
 			var hjd = 4f;
 			while(noteJumpMovementSpeed * num * hjd > 18f)
 				hjd /= 2f;
 
-			hjd += overrideOffset ?? lvl.noteJumpStartBeatOffset;
+			hjd += offset;
 
 			return Math.Max(hjd, 1);
 		}
 
-		public static float GetJd(IDifficultyBeatmap diff, float? overrideOffset = null) {
-			return diff.noteJumpMovementSpeed * (60f / diff.level.beatsPerMinute) * hjd(diff, overrideOffset) * 2;
+		public static float GetJd(float bpm, float njs, float offset) {
+			return njs * (60f / bpm) * hjd(bpm, njs, offset) * 2;
 		}
 
-		public static float GetMinJd(IDifficultyBeatmap diff) {
-			return diff.noteJumpMovementSpeed * (60f / diff.level.beatsPerMinute) * 2;
+		public static float GetMinJd(float bpm, float njs) {
+			return njs * (60f / bpm) * 2;
 		}
 	}
 }
