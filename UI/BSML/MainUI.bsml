@@ -27,10 +27,6 @@
 						text='Allow deleting WIPs' bind-value='true' apply-on-change='true' value='AllowWipDelete'
 						hover-hint='Should Work in Progress maps be deleteable?'
 					/>
-					<toggle-setting 
-						text='Re-select last song' bind-value='true' apply-on-change='true' value='ReselectLastSong'
-						hover-hint='Selecting a song causes a lagspike. If you dont care about selecting the last song you left from you can disable this'
-					/>
 					<toggle-setting
 						text='Auto-Filter Unowned DLC Songs' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
@@ -47,9 +43,13 @@
 						text='Improve Basegame search' bind-value='true' apply-on-change='true' value='ModBasegameSearch'
 						hover-hint='Adds searching by Mapper name and handling of Songs with spaces to the Basegame search'
 					/>
+					<toggle-setting
+						text='Show map JD instead of Offset' bind-value='true' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
+						hover-hint='Will display the maps JD instead of its configured offset'
+					/>
 					<slider-setting 
 						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'
-						hover-hint='If a maps minimum Jump Distance is lower than this value a lock will be displayed next to the default JD'
+						hover-hint='If a maps minimum Jump Distance is lower than this value a lock will be displayed on the right side of the JD'
 					/>
 				</macro.as-host>
 			</vertical>
