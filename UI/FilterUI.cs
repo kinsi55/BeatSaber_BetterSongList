@@ -114,6 +114,7 @@ namespace BetterSongList.UI {
 
 			if(Config.Instance.SortAsc != ascending) {
 				Config.Instance.SortAsc = ascending;
+				RestoreTableScroll.ResetScroll();
 				if(refresh)
 					HookLevelCollectionTableSet.Refresh(true);
 			}
