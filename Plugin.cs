@@ -1,4 +1,5 @@
 ﻿using BetterSongList.UI;
+using BetterSongList.Util;
 using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
@@ -26,6 +27,8 @@ namespace BetterSongList {
 			harmony = new Harmony("Kinsi55.BeatSaber.BetterSongList");
 			harmony.PatchAll(Assembly.GetExecutingAssembly());
 			FilterUI.Init();
+
+			PlaylistsUtil.Init();
 		}
 
 		[OnExit]

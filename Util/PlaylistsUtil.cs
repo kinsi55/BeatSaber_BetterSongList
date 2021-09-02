@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace BetterSongList.Util {
 	public static class PlaylistsUtil {
-		public static bool hasPlaylistLib = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlaylistsLib") != null;
+		public static bool hasPlaylistLib = false;
+		public static bool requiresListCast = false;
+
+		public static void Init() {
+			var x = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlaylistsLib");
+
+			hasPlaylistLib = x != null;
+			requiresListCast = hasPlaylistLib && x.HVersion <= new Hive.Versioning.Version("1.4.0");
+		}
 
 		public static Dictionary<string, IBeatmapLevelPack> builtinPacks = null;
 

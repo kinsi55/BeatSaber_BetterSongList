@@ -20,7 +20,7 @@
     "conflictsWith": {
         "SongBrowser": ">=0.0.0",
         "PlaylistManager": "<=1.3.0",
-        "BeatSaberPlaylistsLib": "<1.4.1",
+        "BeatSaberPlaylistsLib": "<1.4.0",
         "SongDetailsCache": "<1.1.4"
     }
 }
