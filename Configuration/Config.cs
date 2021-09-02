@@ -6,7 +6,7 @@ namespace BetterSongList {
 	internal class Config {
 		public static Config Instance { get; set; }
 		public bool SortAsc { get; set; } = false;
-		public string LastSort { get; set; } = "Newest";
+		public string LastSort { get; set; } = "Default";
 		//public virtual bool InvertFilter { get; set; } = false;
 		public string LastFilter { get; set; } = "";
 

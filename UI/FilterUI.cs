@@ -65,7 +65,9 @@ namespace BetterSongList.UI {
 				return;
 			}
 
+#if DEBUG
 			Plugin.Log.Warn(string.Format("Setting Sort to {0}", selected));
+#endif
 			if(HookLevelCollectionTableSet.sorter != newSort) {
 				if(storeToConfig)
 					Config.Instance.LastSort = selected;
@@ -94,7 +96,9 @@ namespace BetterSongList.UI {
 				return;
 			}
 
+#if DEBUG
 			Plugin.Log.Warn(string.Format("Setting Filter to {0}", selected));
+#endif
 			if(HookLevelCollectionTableSet.filter != filterOptions[selected]) {
 				if(storeToConfig)
 					Config.Instance.LastFilter = selected;
