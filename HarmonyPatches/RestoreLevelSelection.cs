@@ -60,8 +60,7 @@ namespace BetterSongList.HarmonyPatches {
 
 	[HarmonyPatch(typeof(LevelPackDetailViewController), nameof(LevelPackDetailViewController.RefreshAvailabilityAsync))]
 	static class SongDetailView {
-		public static bool blockNextLevelpackIfEmpty = false;
-		static void Prefix(LevelPackDetailViewController __instance, ref IBeatmapLevelPack ____pack) {
+		static bool Prefix(LevelPackDetailViewController __instance, ref IBeatmapLevelPack ____pack) {
 #if TRACE
 			Plugin.Log.Warn("LevelPackDetailViewController.RefreshAvailabilityAsync()");
 #endif
@@ -71,6 +70,13 @@ namespace BetterSongList.HarmonyPatches {
 			 * have any pack setup
 			 */
 			____pack ??= SongCore.Loader.CustomLevelsPack;
+
+			if(____pack == null) {
+				__instance.gameObject.SetActive(false);
+				return false;
+			}
+
+			return true;
 		}
 	}
 }
