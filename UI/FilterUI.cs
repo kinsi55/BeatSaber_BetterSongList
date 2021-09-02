@@ -142,22 +142,30 @@ namespace BetterSongList.UI {
 			x.SelectLevel(ml[Random.Range(0, ml.Length - 1)]);
 		}
 
-		void ShowErrorASAP(string text) {
-			SharedCoroutineStarter.instance.StartCoroutine(_ShowError(text));
+		Queue<string> warnings = new Queue<string>();
+		bool warningLoadInProgress;
+		public void ShowErrorASAP(string text = null) {
+			if(text != null)
+				warnings.Enqueue(text);
+			if(!warningLoadInProgress)
+				SharedCoroutineStarter.instance.StartCoroutine(_ShowError());
 		}
 
-		IEnumerator _ShowError(string text) {
+		[UIAction("PossiblyShowNextWarning")] void PossiblyShowNextWarning() => ShowErrorASAP();
+
+		IEnumerator _ShowError() {
+			warningLoadInProgress = true;
 			yield return new WaitUntil(() => _failTextLabel != null);
 			var x = _failTextLabel.GetComponentInParent<ViewController>();
-			if(x == null)
-				yield break;
+			if(x != null) {
+				yield return new WaitUntil(() => !x.isInTransition);
 
-			yield return new WaitUntil(() => !x.isInTransition);
-			if(!x.isActivated)
-				yield break;
-
-			_failTextLabel.text = text;
-			parserParams.EmitEvent("IncompatabilityNotice");
+				if(x.isActivated && warnings.Count > 0) {
+					_failTextLabel.text = warnings.Dequeue();
+					parserParams.EmitEvent("IncompatabilityNotice");
+				}
+			}
+			warningLoadInProgress = false;
 		}
 
 

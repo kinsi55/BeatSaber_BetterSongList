@@ -73,7 +73,7 @@
 			</horizontal>
 			<text text='' align='Center' font-size='3.3' id='failTextLabel' word-wrapping='true'/>
 			<horizontal pad-top='4' pad-bottom='2'>
-				<button text='OK' click-event='Close' min-width='20'/>
+				<button text='OK' click-event='Close' min-width='20' on-click='PossiblyShowNextWarning'/>
 			</horizontal>
 		</vertical>
 	</modal>
