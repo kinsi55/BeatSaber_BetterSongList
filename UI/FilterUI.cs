@@ -134,10 +134,12 @@ namespace BetterSongList.UI {
 			if(x == null)
 				return;
 
-			if(HookLevelCollectionTableSet.lastInMapList.Length < 2)
+			var ml = HookLevelCollectionTableSet.lastOutMapList ?? HookLevelCollectionTableSet.lastInMapList;
+
+			if(ml.Length < 2)
 				return;
 
-			x.SelectLevel(HookLevelCollectionTableSet.lastInMapList[Random.Range(0, HookLevelCollectionTableSet.lastInMapList.Length - 1)]);
+			x.SelectLevel(ml[Random.Range(0, ml.Length - 1)]);
 		}
 
 		void ShowErrorASAP(string text) {
