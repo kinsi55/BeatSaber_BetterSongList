@@ -59,30 +59,33 @@ namespace BetterSongList.HarmonyPatches.UI {
 				if(!SongDetailsUtil.isAvailable) {
 					fields[0].text = fields[1].text = "N/A";
 				} else if(SongDetailsUtil.instance != null) {
-					// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
-					var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
+					void wrapper() {
+						// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
+						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
 
-					if(ch != SongDetailsCache.Structs.MapCharacteristic.Standard) {
-						fields[0].text = fields[1].text = "-";
-					} else {
-						var mh = BeatmapsUtil.GetHashOfPreview(____level);
-
-						if(mh == null ||
-							!SongDetailsUtil.instance.songs.FindByHash(mh, out var song) ||
-							!song.GetDifficulty(
-								out var diff,
-								(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
-								ch
-							)
-						) {
-							fields[0].text = fields[1].text = "?";
-						} else if(!diff.ranked) {
+						if(ch != SongDetailsCache.Structs.MapCharacteristic.Standard) {
 							fields[0].text = fields[1].text = "-";
 						} else {
-							fields[0].text = diff.approximatePpValue.ToString("0.0");
-							fields[1].text = diff.stars.ToString("0.0#");
+							var mh = BeatmapsUtil.GetHashOfPreview(____level);
+
+							if(mh == null ||
+								!((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(mh, out var song) ||
+								!song.GetDifficulty(
+									out var diff,
+									(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
+									ch
+								)
+							) {
+								fields[0].text = fields[1].text = "?";
+							} else if(!diff.ranked) {
+								fields[0].text = fields[1].text = "-";
+							} else {
+								fields[0].text = diff.approximatePpValue.ToString("0.0");
+								fields[1].text = diff.stars.ToString("0.0#");
+							}
 						}
 					}
+					wrapper();
 				} else if(!SongDetailsUtil.attemptedToInit) {
 					SongDetailsUtil.TryGet().ContinueWith(
 						x => { if(x.Result != null) __instance.RefreshContent(); },

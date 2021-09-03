@@ -9,9 +9,9 @@ namespace BetterSongList.Filters.Models {
 	class BasicSongDetailsFilter : IFilter, IAvailabilityCheck {
 		public bool isReady => SongDetailsUtil.finishedInitAttempt;
 
-		Func<Song, bool> filterValueTransformer;
+		Func<object, bool> filterValueTransformer;
 
-		public BasicSongDetailsFilter(Func<Song, bool> filterValueTransformer) {
+		public BasicSongDetailsFilter(Func<object, bool> filterValueTransformer) {
 			this.filterValueTransformer = filterValueTransformer;
 		}
 
@@ -45,7 +45,7 @@ namespace BetterSongList.Filters.Models {
 			if(h == null)
 				return false;
 
-			if(!SongDetailsUtil.instance.songs.FindByHash(h, out var song))
+			if(!((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
 				return false;
 
 			return filterValueTransformer(song);

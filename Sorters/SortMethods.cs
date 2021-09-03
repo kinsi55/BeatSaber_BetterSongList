@@ -21,14 +21,15 @@ namespace BetterSongList {
 		);
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
-		static float? StarsProcessor(SongDetailsCache.Structs.Song x) {
+		static float? StarsProcessor(object xx) {
+			var x = (SongDetailsCache.Structs.Song)xx;
 			if(x.rankedStatus != SongDetailsCache.Structs.RankedStatus.Ranked)
 				return null;
 
 			float ret = 0;
 
 			for(var i = (int)x.diffOffset; i < x.diffOffset + x.diffCount; i++) {
-				var diff = SongDetailsUtil.instance.difficulties[i];
+				var diff = ((SongDetailsCache.SongDetails)SongDetailsUtil.instance).difficulties[i];
 
 				if(diff.stars == 0)
 					continue;
@@ -52,7 +53,7 @@ namespace BetterSongList {
 		}
 
 		public static readonly ISorter stars = new BasicSongDetailsSorterWithLegend(StarsProcessor, x => {
-			var y = StarsProcessor(x);
+			var y = StarsProcessor((SongDetailsCache.Structs.Song)x);
 
 			if(y == null)
 				return null;
@@ -77,9 +78,9 @@ namespace BetterSongList {
 		}
 
 		public static readonly ISorter beatSaverDate = new BasicSongDetailsSorterWithLegend(
-			x => x.uploadTimeUnix,
+			x => ((SongDetailsCache.Structs.Song)x).uploadTimeUnix,
 		x => {
-			var d = x.uploadTime;
+			var d = ((SongDetailsCache.Structs.Song)x).uploadTime;
 			return d.ToString($"Q{GetQuarter(d)} yy");
 		});
 	}

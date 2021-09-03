@@ -11,15 +11,15 @@ namespace BetterSongList.SortModels {
 		public bool isReady => SongDetailsUtil.finishedInitAttempt;
 
 #nullable enable
-		Func<Song, float?> sortValueTransformer;
-		Func<Song, string?> legendValueTransformer;
+		Func<object, float?> sortValueTransformer;
+		Func<object, string?> legendValueTransformer;
 
-		public BasicSongDetailsSorterWithLegend(Func<Song, float?> sortValueTransformer, Func<Song, string?> legendValueTransformer) {
+		public BasicSongDetailsSorterWithLegend(Func<object, float?> sortValueTransformer, Func<object, string?> legendValueTransformer) {
 			this.sortValueTransformer = sortValueTransformer;
 			this.legendValueTransformer = legendValueTransformer;
 		}
 #nullable disable
-		public BasicSongDetailsSorterWithLegend(Func<Song, float?> sortValueTransformer) {
+		public BasicSongDetailsSorterWithLegend(Func<object, float?> sortValueTransformer) {
 			this.sortValueTransformer = sortValueTransformer;
 			this.legendValueTransformer = (x) => sortValueTransformer(x).ToString();
 		}
@@ -34,7 +34,7 @@ namespace BetterSongList.SortModels {
 					//	return null;
 
 					var h = BeatmapsUtil.GetHashOfPreview(level);
-					if(h == null || !SongDetailsUtil.instance.songs.FindByHash(h, out var song))
+					if(h == null || !((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
 						return "N/A";
 
 					return legendValueTransformer(song);
@@ -57,7 +57,7 @@ namespace BetterSongList.SortModels {
 				var def = Config.Instance.SortAsc ? float.MaxValue : float.MinValue;
 
 				var h = BeatmapsUtil.GetHashOfPreview(x);
-				if(h == null || !SongDetailsUtil.instance.songs.FindByHash(h, out var song))
+				if(h == null || !((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
 					return def;
 
 				return sortValueTransformer(song) ?? def;

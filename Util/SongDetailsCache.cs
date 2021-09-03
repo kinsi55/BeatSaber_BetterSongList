@@ -15,7 +15,7 @@ namespace BetterSongList.Util {
 			return v.HVersion >= new Hive.Versioning.Version("1.1.5");
 		}
 		public static bool isAvailable => CheckAvailable();
-		public static SongDetails instance { get; private set; }
+		public static object instance { get; private set; }
 
 		public static string GetUnavailabilityReason() {
 			if(!isAvailable)
@@ -27,7 +27,7 @@ namespace BetterSongList.Util {
 			return null;
 		}
 
-		public static async Task<SongDetails> TryGet() {
+		public static async Task<object> TryGet() {
 			if(!finishedInitAttempt) {
 				attemptedToInit = true;
 				try {

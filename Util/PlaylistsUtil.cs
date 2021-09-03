@@ -40,10 +40,14 @@ namespace BetterSongList.Util {
 			if(builtinPacks.ContainsKey(packName)) {
 				return builtinPacks[packName];
 			} else if(hasPlaylistLib) {
-				foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists()) {
-					if(x.packName == packName)
-						return x;
+				IBeatmapLevelPack wrapper() {
+					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists()) {
+						if(x.packName == packName)
+							return x;
+					}
+					return null;
 				}
+				return wrapper();
 			}
 			return null;
 		}
