@@ -80,7 +80,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 							} else if(!diff.ranked) {
 								fields[0].text = fields[1].text = "-";
 							} else {
-								fields[0].text = diff.approximatePpValue.ToString("0.0");
+								//TODO: Put this back once new pp estimation algo is mainstream (New SongDetails version)
+								//fields[0].text = diff.approximatePpValue.ToString("0.0");
+								fields[0].text = (diff.stars * 42.108f * (1.11f - ((.055f / 14f) * diff.stars))).ToString("0.0");
 								fields[1].text = diff.stars.ToString("0.0#");
 							}
 						}
