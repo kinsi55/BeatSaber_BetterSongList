@@ -1,9 +1,5 @@
 ﻿using BetterSongList.FilterModels;
 using BetterSongList.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +13,7 @@ namespace BetterSongList.Filters.Models {
 			IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory.StartNew(() => {
 				try {
 					LocalScoresUtil.Load();
-				} catch {}
+				} catch { }
 				t.SetResult(true);
 			});
 			return t.Task;

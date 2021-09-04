@@ -1,6 +1,5 @@
 ﻿using BetterSongList.FilterModels;
 using BetterSongList.Util;
-using SongDetailsCache.Structs;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

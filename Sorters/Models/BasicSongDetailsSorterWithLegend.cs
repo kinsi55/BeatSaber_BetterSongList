@@ -1,5 +1,4 @@
 ﻿using BetterSongList.Util;
-using SongDetailsCache.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

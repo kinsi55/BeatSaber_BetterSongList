@@ -111,8 +111,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 				fields[2].text = njs.ToString("0.0#");
 
-				var offset = Config.Instance.ShowMapJDInsteadOfOffset ? 
-					JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) : 
+				var offset = Config.Instance.ShowMapJDInsteadOfOffset ?
+					JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) :
 					____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
 
 				fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");

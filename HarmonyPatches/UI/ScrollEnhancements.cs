@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage;
+﻿using BeatSaberMarkupLanguage;
 using HarmonyLib;
 using HMUI;
+using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,7 +29,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 				.parent // ScrollBar
 				.parent // LevelsTableView
 				.parent // LevelCollecionViewController
-				//.parent // LevelCollectionNavigationController
 			);
 
 			// Appropriately size the button rect
@@ -42,9 +37,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 			r.anchorMax = new Vector2(1, 0.953f - vOffs);
 
 			var i = newBtn.GetComponentInChildren<ImageView>();
-			if(Icon[0] == '#') {
+			if(Icon[0] == '#')
 				i.SetImage(Icon);
-			}
 
 			// Put the Icon in the middle of the touchable rect
 			r = (RectTransform)i.transform;

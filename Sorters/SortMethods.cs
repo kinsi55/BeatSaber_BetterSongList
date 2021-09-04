@@ -1,7 +1,7 @@
 ﻿using BetterSongList.SortModels;
 using BetterSongList.Util;
+using SongDetailsCache.Structs;
 using System;
-using System.Linq;
 
 namespace BetterSongList {
 	static class SortMethods {
@@ -22,8 +22,8 @@ namespace BetterSongList {
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
 		static float? StarsProcessor(object xx) {
-			var x = (SongDetailsCache.Structs.Song)xx;
-			if(x.rankedStatus != SongDetailsCache.Structs.RankedStatus.Ranked)
+			var x = (Song)xx;
+			if(x.rankedStatus != RankedStatus.Ranked)
 				return null;
 
 			float ret = 0;
@@ -53,7 +53,7 @@ namespace BetterSongList {
 		}
 
 		public static readonly ISorter stars = new BasicSongDetailsSorterWithLegend(StarsProcessor, x => {
-			var y = StarsProcessor((SongDetailsCache.Structs.Song)x);
+			var y = StarsProcessor((Song)x);
 
 			if(y == null)
 				return null;
@@ -78,9 +78,9 @@ namespace BetterSongList {
 		}
 
 		public static readonly ISorter beatSaverDate = new BasicSongDetailsSorterWithLegend(
-			x => ((SongDetailsCache.Structs.Song)x).uploadTimeUnix,
+			x => ((Song)x).uploadTimeUnix,
 		x => {
-			var d = ((SongDetailsCache.Structs.Song)x).uploadTime;
+			var d = ((Song)x).uploadTime;
 			return d.ToString($"Q{GetQuarter(d)} yy");
 		});
 	}
