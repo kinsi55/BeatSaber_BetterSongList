@@ -48,6 +48,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 
 			var btn = newBtn.GetComponent<NoTransitionsButton>();
+			btn.interactable = true;
 			btn.onClick.AddListener(cb);
 
 			return newBtn;
