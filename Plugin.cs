@@ -36,7 +36,7 @@ namespace BetterSongList {
 
 			l = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlus");
 			if(l != null && l.HVersion <= new Hive.Versioning.Version("3.2.9"))
-				FilterUI.persistentNuts.ShowErrorASAP("Your version of BeatSaberPlus contains a bug when deleting a map that was selected from Chat requests, please update");
+				FilterUI.persistentNuts.ShowErrorASAP("Your version of BeatSaberPlus contains a bug when deleting a map that was selected from Chat requests, consider updating");
 
 			l = IPA.Loader.PluginManager.IgnoredPlugins.Select(x => x.Key).FirstOrDefault(x => x.Id == "SongDetailsCache");
 			if(l != null && l.HVersion < new Hive.Versioning.Version("1.1.4"))
