@@ -14,25 +14,36 @@ namespace BetterSongList.HarmonyPatches.UI {
 	static class SongDeleteButton {
 		static Button deleteButton = null;
 
+		static CustomPreviewBeatmapLevel lastLevel = null;
+		public static void UpdateState() {
+			if(deleteButton == null)
+				return;
+
+			deleteButton.interactable = lastLevel != null && (Config.Instance.AllowWipDelete || !lastLevel.levelID.Contains(" WIP"));
+		}
+
 		class DeleteConfirmHandler {
 			public static Lazy<DeleteConfirmHandler> instance = new Lazy<DeleteConfirmHandler>(() => new DeleteConfirmHandler());
 
 			[UIParams] readonly BSMLParserParams parserParams = null;
 
-			string songPath = null;
-			public void ConfirmDelete(IPreviewBeatmapLevel level, string path) {
-				songPath = path;
+			public void ConfirmDelete() => parserParams.EmitEvent("Show");
 
-				parserParams.EmitEvent("Show");
+			void Confirm() {
+				if(lastLevel == null)
+					return;
+
+				SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath);
 			}
-
-			void Confirm() => SongCore.Loader.Instance.DeleteSong(songPath);
 		}
 
 		static void Postfix(StandardLevelDetailView __instance, Button ____practiceButton, IPreviewBeatmapLevel ____level) {
 			if(deleteButton == null && ____practiceButton != null) {
 				var newButton = GameObject.Instantiate(____practiceButton.gameObject, ____practiceButton.transform.parent);
 				deleteButton = newButton.GetComponentInChildren<Button>();
+
+				deleteButton.onClick.AddListener(DeleteConfirmHandler.instance.Value.ConfirmDelete);
+
 				newButton.GetComponentsInChildren<LayoutElement>().Last().minWidth = 12;
 				newButton.transform.SetAsFirstSibling();
 
@@ -56,20 +67,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 				);
 			}
 
-			if(deleteButton == null)
-				return;
+			lastLevel = ____level as CustomPreviewBeatmapLevel;
 
-			deleteButton.interactable = false;
-			deleteButton.onClick.RemoveAllListeners();
-			
-			if(!(____level is CustomPreviewBeatmapLevel custom))
-				return;
-
-			if(!Config.Instance.AllowWipDelete && custom.levelID.Contains(" WIP"))
-				return;
-
-			deleteButton.interactable = true;
-			deleteButton.onClick.AddListener(() => DeleteConfirmHandler.instance.Value.ConfirmDelete(____level, custom.customLevelPath));
+			UpdateState();
 		}
 	}
 }

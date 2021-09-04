@@ -21,6 +21,7 @@ namespace BetterSongList {
 		public bool ClearFiltersOnPlaylistSelect { get; set; } = true;
 		public bool ModBasegameSearch { get; set; } = true;
 		public bool ShowMapJDInsteadOfOffset { get; set; } = true;
+		public bool ExtendSongsScrollbar { get; set; } = true;
 		public float UnlockedJd { get; set; } = 20.0f;
 
 		/// <summary>

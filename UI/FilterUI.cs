@@ -4,6 +4,7 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BetterSongList.FilterModels;
 using BetterSongList.HarmonyPatches;
+using BetterSongList.HarmonyPatches.UI;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
@@ -79,6 +80,12 @@ namespace BetterSongList.UI {
 			}
 
 			XD.FunnyNull(persistentNuts._sortDropdown)?.SelectCellWithIdx(_sortOptions.IndexOf(selected));
+		}
+
+		static void SettingsClosed() {
+			SongDeleteButton.UpdateState();
+			ScrollEnhancements.UpdateState();
+			ExtraLevelParams.UpdateState();
 		}
 
 		public static void ClearFilter(bool reloadTable = false) => SetFilter(null, false, reloadTable);

@@ -42,6 +42,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 			fields[3].richText = true;
 		}
 
+		static StandardLevelDetailView lastInstance = null;
+
+		public static void UpdateState() {
+			if(lastInstance != null)
+				lastInstance.RefreshContent();
+		}
+
 
 		static void Postfix(IBeatmapLevel ____level, IDifficultyBeatmap ____selectedDifficultyBeatmap, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
 			if(extraUI == null) {
@@ -54,6 +61,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 				fields = extraUI.GetComponentsInChildren<CurvedTextMeshPro>();
 				SharedCoroutineStarter.instance.StartCoroutine(ProcessFields());
 			}
+
+			lastInstance = __instance;
 
 			if(fields != null) {
 				if(!SongDetailsUtil.isAvailable) {
@@ -90,7 +99,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 					wrapper();
 				} else if(!SongDetailsUtil.attemptedToInit) {
 					SongDetailsUtil.TryGet().ContinueWith(
-						x => { if(x.Result != null) __instance.RefreshContent(); },
+						x => { if(x.Result != null) UpdateState(); },
 						CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext()
 					);
 				}
