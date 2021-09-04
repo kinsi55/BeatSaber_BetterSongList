@@ -37,6 +37,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 		}
 
+		[HarmonyPriority(int.MinValue)]
 		static void Postfix(StandardLevelDetailView __instance, Button ____practiceButton, IPreviewBeatmapLevel ____level) {
 			if(deleteButton == null && ____practiceButton != null) {
 				var newButton = GameObject.Instantiate(____practiceButton.gameObject, ____practiceButton.transform.parent);
@@ -55,6 +56,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var icon = iconG.AddComponent<ImageView>();
 
 				icon.color = t.color;
+				IPA.Utilities.ReflectionUtil.SetField(icon, "_skew", 0.2f);
 				icon.material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == "UINoGlow");
 				icon.SetImage("#DeleteIcon");
 
@@ -71,5 +73,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 			UpdateState();
 		}
+	}
+
+	//Having both ends up overlapping the fast scroll buttons and that is kind of annoying
+	[HarmonyPatch]
+	static class deletebuttont {
+		static MethodBase TargetMethod() => AccessTools.Method("BeatSaberPlus.Modules.GameTweaker.Patches.PStandardLevelDetailView:SetDeleteSongButtonEnabled");
+		static Exception Cleanup(Exception ex) => null;
+		static bool Prefix() => false;
 	}
 }
