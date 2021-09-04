@@ -11,12 +11,12 @@
         "SongCore": "^3.5.0"
     },
     "loadAfter": [
-        "BeatSaberPlaylistsLib",
-        "SongDetailsCache"
+        "BeatSaberPlaylistsLib"
     ],
     "loadBefore": [
         "SongBrowser",
-        "PlaylistManager"
+        "PlaylistManager",
+        "SongDetailsCache"
     ],
     "conflictsWith": {
         "SongBrowser": ">=0.0.0",
