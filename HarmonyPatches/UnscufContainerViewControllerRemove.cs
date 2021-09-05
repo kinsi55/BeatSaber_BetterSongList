@@ -10,7 +10,7 @@ using HMUI;
 
 namespace BetterSongList.HarmonyPatches {
 	/*
-	 * In LevelSearchViewController:ResetCurrentFilterParams, EventSystem.current some times evaluates to null,
+	 * In ContainerViewController:RemoveViewControllersCoroutine, EventSystem.current some times evaluates to null,
 	 * which will then break the UI until you reload. This adds a nullcheck to that call to fix that for now.
 	 * I'm not sure why this is such a big problem with BetterSongList but oh well (Personally I cant reproduce it)
 	 */
