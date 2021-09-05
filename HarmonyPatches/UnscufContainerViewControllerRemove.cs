@@ -31,7 +31,7 @@ namespace BetterSongList.HarmonyPatches {
 
 			l.InsertRange(44, new[] {
 				// Call EventSystem.current
-				l[44],
+				new CodeInstruction(OpCodes.Call, l[44].operand).MoveLabelsFrom(l[44]),
 				// Load Null
 				new CodeInstruction(OpCodes.Ldnull),
 				// Check if is null

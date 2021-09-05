@@ -17,7 +17,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static bool Prefix(ref bool state, Button ____playButton) {
 			var l = ((RectTransform)____playButton.gameObject.transform).localScale;
 
-			l.x = state ? 1 : 0;
+			l.y = state ? 1 : 0;
 			____playButton.GetComponent<NoTransitionsButton>().enabled = state;
 			((RectTransform)____playButton.gameObject.transform).localScale = l;
 			return false;
