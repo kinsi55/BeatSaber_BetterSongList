@@ -3,8 +3,8 @@
     "id": "BetterSongList",
     "name": "BetterSongList",
     "author": "Kinsi55",
-    "version": "0.0.1",
-    "description": "Adds Various improvements to the Basegame Map list like Filters, a persistent state and more",
+    "version": "0.1.0",
+    "description": "Adds Various improvements to the Basegame Map list like Filters, a persisted state and much more",
     "gameVersion": "1.16.3",
     "dependsOn": {
         "BSIPA": "^4.2.0",
