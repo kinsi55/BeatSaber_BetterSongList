@@ -19,11 +19,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 			if(____playButton.transform.parent?.parent?.parent?.parent?.name != "LevelCollectionNavigationController")
 				return true;
 
-			var l = ((RectTransform)____playButton.gameObject.transform).localScale;
+			var l = ((RectTransform)____playButton.gameObject.transform).sizeDelta;
 
-			l.y = l.x = state ? 1 : 0.001f;
-			____playButton.GetComponent<NoTransitionsButton>().enabled = state;
-			((RectTransform)____playButton.gameObject.transform).localScale = l;
+			l.y = state ? 10 : -5000;
+			((RectTransform)____playButton.gameObject.transform).sizeDelta = l;
 			return false;
 		}
 	}
