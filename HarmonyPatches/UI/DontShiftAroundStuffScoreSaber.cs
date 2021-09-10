@@ -23,6 +23,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 			l.y = state ? 10 : -5000;
 			((RectTransform)____playButton.gameObject.transform).sizeDelta = l;
+			// Fix button being broken for whatever reason
+			var l2 = ____playButton.GetComponent<NoTransitionsButton>();
+			l2.enabled = false;
+			l2.enabled = true;
 			return false;
 		}
 	}
