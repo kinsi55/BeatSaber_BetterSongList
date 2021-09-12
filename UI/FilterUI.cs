@@ -11,7 +11,9 @@ using HMUI;
 using IPA.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -234,6 +236,16 @@ namespace BetterSongList.UI {
 				l.onClick.RemoveAllListeners();
 				l.onClick.AddListener(new UnityEngine.Events.UnityAction(dropdown.OnButtonClick));
 			}));
+		}
+
+
+		[UIComponent("sponsorsText")] CurvedTextMeshPro sponsorsText = null;
+		void OpenSponsorsLink() => Process.Start("https://github.com/sponsors/kinsi55");
+		void OpenSponsorsModal() {
+			parserParams.EmitEvent("CloseSettings");
+			try {
+				sponsorsText.text = (new WebClient()).DownloadString("http://kinsi.me/sponsors/bsout.php");
+			} catch { }
 		}
 	}
 }

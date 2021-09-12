@@ -14,7 +14,7 @@
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 
-	<modal move-to-center='true' show-event='ShowSettings' hide-event='Close' size-delta-x='80' size-delta-y='75'>
+	<modal move-to-center='true' show-event='ShowSettings' hide-event='CloseSettings' size-delta-x='80' size-delta-y='75'>
 		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='70'>
 			<horizontal pad-bottom='4' pad-top='1'>
 				<horizontal bg='panel-top-gradient'>
@@ -59,10 +59,13 @@
 			</vertical>
 			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false'>
 				<vertical>
-					<primary-button text='Close' click-event='Close' on-click='SettingsClosed' min-width='20'/>
+					<primary-button text='Close' click-event='CloseSettings' on-click='SettingsClosed' min-width='20'/>
 				</vertical>
 				<vertical>
-					<text text="~version" font-size="3" font-color="#CC6E3B" align="Center"/>
+					<horizontal spacing='2'>
+						<text text="~version" font-size="3" font-color="#CC6E3B" align="Center"/>
+						<clickable-text text='♥ Donate' font-size="4" align="Center" click-event="OpenSponsorModal" on-click="OpenSponsorsModal"/>
+					</horizontal>
 				</vertical>
 			</horizontal>
 		</vertical>
@@ -79,6 +82,25 @@
 			<horizontal pad-top='4' pad-bottom='2'>
 				<button text='OK' click-event='Close' min-width='20' on-click='PossiblyShowNextWarning'/>
 			</horizontal>
+		</vertical>
+	</modal>
+
+	<modal move-to-center='true' hide-event='CloseSponsorModal' show-event='OpenSponsorModal' size-delta-x='80' size-delta-y='82'>
+		<vertical preferred-width='80' vertical-fit='PreferredSize' pad-left='2' pad-right='2' spacing='2' child-expand-width='true'>
+			<horizontal pad-bottom='2' pad-top='1'>
+				<horizontal bg='panel-top-gradient'>
+					<text text='BetterSongSearch - Sponsors' align='Center' font-size='4'/>
+				</horizontal>
+			</horizontal>
+			<text text='Are you enjoying my stuff and want to support me?' align='Center'/>
+			<horizontal>
+				<primary-button text='Open Website on Desktop' on-click='OpenSponsorsLink'/>
+				<button text='Close' click-event='CloseSponsorModal'/>
+			</horizontal>
+			<text text='Current sponsors' align='Center'/>
+			<vertical horizontal-fit='Unconstrained' vertical-fit='Unconstrained' preferred-height='45'>
+				<text-page id='sponsorsText' text='Loading...'/>
+			</vertical>
 		</vertical>
 	</modal>
 </horizontal>
