@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
+using BetterSongList.UI;
 using HarmonyLib;
 using HMUI;
 using System;
@@ -33,7 +34,11 @@ namespace BetterSongList.HarmonyPatches.UI {
 				if(lastLevel == null)
 					return;
 
-				SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath);
+				try {
+					SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath);
+				} catch {
+					FilterUI.persistentNuts.ShowErrorASAP("Deleting the map failed because it failed. Deal with it");
+				}
 			}
 		}
 
