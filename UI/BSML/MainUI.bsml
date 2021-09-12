@@ -2,15 +2,15 @@
 	<horizontal spacing='5' child-expand-width='false' preferred-width='106'>
 		<horizontal spacing='1' preferred-width='47' child-expand-width='false'>
 			<dropdown-list-setting id='sortDropdown' options='_sortOptions' text='Sort' on-change='_SetSort' preferred-width='44'/>
-			<clickable-text id='sortDirection' text='▼' on-click='ToggleSortDirection' font-size='5'/>
+			<clickable-text id='sortDirection' text='▼' on-click='ToggleSortDirection' font-size='5' hover-hint='Sort direction (Ascending / Descending)'/>
 		</horizontal>
 		<horizontal child-expand-width='false' preferred-width='44'>
 			<dropdown-list-setting id='filterDropdown' options='_filterOptions' text='Filter' on-change='_SetFilter'/>
 		</horizontal>
 	</horizontal>
 	<horizontal child-expand-width='false' spacing='5' preferred-width='106'>
-		<clickable-text text='🎲' on-click='SelectRandom' font-size='6.5'/>
-		<clickable-text text='⚙' click-event='ShowSettings' font-size='7'/>
+		<clickable-text text='🎲' on-click='SelectRandom' font-size='6.5' hover-hint='Select a random song from the list'/>
+		<clickable-text text='⚙' click-event='ShowSettings' font-size='7' hover-hint='Better Song List settings'/>
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 
