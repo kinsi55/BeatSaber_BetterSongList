@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace BetterSongList.HarmonyPatches.UI {
 	[HarmonyPatch]
-	class DontShiftAroundStuffScoreSaber {
+	static class DontShiftAroundStuffScoreSaber {
 		static MethodBase TargetMethod() => AccessTools.Method("ScoreSaber.UI.Other.ScoreSaberLeaderboardView:SetPlayButtonState");
 		static Exception Cleanup(Exception ex) => null;
 

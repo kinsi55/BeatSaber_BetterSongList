@@ -3,7 +3,7 @@ using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), nameof(AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection))]
-	public static class HookSelectedCollection {
+	static class HookSelectedCollection {
 		public static IAnnotatedBeatmapLevelCollection lastSelectedCollection { get; private set; }
 
 		[HarmonyPriority(int.MinValue), HarmonyPrefix]
