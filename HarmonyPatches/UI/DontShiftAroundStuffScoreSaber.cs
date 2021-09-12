@@ -11,22 +11,23 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static MethodBase TargetMethod() => AccessTools.Method("ScoreSaber.UI.Other.ScoreSaberLeaderboardView:SetPlayButtonState");
 		static Exception Cleanup(Exception ex) => null;
 
+		static Button lastButton;
+
 		[HarmonyPriority(int.MinValue)]
 		// taking state by ref because "the first prefix that returns false will skip all remaining prefixes [..with..] ref arguments"
 		// https://harmony.pardeike.net/articles/patching-prefix.html
 		static bool Prefix(ref bool state, Button ____playButton) {
 			// Scoresaber will use the wrong play button in certain cases.... so I guess I gotta handle that?
-			if(____playButton.transform.parent?.parent?.parent?.parent?.name != "LevelCollectionNavigationController")
+			if(____playButton.transform.parent?.parent?.parent?.parent?.name == "LevelCollectionNavigationController")
+				lastButton = ____playButton;
+
+			if(lastButton == null)
 				return true;
 
-			var l = ((RectTransform)____playButton.gameObject.transform).sizeDelta;
+			var l = ((RectTransform)lastButton.gameObject.transform).localScale;
 
-			l.y = state ? 10 : -5000;
-			((RectTransform)____playButton.gameObject.transform).sizeDelta = l;
-			// Fix button being broken for whatever reason
-			var l2 = ____playButton.GetComponent<NoTransitionsButton>();
-			l2.enabled = false;
-			l2.enabled = true;
+			l.x = l.y = state ? 1 : 0.001f;
+			((RectTransform)lastButton.gameObject.transform).localScale = l;
 			return false;
 		}
 	}
