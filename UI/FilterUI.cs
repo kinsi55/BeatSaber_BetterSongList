@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -243,9 +244,17 @@ namespace BetterSongList.UI {
 		void OpenSponsorsLink() => Process.Start("https://github.com/sponsors/kinsi55");
 		void OpenSponsorsModal() {
 			parserParams.EmitEvent("CloseSettings");
-			try {
-				sponsorsText.text = (new WebClient()).DownloadString("http://kinsi.me/sponsors/bsout.php");
-			} catch { }
+			sponsorsText.text = "Loading...";
+			Task.Run(() => {
+				string desc = "Failed to load";
+				try {
+					desc = (new WebClient()).DownloadString("http://kinsi.me/sponsors/bsout.php");
+				} catch { }
+
+				_ = IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory.StartNew(() => {
+					sponsorsText.text = desc;
+				});
+			}).ConfigureAwait(false);
 		}
 	}
 }
