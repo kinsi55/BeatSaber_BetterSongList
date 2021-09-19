@@ -84,8 +84,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 
-			var btnUpFast = BuildButton(buton, "-", 0, 0, () => Scroll(0.1f, -1));
-			var btnDownFast = BuildButton(buton, "-", 0.86f, 180, () => Scroll(0.1f, 1));
+			var btnUpFast = BuildButton(buton, "-", 0, -90, () => Scroll(0.1f, -1));
+			var btnDownFast = BuildButton(buton, "-", 0.86f, 90, () => Scroll(0.1f, 1));
 
 			buttons = new[] {
 				btnUpFast,

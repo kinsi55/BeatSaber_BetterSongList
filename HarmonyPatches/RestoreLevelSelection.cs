@@ -50,7 +50,7 @@ namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(SelectLevelCategoryViewController), nameof(SelectLevelCategoryViewController.Setup))]
 	static class RestoreLevelSelection {
 		static void Prefix(ref SelectLevelCategoryViewController.LevelCategory selectedCategory) {
-			Enum.TryParse<SelectLevelCategoryViewController.LevelCategory>(Config.Instance.LastCategory, out selectedCategory);
+			Enum.TryParse(Config.Instance.LastCategory, out selectedCategory);
 #if TRACE
 			Plugin.Log.Warn(string.Format("SelectLevelCategoryViewController.Setup(): selectedCategory: {0}", selectedCategory));
 #endif
