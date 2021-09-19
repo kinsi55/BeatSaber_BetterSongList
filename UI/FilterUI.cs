@@ -221,22 +221,12 @@ namespace BetterSongList.UI {
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
-			ReflectionUtil.SetField(dropdown, "_numberOfVisibleCells", 9);
+			var c = Mathf.Min(9, dropdown.tableViewDataSource.NumberOfCells());
+			ReflectionUtil.SetField(dropdown, "_numberOfVisibleCells", c);
 			dropdown.ReloadData();
-			// Offset it far down so that its not sticking up 10 kilometers
-			var l = ReflectionUtil.GetField<Button, DropdownWithTableView>(dropdown, "_button");
-			l.onClick.RemoveAllListeners();
-			l.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
-				var offsHack = (dropdown.transform as RectTransform);
 
-				offsHack.offsetMin = new Vector2(offsHack.offsetMin.x, 5 + (dropdown.tableViewDataSource.NumberOfCells() * 11));
-				dropdown.OnButtonClick();
-				offsHack.offsetMin = new Vector2(offsHack.offsetMin.x, 0);
-
-				// We should only do this on the first load because the modified position will stick
-				l.onClick.RemoveAllListeners();
-				l.onClick.AddListener(new UnityEngine.Events.UnityAction(dropdown.OnButtonClick));
-			}));
+			var m = ReflectionUtil.GetField<ModalView, DropdownWithTableView>(dropdown, "_modalView");
+			((RectTransform)m.transform).pivot = new Vector2(0.5f, 0.14f - (c * 0.011f));
 		}
 
 
