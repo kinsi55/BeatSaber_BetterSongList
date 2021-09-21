@@ -44,7 +44,6 @@ namespace BetterSongList {
 		[OnExit]
 		public void OnApplicationQuit() {
 			harmony.UnpatchAll(harmony.Id);
-			Config.Instance.Changed();
 		}
 	}
 }

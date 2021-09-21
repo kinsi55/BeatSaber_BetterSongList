@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 namespace BetterSongList {
 	internal class Config {
 		public static Config Instance { get; set; }
+		public string SettingsSeenInVersion { get; set; } = "";
+		
 		public bool SortAsc { get; set; } = false;
 		public string LastSort { get; set; } = "Default";
 		//public virtual bool InvertFilter { get; set; } = false;

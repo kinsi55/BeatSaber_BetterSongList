@@ -89,6 +89,7 @@ namespace BetterSongList.UI {
 			SongDeleteButton.UpdateState();
 			ScrollEnhancements.UpdateState();
 			ExtraLevelParams.UpdateState();
+			Config.Instance.Changed();
 		}
 
 		public static void ClearFilter(bool reloadTable = false) => SetFilter(null, false, reloadTable);
@@ -209,6 +210,13 @@ namespace BetterSongList.UI {
 			target.GetChild(0).position -= new Vector3(0, 0.02f);
 		}
 
+		bool settingsWereOpened = false;
+		void SettingsOpened() {
+			Config.Instance.SettingsSeenInVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			settingsWereOpened = true;
+		}
+		[UIComponent("settingsButton")] readonly ClickableImage _settingsButton = null;
+
 		[UIAction("#post-parse")]
 		void Parsed() {
 			HackDropdown(_sortDropdown);
@@ -218,6 +226,25 @@ namespace BetterSongList.UI {
 			SetFilter(Config.Instance.LastFilter, false, false);
 
 			SetSortDirection(Config.Instance.SortAsc, false);
+
+			SharedCoroutineStarter.instance.StartCoroutine(PossiblyDrawUserAttentionToSettingsButton());
+		}
+
+		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
+			try {
+				if(System.Version.TryParse(Config.Instance.SettingsSeenInVersion, out var oldV)) {
+					if(oldV >= new System.Version("0.1.2.0"))
+						yield break;
+				}
+			} catch { }
+
+			while(!settingsWereOpened && _settingsButton != null) {
+				yield return new WaitForSeconds(.5f);
+				_settingsButton.color = Color.green;
+
+				yield return new WaitForSeconds(.5f);
+				_settingsButton.color = Color.white;
+			}
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {

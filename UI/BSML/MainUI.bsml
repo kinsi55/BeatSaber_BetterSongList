@@ -10,7 +10,7 @@
 	</horizontal>
 	<horizontal child-expand-width='false' spacing='5' preferred-width='106'>
 		<clickable-image src='#RandomIcon' on-click='SelectRandom' hover-hint='Select a random song from the list' preserve-aspect='true' min-width='7'/>
-		<clickable-image src='#SettingsIcon' click-event='ShowSettings' hover-hint='Better Song List settings' preserve-aspect='true' min-width='7'/>
+		<clickable-image id='settingsButton' on-click='SettingsOpened' src='#SettingsIcon' click-event='ShowSettings' hover-hint='Better Song List settings' preserve-aspect='true' min-width='7'/>
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 
