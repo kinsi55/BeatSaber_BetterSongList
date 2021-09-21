@@ -4,7 +4,7 @@ The smaller brother of [Better Song Search](https://github.com/kinsi55/BeatSaber
 
 ---
 
-Currently compatible game versions: **1.16.3 and up**
+Currently compatible game versions: **1.18.0 and up**
 
 ## Install
 
