@@ -4,8 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.Filters.Models {
-	class UnplayedFilter : IFilter {
+	class PlayedFilter : IFilter {
 		public bool isReady => LocalScoresUtil.hasScores;
+
+		bool intendedPlayedState = false;
+
+		public PlayedFilter(bool unplayed = false) {
+			intendedPlayedState = !unplayed;
+		}
 
 		public Task Prepare(CancellationToken cancelToken) {
 			var t = new TaskCompletionSource<bool>();
@@ -25,7 +31,7 @@ namespace BetterSongList.Filters.Models {
 			if(SongDetailsUtil.instance == null)
 				return true;
 
-			return !LocalScoresUtil.HasLocalScore(level);
+			return LocalScoresUtil.HasLocalScore(level) == intendedPlayedState;
 		}
 	}
 }

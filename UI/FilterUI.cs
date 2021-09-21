@@ -49,7 +49,9 @@ namespace BetterSongList.UI {
 			{ "Ranked", FilterMethods.ranked },
 			{ "Qualified", FilterMethods.qualified },
 			{ "Unplayed", FilterMethods.unplayed },
-			{ "Unranked", FilterMethods.unranked }
+			{ "Played", FilterMethods.played },
+			{ "Requirements", FilterMethods.requirements },
+			{ "Unranked", FilterMethods.unranked },
 		};
 
 		[UIValue("_sortOptions")] static List<object> _sortOptions = sortOptions.Keys.ToList<object>();
