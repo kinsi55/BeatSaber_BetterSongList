@@ -230,8 +230,6 @@ namespace BetterSongList.UI {
 			SetSortDirection(Config.Instance.SortAsc, false);
 
 			SharedCoroutineStarter.instance.StartCoroutine(PossiblyDrawUserAttentionToSettingsButton());
-
-			Resources.FindObjectsOfTypeAll<LevelCollectionNavigationController>().LastOrDefault().transform.position += new Vector3(0, 0.07f);
 		}
 
 		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
