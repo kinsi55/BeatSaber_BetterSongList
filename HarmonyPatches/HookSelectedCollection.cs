@@ -7,17 +7,17 @@ namespace BetterSongList.HarmonyPatches {
 		public static IAnnotatedBeatmapLevelCollection lastSelectedCollection { get; private set; }
 
 		[HarmonyPriority(int.MinValue), HarmonyPrefix]
-		static void CollectionSet(IAnnotatedBeatmapLevelCollection annotatedBeatmapLevelCollection) {
-			if(annotatedBeatmapLevelCollection != null) {
+		static void CollectionSet(IAnnotatedBeatmapLevelCollection beatmapLevelCollection) {
+			if(beatmapLevelCollection != null) {
 				// Save the collection we're on for reselection purposes
-				Config.Instance.LastPack = annotatedBeatmapLevelCollection.collectionName ?? "";
+				Config.Instance.LastPack = beatmapLevelCollection.collectionName ?? "";
 			}
 #if TRACE
 			Plugin.Log.Warn("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection()");
 #endif
 
 			// If its a playlist we want to start off with no sorting and filtering - Requested by Pixel
-			if(annotatedBeatmapLevelCollection != null && Config.Instance.ClearFiltersOnPlaylistSelect && annotatedBeatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
+			if(beatmapLevelCollection != null && Config.Instance.ClearFiltersOnPlaylistSelect && beatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
 				FilterUI.SetSort(null, false, false);
 				FilterUI.SetFilter(null, false, false);
 				// Restore previously used Sort and filter for non-playlists
@@ -26,7 +26,7 @@ namespace BetterSongList.HarmonyPatches {
 				FilterUI.SetFilter(Config.Instance.LastFilter, false, false);
 			}
 
-			lastSelectedCollection = annotatedBeatmapLevelCollection;
+			lastSelectedCollection = beatmapLevelCollection;
 		}
 
 		[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), "DidDeactivate")]
