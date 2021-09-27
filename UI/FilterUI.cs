@@ -240,12 +240,14 @@ namespace BetterSongList.UI {
 				}
 			} catch { }
 
-			while(!settingsWereOpened && _settingsButton != null) {
+			while(!settingsWereOpened) {
 				yield return new WaitForSeconds(.5f);
-				_settingsButton.color = Color.green;
+				if(_settingsButton != null)
+					_settingsButton.color = Color.green;
 
 				yield return new WaitForSeconds(.5f);
-				_settingsButton.color = Color.white;
+				if(_settingsButton != null)
+					_settingsButton.color = Color.white;
 			}
 		}
 
