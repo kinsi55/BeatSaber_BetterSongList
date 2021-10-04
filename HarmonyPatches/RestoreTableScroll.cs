@@ -54,18 +54,17 @@ namespace BetterSongList.HarmonyPatches {
 						if(____previewBeatmapLevels[i].levelID == Config.Instance.LastSong) {
 							scrollToIndex = i;
 							specificMap = true;
+
+							if(____showLevelPackHeader)
+								scrollToIndex++;
+
 							break;
 						}
 					}
-
-					scrollToIndex ??= 0;
 				}
 
-				if(scrollToIndex < 0)
+				if(scrollToIndex == null || scrollToIndex < 0)
 					return;
-
-				if(____showLevelPackHeader)
-					scrollToIndex++;
 
 #if TRACE
 				Plugin.Log.Warn(string.Format("-> Scrolling to {0} (Specific map: {1})", scrollToIndex, specificMap));
