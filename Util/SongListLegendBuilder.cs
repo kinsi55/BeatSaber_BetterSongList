@@ -8,7 +8,7 @@ namespace BetterSongList.Util {
 			var x = beatmaps
 				.Select((x, i) => new KeyValuePair<string, int>(displayValueTransformer(x), i))
 				.Where(x => x.Key != null)
-				.GroupBy(x => x.Key)
+				.GroupBy(x => x.Key.ToUpperInvariant())
 				.ToList();
 
 			var amt = Math.Min(valueLimit, x.Count);
