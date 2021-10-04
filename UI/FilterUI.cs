@@ -224,8 +224,8 @@ namespace BetterSongList.UI {
 			HackDropdown(_sortDropdown);
 			HackDropdown(_filterDropdown);
 
-			SetSort(Config.Instance.LastSort, false, false);
-			SetFilter(Config.Instance.LastFilter, false, false);
+			SetSort((string)sortOptions.Select(x => new object[] { x.Key, x.Value }).FirstOrDefault(x => x[1] == HookLevelCollectionTableSet.sorter)?[0], false, false);
+			SetFilter((string)filterOptions.Select(x => new object[] { x.Key, x.Value }).FirstOrDefault(x => x[1] == HookLevelCollectionTableSet.filter)?[0], false, false);
 
 			SetSortDirection(Config.Instance.SortAsc, false);
 
