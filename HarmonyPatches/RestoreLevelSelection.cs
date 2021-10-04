@@ -8,8 +8,8 @@ namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
 		[HarmonyPriority(int.MinValue)]
-		static void Prefix(IReadOnlyList<IBeatmapLevelPack> beatmapLevelPacks, ref string ____levelPackIdToBeSelectedAfterPresent) {
-			____levelPackIdToBeSelectedAfterPresent = PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
+		static void Prefix(ref string ____levelPackIdToBeSelectedAfterPresent) {
+			____levelPackIdToBeSelectedAfterPresent ??= NavigationRestorePrepare.collection ?? "";
 		}
 	}
 
@@ -17,10 +17,12 @@ namespace BetterSongList.HarmonyPatches {
 	static class LevelPreselect {
 		[HarmonyPriority(int.MinValue)]
 		static void Prefix(LevelCollectionNavigationController __instance, bool addedToHierarchy, ref IPreviewBeatmapLevel ____beatmapLevelToBeSelectedAfterPresent) {
-			if(!addedToHierarchy || ____beatmapLevelToBeSelectedAfterPresent != null || !Config.Instance.ReselectLastSong)
+			var restoreTo = NavigationRestorePrepare.level;
+
+			if(!addedToHierarchy || ____beatmapLevelToBeSelectedAfterPresent != null || !Config.Instance.ReselectLastSong || restoreTo == null)
 				return;
 
-			____beatmapLevelToBeSelectedAfterPresent = HookLevelCollectionTableSet.lastOutMapList?.FirstOrDefault(x => x.levelID == Config.Instance.LastSong);
+			____beatmapLevelToBeSelectedAfterPresent = HookLevelCollectionTableSet.lastOutMapList?.FirstOrDefault(x => x.levelID == restoreTo);
 #if TRACE
 			Plugin.Log.Warn(string.Format("LevelCollectionNavigationController.DidActivate():Prefix ____beatmapLevelToBeSelectedAfterPresent {0}", ____beatmapLevelToBeSelectedAfterPresent));
 #endif
@@ -31,6 +33,9 @@ namespace BetterSongList.HarmonyPatches {
 		 * by the next table refresh, it will then scroll to an idx instead of the specific map
 		 */
 		static void Postfix(bool addedToHierarchy, ref bool ____hideDetailViewController) {
+#if TRACE
+			Plugin.Log.Error("LevelCollectionNavigationController.DidActivate():Postfix");
+#endif
 			RestoreTableScroll.GotoLastSelectedOnNextSetData();
 
 			/*
@@ -50,7 +55,10 @@ namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(SelectLevelCategoryViewController), nameof(SelectLevelCategoryViewController.Setup))]
 	static class RestoreLevelSelection {
 		static void Prefix(ref SelectLevelCategoryViewController.LevelCategory selectedCategory) {
-			Enum.TryParse(Config.Instance.LastCategory, out selectedCategory);
+			var restoreTo = NavigationRestorePrepare.category;
+
+			if(restoreTo != SelectLevelCategoryViewController.LevelCategory.None)
+				selectedCategory = restoreTo;
 #if TRACE
 			Plugin.Log.Warn(string.Format("SelectLevelCategoryViewController.Setup(): selectedCategory: {0}", selectedCategory));
 #endif

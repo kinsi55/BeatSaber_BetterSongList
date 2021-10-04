@@ -13,7 +13,7 @@ namespace BetterSongList.HarmonyPatches {
 				Config.Instance.LastPack = beatmapLevelCollection.collectionName ?? "";
 			}
 #if TRACE
-			Plugin.Log.Warn("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection()");
+			Plugin.Log.Warn(string.Format("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection(): {0}", beatmapLevelCollection?.collectionName));
 #endif
 
 			// If its a playlist we want to start off with no sorting and filtering - Requested by Pixel
