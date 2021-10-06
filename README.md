@@ -24,7 +24,7 @@ For obvious reasons, this is incompatible with Song Browser, which will be disab
 - Rembers 😁 your last selected Category / Playlist / Song and returns there
 - Context-Aware legend-scrollbar whose steps are determined by your sorting method
 - Fixes the shifting around of Practice / Play buttons when using Scoresaber
-- Displays the map Default Jump Distance and can show you if you cant decrease it below a certain preferred one
+- Displays the map Default Jump Distance (Can be changed to show the maps Offset if you prefer that)
 - Extended Scroll buttons
 - Probably other minor things I Forgor 💀
 
