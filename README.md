@@ -6,6 +6,8 @@ The smaller brother of [Better Song Search](https://github.com/kinsi55/BeatSaber
 
 Currently compatible game versions: **1.18.0 and up**
 
+For obvious reasons, this is incompatible with Song Browser, which will be disabled if you have BetterSongList installed.
+
 ## Install
 
 #### You can always find the latest download in [The Releases](https://github.com/kinsi55/BeatSaber_BetterSongList/releases), simply drag the Plugin DLL into the Plugins folder
