@@ -11,15 +11,14 @@ namespace BetterSongList.Util {
 
 			hjd += offset;
 
-			return Math.Max(hjd, 1);
+			// TODO: Remove once <1.18.1 support is dropped
+			var l = IPA.Utilities.UnityGame.GameVersion.SemverValue;
+
+			return Math.Max(hjd, l.Minor > 18 || (l.Minor == 18 && l.Patch >= 1) ? 0.25f : 1);
 		}
 
 		public static float GetJd(float bpm, float njs, float offset) {
 			return njs * (60f / bpm) * hjd(bpm, njs, offset) * 2;
-		}
-
-		public static float GetMinJd(float bpm, float njs) {
-			return njs * (60f / bpm) * 2;
 		}
 	}
 }

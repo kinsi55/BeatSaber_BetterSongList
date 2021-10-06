@@ -116,12 +116,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 					____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
 
 				fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
-
-				var minJd = JumpDistanceCalculator.GetMinJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs);
-
-				// Consider bpm locked if minimum is within 7%
-				if(minJd > Config.Instance.UnlockedJd)
-					fields[3].text += "<size=3>🔒";
 			}
 		}
 	}

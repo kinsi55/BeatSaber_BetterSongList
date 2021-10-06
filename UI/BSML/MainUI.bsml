@@ -51,10 +51,6 @@
 						text='Show map JD instead of Offset' bind-value='true' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
 						hover-hint='Will display the maps JD instead of its configured offset'
 					/>
-					<slider-setting 
-						text='JD considered "Unlocked"' min='10' max='30' increment='0.5' bind-value='true' apply-on-change='true' value='UnlockedJd'
-						hover-hint='If a maps minimum Jump Distance is lower than this value a lock will be displayed on the right side of the JD'
-					/>
 				</macro.as-host>
 			</vertical>
 			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false'>
