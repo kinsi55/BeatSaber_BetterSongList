@@ -15,6 +15,11 @@ namespace BetterSongList {
 			(song) => Math.Round(song.beatsPerMinute).ToString()
 		);
 
+		public static readonly ISorter alphabeticalAuthor = new FunctionSorterWithLegend(
+			(songa, songb) => string.Compare(songa.songAuthorName, songb.songAuthorName),
+			(song) => song.songAuthorName.Length > 0 ? song.songAuthorName.Substring(0, 1) : null
+		);
+
 		public static readonly ISorter alphabeticalMapper = new FunctionSorterWithLegend(
 			(songa, songb) => string.Compare(songa.levelAuthorName, songb.levelAuthorName),
 			(song) => song.levelAuthorName.Length > 0 ? song.levelAuthorName.Substring(0, 1) : null
