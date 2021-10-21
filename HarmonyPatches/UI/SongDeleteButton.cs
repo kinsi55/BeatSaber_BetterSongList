@@ -2,11 +2,13 @@
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using BetterSongList.UI;
+using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,11 +18,14 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static Button deleteButton = null;
 
 		static CustomPreviewBeatmapLevel lastLevel = null;
+
+		static bool isWip => lastLevel != null && lastLevel.levelID.Contains(" WIP");
+
 		public static void UpdateState() {
 			if(deleteButton == null)
 				return;
 
-			deleteButton.interactable = lastLevel != null && (Config.Instance.AllowWipDelete || !lastLevel.levelID.Contains(" WIP"));
+			deleteButton.interactable = lastLevel != null && (Config.Instance.AllowWipDelete || !isWip);
 		}
 
 		class DeleteConfirmHandler {
@@ -35,10 +40,19 @@ namespace BetterSongList.HarmonyPatches.UI {
 					return;
 
 				try {
-					SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath);
+					SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath, !isWip);
 				} catch {
 					FilterUI.persistentNuts.ShowErrorASAP("Deleting the map failed because it failed. Deal with it");
 				}
+
+				if(!isWip)
+					return;
+
+				Task.Run(() => {
+					try {
+						WinApi.DeleteFileOrFolder(lastLevel.customLevelPath);
+					} catch { }
+				});
 			}
 		}
 
