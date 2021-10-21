@@ -14,6 +14,8 @@ namespace BetterSongList.HarmonyPatches {
 			}
 #if TRACE
 			Plugin.Log.Warn(string.Format("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection(): {0}", beatmapLevelCollection?.collectionName));
+
+			//System.Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 #endif
 
 			// If its a playlist we want to start off with no sorting and filtering - Requested by Pixel
@@ -29,10 +31,13 @@ namespace BetterSongList.HarmonyPatches {
 			lastSelectedCollection = beatmapLevelCollection;
 		}
 
-		[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), "DidDeactivate")]
+		[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.UpdateSecondChildControllerContent))]
 		static class HookLevelCollectionUnset {
 			// When leaving playlists, null the "last selected" playlist
-			static void Postfix() => CollectionSet(null);
+			static void Prefix(SelectLevelCategoryViewController.LevelCategory levelCategory) {
+				if(levelCategory != SelectLevelCategoryViewController.LevelCategory.CustomSongs)
+					CollectionSet(null);
+			}
 		}
 
 		[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), nameof(AnnotatedBeatmapLevelCollectionsViewController.SetData))]
