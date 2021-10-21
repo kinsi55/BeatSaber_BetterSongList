@@ -38,7 +38,6 @@ namespace BetterSongList.UI {
 			{ "Download Date", SortMethods.downloadTime },
 			{ "Ranked Stars", SortMethods.stars },
 			{ "Song Length", SortMethods.songLength },
-			{ "Mapper Name", SortMethods.alphabeticalMapper },
 			{ "BPM", SortMethods.bpm },
 			{ "BeatSaver Date", SortMethods.beatSaverDate },
 			{ "Default", null }
