@@ -37,7 +37,7 @@ namespace BetterSongList.SortModels {
 					var xy = new System.Diagnostics.Stopwatch();
 					xy.Start();
 
-					foreach(var song in SongCore.Loader.CustomLevels.Concat(SongCore.Loader.CustomWIPLevels)) {
+					foreach(var song in SongCore.Loader.CustomLevels.Concat(SongCore.Loader.CustomWIPLevels).Concat(SongCore.Loader.SeperateSongFolders.SelectMany(x => x.Levels))) {
 						if(songTimes.ContainsKey(song.Value.levelID) || fullReload)
 							continue;
 
