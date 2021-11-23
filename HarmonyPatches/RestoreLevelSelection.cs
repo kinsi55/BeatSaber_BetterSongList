@@ -13,6 +13,21 @@ namespace BetterSongList.HarmonyPatches {
 		}
 	}
 
+	/*
+	 * For some reason that I do not know yet, SOME TIMES, for SOME PEOPLE (Obviously, not me)
+	 * SelectLevel() will be called while _previewBeatmapLevels is null (Eventho SetData() was
+	 * already called beforehand. It will then later be re-called from a different control flow.
+	 * Honestly, for now I CBA to investigate why this happens - The only thing that this patch
+	 * does is prevent a possible Exception that would otherwise happen if this function was
+	 * called with the given / checked state
+	 * 
+	 * TODO: Endure the pain that is finding out why this happens
+	 */
+	[HarmonyPatch(typeof(LevelCollectionTableView), "SelectLevel")]
+	static class PreventExceptionWhenSelectLevelIsCalledEventhoPreviewBeatmapLevelsIsEmptyForSomeReason {
+		static bool Prefix(IPreviewBeatmapLevel[] ____previewBeatmapLevels) => ____previewBeatmapLevels != null;
+	}
+
 	[HarmonyPatch(typeof(LevelCollectionNavigationController), "DidActivate")]
 	static class LevelPreselect {
 		[HarmonyPriority(int.MinValue)]
@@ -32,7 +47,7 @@ namespace BetterSongList.HarmonyPatches {
 		 * The above will call LevelCollectionViewController.SelectLevel() which would then f up the scroll restore logic as,
 		 * by the next table refresh, it will then scroll to an idx instead of the specific map
 		 */
-		static void Postfix(bool addedToHierarchy, ref bool ____hideDetailViewController) {
+	static void Postfix(bool addedToHierarchy, ref bool ____hideDetailViewController) {
 #if TRACE
 			Plugin.Log.Error("LevelCollectionNavigationController.DidActivate():Postfix");
 #endif
