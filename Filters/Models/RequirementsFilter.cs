@@ -21,13 +21,16 @@ namespace BetterSongList.FilterModels {
 		}
 
 		public bool GetValueFor(IPreviewBeatmapLevel level) {
+			if(!(level is CustomPreviewBeatmapLevel customLevel))
+				return false;
+
 			var mid = BeatmapsUtil.GetHashOfPreview(level);
 
 			if(mid == null)
 				return false;
 
-			return SongCore.Collections.RetrieveExtraSongData(mid)?
-				._difficulties.Any(x => x.additionalDifficultyData._requirements.Any(x => x.Length != 0)) == true;
+			return SongCore.Collections.RetrieveExtraSongData(mid, customLevel.customLevelPath)?
+				._difficulties?.Any(x => x.additionalDifficultyData._requirements.Any(x => x.Length != 0)) == true;
 		}
 	}
 }
