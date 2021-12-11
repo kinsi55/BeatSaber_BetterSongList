@@ -24,32 +24,36 @@
 			<vertical horizontal-fit='Unconstrained' preferred-height='80' child-expand-height='false'>
 				<macro.as-host host='cfgi'>
 					<toggle-setting 
-						text='Allow deleting WIPs' bind-value='true' apply-on-change='true' value='AllowWipDelete'
+						text='Allow deleting WIPs' apply-on-change='true' value='AllowWipDelete'
 						hover-hint='Should Work in Progress maps be deleteable?'
 					/>
 					<toggle-setting
-						text='Auto-Filter Unowned DLC Songs' bind-value='true' apply-on-change='true' value='AutoFilterUnowned'
+						text='Auto-Filter Unowned DLC Songs' apply-on-change='true' value='AutoFilterUnowned'
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
 					/>
 					<toggle-setting
-						text='Enable custom Legend Scrollbar' bind-value='true' apply-on-change='true' value='EnableAlphabetScrollbar'
+						text='Enable custom Legend Scrollbar' apply-on-change='true' value='EnableAlphabetScrollbar'
 						hover-hint='Enables the "Quick scroll" / Alphabet bar on the left of the song list'
 					/>
 					<toggle-setting
-						text='Clear Sort and Filter in Playlists' bind-value='true' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'
+						text='Clear Sort and Filter in Playlists' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'
 						hover-hint='Automatically removes the Sort and Filter when selecting a playlist - Is restored when you leave Playlists again'
 					/>
 					<toggle-setting
-						text='Improve Basegame search' bind-value='true' apply-on-change='true' value='ModBasegameSearch'
+						text='Improve Basegame search' apply-on-change='true' value='ModBasegameSearch'
 						hover-hint='Adds searching by Mapper name and handling of Songs with spaces to the Basegame search'
 					/>
 					<toggle-setting
-						text='Extend Basegame scrollbar' bind-value='true' apply-on-change='true' value='ExtendSongsScrollbar'
+						text='Extend Basegame scrollbar' apply-on-change='true' value='ExtendSongsScrollbar'
 						hover-hint='Adds Far-Scroll and Jump to Top / Bottom buttons to Scrollbar'
 					/>
 					<toggle-setting
-						text='Show map JD instead of Offset' bind-value='true' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
+						text='Show map JD instead of Offset' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
 						hover-hint='Will display the maps JD instead of its configured offset'
+					/>
+					<slider-setting
+						text='PP Accuracy Scale' apply-on-change='true' value='AccuracyMultiplier' min='0.2' max='2' increment='0.02'
+						hover-hint='Scales the Accuracy used to calculate a PP value with by this amount to be closer to your skill / preference'
 					/>
 				</macro.as-host>
 			</vertical>

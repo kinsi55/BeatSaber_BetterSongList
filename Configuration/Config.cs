@@ -24,6 +24,7 @@ namespace BetterSongList {
 		public bool ModBasegameSearch { get; set; } = true;
 		public bool ShowMapJDInsteadOfOffset { get; set; } = true;
 		public bool ExtendSongsScrollbar { get; set; } = true;
+		public float AccuracyMultiplier { get; set; } = 1f;
 
 		/// <summary>
 		/// This is called whenever BSIPA reads the config from disk (including when file changes are detected).

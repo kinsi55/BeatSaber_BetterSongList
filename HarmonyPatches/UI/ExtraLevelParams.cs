@@ -3,6 +3,7 @@ using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
 using IPA.Utilities;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Threading;
@@ -34,11 +35,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 				hhint.text = hoverHint;
 			}
 
-			ModifyValue(fields[0], "Approximate ScoreSaber PP Value", "DifficultyIcon");
+			ModifyValue(fields[0], "ScoreSaber PP Value", "DifficultyIcon");
 			ModifyValue(fields[1], "ScoreSaber Star Rating", "FavoritesIcon");
 			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotesIcon");
 			ModifyValue(fields[3], "JD (Jump Distance, how close notes spawn)", "MeasureIcon");
 
+			fields[0].richText = true;
+			fields[0].characterSpacing = -3f;
 			fields[3].richText = true;
 		}
 
@@ -93,9 +96,11 @@ namespace BetterSongList.HarmonyPatches.UI {
 							} else if(!diff.ranked) {
 								fields[0].text = fields[1].text = "-";
 							} else {
-								//TODO: Put this back once new pp estimation algo is mainstream (New SongDetails version)
-								//fields[0].text = diff.approximatePpValue.ToString("0.0");
-								fields[0].text = (diff.stars * 42.108f * (1.11f - ((.055f / 14f) * diff.stars))).ToString("0.0");
+								var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (14f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
+								//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
+								var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
+
+								fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
 								fields[1].text = diff.stars.ToString("0.0#");
 							}
 						}
