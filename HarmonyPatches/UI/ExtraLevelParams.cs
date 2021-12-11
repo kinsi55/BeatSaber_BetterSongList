@@ -55,8 +55,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 				// I wanted to make a custom UI for this with bsml first... But this is MUCH easier and probably looks better
 				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
 				GameObject.Destroy(extraUI.GetComponent<LevelParamsPanel>());
-				____levelParamsPanel.transform.localPosition += new Vector3(0, 1);
-				extraUI.transform.localPosition -= new Vector3(0, 4);
+
+				// TODO: Remove this funny business when required game version >= 1.19.0
+				var isPostGagaUI = UnityGame.GameVersion >= new AlmostVersion("1.19.0");
+
+				____levelParamsPanel.transform.localPosition += new Vector3(0, isPostGagaUI ? 3f : 1);
+				extraUI.transform.localPosition -= new Vector3(0, isPostGagaUI ? 1.5f : 4);
 
 				fields = extraUI.GetComponentsInChildren<CurvedTextMeshPro>();
 				SharedCoroutineStarter.instance.StartCoroutine(ProcessFields());
