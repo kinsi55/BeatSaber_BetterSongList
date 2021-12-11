@@ -255,6 +255,12 @@ namespace BetterSongList.UI {
 			ReflectionUtil.SetField(dropdown, "_numberOfVisibleCells", c);
 			dropdown.ReloadData();
 
+			// TODO: Remove this funny business when required game version >= 1.19.0 - Apparently is now a basegame thing?
+			var isPostGagaUI = UnityGame.GameVersion >= new AlmostVersion("1.19.0");
+
+			if(isPostGagaUI)
+				return;
+
 			var m = ReflectionUtil.GetField<ModalView, DropdownWithTableView>(dropdown, "_modalView");
 			((RectTransform)m.transform).pivot = new Vector2(0.5f, 0.14f - (c * 0.011f));
 		}
