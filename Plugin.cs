@@ -29,12 +29,6 @@ namespace BetterSongList {
 			harmony.PatchAll(Assembly.GetExecutingAssembly());
 			FilterUI.Init();
 
-			var l = IPA.Loader.PluginManager.IgnoredPlugins.Select(x => x.Key).FirstOrDefault(x => x.Id == "SongDetailsCache");
-
-			l = IPA.Loader.PluginManager.IgnoredPlugins.Select(x => x.Key).FirstOrDefault(x => x.Id == "SongDetailsCache");
-			if(l != null && l.HVersion < new Hive.Versioning.Version("1.1.4"))
-				FilterUI.persistentNuts.ShowErrorASAP("Your version of 'SongDetailsCache' is outdated / broken - It has been disabled, please update it");
-
 			PlaylistsUtil.Init();
 		}
 
