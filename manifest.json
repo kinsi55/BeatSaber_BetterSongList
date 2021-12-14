@@ -3,7 +3,7 @@
     "id": "BetterSongList",
     "name": "BetterSongList",
     "author": "Kinsi55",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "description": "Adds Various improvements to the Basegame Map list like Filters, a persisted state and much more",
     "gameVersion": "1.18.0",
     "dependsOn": {
@@ -21,7 +21,6 @@
     ],
     "conflictsWith": {
         "SongBrowser": ">=0.0.0",
-        "PlaylistManager": "<1.3.0",
         "BeatSaberPlaylistsLib": "<1.4.0",
         "SongDetailsCache": "<1.1.4"
     }

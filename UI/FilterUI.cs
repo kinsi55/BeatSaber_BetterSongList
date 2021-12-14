@@ -234,7 +234,7 @@ namespace BetterSongList.UI {
 		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
 			try {
 				if(System.Version.TryParse(Config.Instance.SettingsSeenInVersion, out var oldV)) {
-					if(oldV >= new System.Version("0.1.2.0"))
+					if(oldV >= new System.Version("0.2.4.0"))
 						yield break;
 				}
 			} catch { }
