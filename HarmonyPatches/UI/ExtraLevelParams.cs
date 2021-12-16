@@ -62,8 +62,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 				// TODO: Remove this funny business when required game version >= 1.19.0
 				var isPostGagaUI = UnityGame.GameVersion >= new AlmostVersion("1.19.0");
 
-				____levelParamsPanel.transform.localPosition += new Vector3(0, isPostGagaUI ? 3f : 1);
-				extraUI.transform.localPosition -= new Vector3(0, isPostGagaUI ? 1.5f : 4);
+				____levelParamsPanel.transform.localPosition += new Vector3(0, isPostGagaUI ? 3.5f : 1);
+				extraUI.transform.localPosition -= new Vector3(0, isPostGagaUI ? 1f : 4);
 
 				fields = extraUI.GetComponentsInChildren<CurvedTextMeshPro>();
 				SharedCoroutineStarter.instance.StartCoroutine(ProcessFields());
