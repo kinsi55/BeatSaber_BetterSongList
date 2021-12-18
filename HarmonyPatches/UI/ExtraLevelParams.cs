@@ -106,7 +106,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 						}
 					}
 					wrapper();
-				} else if(!SongDetailsUtil.attemptedToInit) {
+				// This might end up Double-Initing SongDetails but SongDetails handles that internally and only does it once so whatever
+				} else if(!SongDetailsUtil.finishedInitAttempt) {
 					SongDetailsUtil.TryGet().ContinueWith(
 						x => { if(x.Result != null) UpdateState(); },
 						CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext()
