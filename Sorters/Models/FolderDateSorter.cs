@@ -68,7 +68,7 @@ namespace BetterSongList.SortModels {
 
 		public int Compare(IPreviewBeatmapLevel x, IPreviewBeatmapLevel y) => ComparerHelpers.CompareInts(GetValueFor(x), GetValueFor(y));
 
-		const float MONTH_SECS = 60 * 60 * 24 * 30.4f;
+		const float MONTH_SECS = 1f / (60 * 60 * 24 * 30.4f);
 		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
 			var curUtc = DateTime.UtcNow.ToUnixTime();
 
@@ -76,7 +76,7 @@ namespace BetterSongList.SortModels {
 				if(!songTimes.ContainsKey(level.levelID))
 					return null;
 
-				var months = (curUtc - songTimes[level.levelID]) / MONTH_SECS;
+				var months = (curUtc - songTimes[level.levelID]) * MONTH_SECS;
 
 				if(months < 1)
 					return "<1 M";

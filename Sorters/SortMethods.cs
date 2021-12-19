@@ -61,9 +61,10 @@ namespace BetterSongList {
 			return ((float)y).ToString("0.0");
 		});
 
+		const float funnyOptim = 1 / 60f;
 		public static readonly ISorter songLength = new FunctionSorterWithLegend(
 			(songa, songb) => ComparerHelpers.CompareFloats(songa.songDuration, songb.songDuration),
-			(song) => (song.songDuration < 60 ? "<1" : Math.Round(song.songDuration / 60).ToString()) + " min"
+			(song) => (song.songDuration < 60 ? "<1" : Math.Round(song.songDuration * funnyOptim).ToString()) + " min"
 		);
 
 		static int GetQuarter(DateTime date) {
