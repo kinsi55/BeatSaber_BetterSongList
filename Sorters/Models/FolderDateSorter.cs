@@ -70,7 +70,7 @@ namespace BetterSongList.SortModels {
 
 		const float MONTH_SECS = 1f / (60 * 60 * 24 * 30.4f);
 		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
-			var curUtc = DateTime.UtcNow.ToUnixTime();
+			var curUtc = (int)DateTime.UtcNow.ToUnixTime();
 
 			return SongListLegendBuilder.BuildFor(levels, (level) => {
 				if(!songTimes.ContainsKey(level.levelID))
