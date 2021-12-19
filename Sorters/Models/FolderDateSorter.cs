@@ -37,11 +37,16 @@ namespace BetterSongList.SortModels {
 					var xy = new System.Diagnostics.Stopwatch();
 					xy.Start();
 
-					foreach(var song in SongCore.Loader.CustomLevels.Concat(SongCore.Loader.CustomWIPLevels).Concat(SongCore.Loader.SeperateSongFolders.SelectMany(x => x.Levels))) {
-						if(songTimes.ContainsKey(song.Value.levelID) || fullReload)
+					foreach(var song in 
+						SongCore.Loader.BeatmapLevelsModelSO
+						.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks.Where(x => x is SongCore.OverrideClasses.SongCoreCustomBeatmapLevelPack)
+						.SelectMany(x => x.beatmapLevelCollection.beatmapLevels)
+						.Cast<CustomPreviewBeatmapLevel>()
+					) {
+						if(songTimes.ContainsKey(song.levelID) && !fullReload)
 							continue;
 
-						songTimes[song.Value.levelID] = (int)Directory.GetCreationTimeUtc(song.Key).ToUnixTime();
+						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(song.customLevelPath + Path.DirectorySeparatorChar + "info.dat").ToUnixTime();
 					}
 
 					Plugin.Log.Debug(string.Format("Getting SongFolder dates took {0}ms", xy.ElapsedMilliseconds));
