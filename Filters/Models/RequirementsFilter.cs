@@ -29,7 +29,7 @@ namespace BetterSongList.FilterModels {
 			if(mid == null)
 				return false;
 
-			return SongCore.Collections.RetrieveExtraSongData(mid, customLevel.customLevelPath)?
+			return SongCore.Collections.RetrieveExtraSongData(mid)?
 				._difficulties?.Any(x => x.additionalDifficultyData._requirements.Any(x => x.Length != 0)) == true;
 		}
 	}
