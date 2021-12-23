@@ -8,7 +8,10 @@ using UnityEngine.UI;
 namespace BetterSongList.HarmonyPatches.UI {
 	[HarmonyPatch]
 	static class DontShiftAroundStuffScoreSaber {
-		static MethodBase TargetMethod() => AccessTools.Method("ScoreSaber.UI.Other.ScoreSaberLeaderboardView:SetPlayButtonState");
+		static MethodBase TargetMethod() => IPA.Loader.PluginManager.GetPluginFromId("ScoreSaber")?
+			.Assembly.GetType("ScoreSaber.UI.Other.ScoreSaberLeaderboardView")?
+			.GetMethod("SetPlayButtonState");
+
 		static Exception Cleanup(Exception ex) => null;
 
 		static Button lastButton;
