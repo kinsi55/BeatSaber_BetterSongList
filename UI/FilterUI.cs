@@ -200,7 +200,7 @@ namespace BetterSongList.UI {
 			SetSortDirection(Config.Instance.SortAsc);
 
 			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed())
-				persistentNuts.ShowErrorASAP("You have 'SongDataCore' installed, but dont have any Plugin which is using it (Normally SongBrowser would be mainly what uses it).\nIt's advised to remove that as it can increase load times.");
+				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed. It's advised to remove that as it can increase load times");
 		}
 
 		internal static void AttachTo(Transform target) {
