@@ -199,8 +199,8 @@ namespace BetterSongList.UI {
 			SetFilter(Config.Instance.LastFilter, true, false);
 			SetSortDirection(Config.Instance.SortAsc);
 
-			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed())
-				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed. It's advised to remove that as it can increase load times");
+			//if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed())
+				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed. It's advised to delete it as it can increase load times.\nIf you use ModAssistant you need to remove SongBrowser (Disabled by BetterSongList) to be able to remove SongDataCore");
 		}
 
 		internal static void AttachTo(Transform target) {
