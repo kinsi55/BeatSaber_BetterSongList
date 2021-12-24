@@ -21,9 +21,6 @@ namespace BetterSongList.FilterModels {
 		}
 
 		public bool GetValueFor(IPreviewBeatmapLevel level) {
-			if(!(level is CustomPreviewBeatmapLevel customLevel))
-				return false;
-
 			var mid = BeatmapsUtil.GetHashOfPreview(level);
 
 			if(mid == null)
