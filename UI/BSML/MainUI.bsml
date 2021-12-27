@@ -32,8 +32,8 @@
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
 					/>
 					<toggle-setting
-						text='Enable custom Legend Scrollbar' apply-on-change='true' value='EnableAlphabetScrollbar'
-						hover-hint='Enables the "Quick scroll" / Alphabet bar on the left of the song list'
+						text='Show Warning for Duck Walls' apply-on-change='true' value='ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinkingThemInRandomlyIsFun'
+						hover-hint='Shows a Warning icon next to the Wall Count if the map contains any crouch walls'
 					/>
 					<toggle-setting
 						text='Clear Sort and Filter in Playlists' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'

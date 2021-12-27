@@ -6,6 +6,7 @@ using IPA.Utilities;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
@@ -18,6 +19,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static TextMeshProUGUI[] fields = null;
 
 		static HoverHintController hhc = null;
+		static FieldInfo FIELD_LevelParamsPanel_obstaclesCount = AccessTools.Field(typeof(LevelParamsPanel), "_obstaclesCountText");
 		static IEnumerator ProcessFields() {
 			//Need to wait until the end of frame for reasons beyond my understanding
 			yield return new WaitForEndOfFrame();
@@ -70,6 +72,36 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 			lastInstance = __instance;
+
+			var obstaclesText = (TextMeshProUGUI)FIELD_LevelParamsPanel_obstaclesCount.GetValue(____levelParamsPanel);
+			obstaclesText.fontStyle = FontStyles.Italic;
+
+			// Crouchwalls HAHABALLS
+			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinkingThemInRandomlyIsFun && ____selectedDifficultyBeatmap.beatmapData.obstaclesCount != 0) {
+				bool hasCrouchwalls = false;
+				foreach(var x in ____selectedDifficultyBeatmap.beatmapData.beatmapLinesData) {
+					foreach(var bme in x.beatmapObjectsData) {
+						if(bme.beatmapObjectType != BeatmapObjectType.Obstacle)
+							continue;
+
+						var o = (ObstacleData)bme;
+
+						if(o.obstacleType == ObstacleType.Top && o.width > 2) {
+							hasCrouchwalls = true;
+							break;
+						}
+					}
+
+					if(hasCrouchwalls)
+						break;
+				}
+
+				if(hasCrouchwalls) {
+					obstaclesText.richText = true;
+					obstaclesText.fontStyle = FontStyles.Normal;
+					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
+				}
+			}
 
 			if(fields != null) {
 				if(!SongDetailsUtil.isAvailable) {
