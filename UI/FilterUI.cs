@@ -234,20 +234,27 @@ namespace BetterSongList.UI {
 		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
 			try {
 				if(System.Version.TryParse(Config.Instance.SettingsSeenInVersion, out var oldV)) {
-					if(oldV >= new System.Version("0.2.4.0"))
+					if(oldV >= new System.Version("0.2.6.0"))
 						yield break;
 				}
 			} catch { }
 
+			var initSize = _settingsButton.transform.localScale;
 			while(!settingsWereOpened) {
 				yield return new WaitForSeconds(.5f);
-				if(_settingsButton != null)
+				if(_settingsButton != null) {
+					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f, 0);
 					_settingsButton.color = Color.green;
+				}
 
 				yield return new WaitForSeconds(.5f);
-				if(_settingsButton != null)
+				if(_settingsButton != null) {
+					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f, 0);
 					_settingsButton.color = Color.white;
+				}
 			}
+			if(_settingsButton != null)
+				_settingsButton.transform.localScale = initSize;
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
