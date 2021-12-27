@@ -45,7 +45,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="UI\BSML\ExtraLevelParams.bsml" />
     <None Remove="UI\BSML\SongDeleteConfirm.bsml" />
     <None Remove="UI\DoubleArrowIcon.png" />
     <None Remove="UI\SongListBottomUI.bsml" />
@@ -127,7 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
-    <EmbeddedResource Include="UI\BSML\ExtraLevelParams.bsml" />
     <EmbeddedResource Include="UI\BSML\SongDeleteConfirm.bsml" />
     <EmbeddedResource Include="UI\BSML\MainUI.bsml" />
     <EmbeddedResource Include="UI\DoubleArrowIcon.png" />
