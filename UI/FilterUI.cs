@@ -229,7 +229,9 @@ namespace BetterSongList.UI {
 
 			SetSortDirection(Config.Instance.SortAsc, false);
 
+#if !DEBUG
 			SharedCoroutineStarter.instance.StartCoroutine(PossiblyDrawUserAttentionToSettingsButton());
+#endif
 		}
 
 		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
@@ -240,27 +242,28 @@ namespace BetterSongList.UI {
 				}
 			} catch { }
 
-			var initSize = _settingsButton.transform.localScale;
+			var blinks = 0;
 			while(!settingsWereOpened) {
-				yield return new WaitForSeconds(.5f);
-				if(_settingsButton != null) {
-					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f);
-					_settingsButton.color = Color.green;
-				}
+				if(blinks++ == 120)
+					_settingsButtonArrow.gameObject.SetActive(true);
 
-				yield return new WaitForSeconds(.5f);
-				if(_settingsButton != null) {
-					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f);
+				yield return new WaitForSeconds(blinks < 100 ? .5f : 0.25f);
+				if(_settingsButton != null)
+					_settingsButton.color = Color.green;
+
+				if(blinks > 150 && _settingsButtonArrow != null)
+					_settingsButtonArrow.gameObject.SetActive(true);
+
+				yield return new WaitForSeconds(blinks < 100 ? .5f : 0.25f);
+				if(_settingsButton != null)
 					_settingsButton.color = Color.white;
 
-					if(_settingsButton.transform.localScale.x > 2f)
-						_settingsButtonArrow.gameObject.SetActive(true);
-				}
+				if(blinks > 150 && _settingsButtonArrow != null)
+					_settingsButtonArrow.gameObject.SetActive(false);
 			}
-			if(_settingsButton != null) {
-				_settingsButton.transform.localScale = initSize;
+
+			if(_settingsButton != null)
 				_settingsButtonArrow.gameObject.SetActive(false);
-			}
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
