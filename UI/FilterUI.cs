@@ -217,6 +217,7 @@ namespace BetterSongList.UI {
 			settingsWereOpened = true;
 		}
 		[UIComponent("settingsButton")] readonly ClickableImage _settingsButton = null;
+		[UIComponent("settingsButtonArrow")] readonly TextMeshProUGUI _settingsButtonArrow = null;
 
 		[UIAction("#post-parse")]
 		void Parsed() {
@@ -243,18 +244,23 @@ namespace BetterSongList.UI {
 			while(!settingsWereOpened) {
 				yield return new WaitForSeconds(.5f);
 				if(_settingsButton != null) {
-					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f, 0);
+					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f);
 					_settingsButton.color = Color.green;
 				}
 
 				yield return new WaitForSeconds(.5f);
 				if(_settingsButton != null) {
-					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f, 0);
+					_settingsButton.transform.localScale += new Vector3(0.01f, 0.01f);
 					_settingsButton.color = Color.white;
+
+					if(_settingsButton.transform.localScale.x > 2f)
+						_settingsButtonArrow.gameObject.SetActive(true);
 				}
 			}
-			if(_settingsButton != null)
+			if(_settingsButton != null) {
 				_settingsButton.transform.localScale = initSize;
+				_settingsButtonArrow.gameObject.SetActive(false);
+			}
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
