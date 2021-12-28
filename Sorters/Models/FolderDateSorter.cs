@@ -46,6 +46,10 @@ namespace BetterSongList.SortModels {
 						if(songTimes.ContainsKey(song.levelID) && !fullReload)
 							continue;
 
+						/*
+						 * There isnt really any "good" setup - LastWriteTime is cloned when copying a file and retained when manually
+						 * extracing from a zip, but the createtime is obviously "reset" when you copy files
+						 */
 						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(song.customLevelPath + Path.DirectorySeparatorChar + "info.dat").ToUnixTime();
 					}
 
