@@ -24,6 +24,8 @@ The Game version(s) specific releases are compatible with are mentioned in the R
 - Fixes the shifting around of Practice / Play buttons when using Scoresaber
 - Displays the map Default Jump Distance (Can be changed to show the maps Offset if you prefer that)
 - Extended Scroll buttons
+- Adds various extra details about the Song Like Ranked Information and NJS
+- Warns you if a map contains Crouch walls (
 - Probably other minor things I Forgor 💀
 
 ![Main UI](Screenshots/Main.jpg)
