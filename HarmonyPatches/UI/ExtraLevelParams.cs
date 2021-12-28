@@ -86,7 +86,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 						var o = (ObstacleData)bme;
 
-						if(o.obstacleType == ObstacleType.Top && o.width > 2) {
+						if(o.obstacleType == ObstacleType.Top && (o.width > 2 || (o.width == 2 && o.lineIndex == 1))) {
 							hasCrouchwalls = true;
 							break;
 						}
