@@ -34,7 +34,7 @@ namespace BetterSongList.Filters.Models {
 		public string GetUnavailabilityReason() => SongDetailsUtil.GetUnavailabilityReason();
 
 		public bool GetValueFor(IPreviewBeatmapLevel level) {
-			if(SongDetailsUtil.instance == null)
+			if(SongDetailsUtil.songDetails == null)
 				return false;
 
 			//if(!GetSongFromBeatmap(level, out var song))
@@ -44,10 +44,13 @@ namespace BetterSongList.Filters.Models {
 			if(h == null)
 				return false;
 
-			if(!((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
-				return false;
+			bool wrapper() {
+				if(!SongDetailsUtil.songDetails.instance.songs.FindByHash(h, out var song))
+					return false;
 
-			return filterValueTransformer(song);
+				return filterValueTransformer(song);
+			}
+			return wrapper();
 		}
 	}
 }

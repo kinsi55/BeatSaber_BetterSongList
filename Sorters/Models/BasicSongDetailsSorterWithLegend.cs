@@ -24,7 +24,7 @@ namespace BetterSongList.SortModels {
 		}
 
 		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
-			if(SongDetailsUtil.instance == null)
+			if(SongDetailsUtil.songDetails == null)
 				return null;
 
 			try {
@@ -33,7 +33,7 @@ namespace BetterSongList.SortModels {
 					//	return null;
 
 					var h = BeatmapsUtil.GetHashOfPreview(level);
-					if(h == null || !((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
+					if(h == null || !SongDetailsUtil.songDetails.instance.songs.FindByHash(h, out var song))
 						return "N/A";
 
 					return legendValueTransformer(song);
@@ -46,7 +46,7 @@ namespace BetterSongList.SortModels {
 		}
 
 		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels) {
-			if(SongDetailsUtil.instance == null)
+			if(SongDetailsUtil.songDetails == null)
 				return;
 
 			float Sorter(IPreviewBeatmapLevel x) {
@@ -56,7 +56,7 @@ namespace BetterSongList.SortModels {
 				var def = Config.Instance.SortAsc ? float.MaxValue : float.MinValue;
 
 				var h = BeatmapsUtil.GetHashOfPreview(x);
-				if(h == null || !((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(h, out var song))
+				if(h == null || !SongDetailsUtil.songDetails.instance.songs.FindByHash(h, out var song))
 					return def;
 
 				return sortValueTransformer(song) ?? def;

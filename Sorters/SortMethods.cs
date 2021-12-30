@@ -29,7 +29,7 @@ namespace BetterSongList {
 			float ret = 0;
 
 			for(var i = (int)x.diffOffset; i < x.diffOffset + x.diffCount; i++) {
-				var diff = ((SongDetailsCache.SongDetails)SongDetailsUtil.instance).difficulties[i];
+				var diff = SongDetailsUtil.songDetails.instance.difficulties[i];
 
 				if(diff.stars == 0)
 					continue;

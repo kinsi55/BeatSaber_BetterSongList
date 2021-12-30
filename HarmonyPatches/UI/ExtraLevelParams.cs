@@ -106,7 +106,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			if(fields != null) {
 				if(!SongDetailsUtil.isAvailable) {
 					fields[0].text = fields[1].text = "N/A";
-				} else if(SongDetailsUtil.instance != null) {
+				} else if(SongDetailsUtil.songDetails != null) {
 					void wrapper() {
 						// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
 						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
@@ -117,7 +117,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 							var mh = BeatmapsUtil.GetHashOfPreview(____level);
 
 							if(mh == null ||
-								!((SongDetailsCache.SongDetails)SongDetailsUtil.instance).songs.FindByHash(mh, out var song) ||
+								!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
 								!song.GetDifficulty(
 									out var diff,
 									(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
