@@ -77,30 +77,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 			obstaclesText.fontStyle = FontStyles.Italic;
 
 			// Crouchwalls HAHABALLS
-			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun && ____selectedDifficultyBeatmap.beatmapData.obstaclesCount != 0) {
-				bool hasCrouchwalls = false;
-				foreach(var x in ____selectedDifficultyBeatmap.beatmapData.beatmapLinesData) {
-					foreach(var bme in x.beatmapObjectsData) {
-						if(bme.beatmapObjectType != BeatmapObjectType.Obstacle)
-							continue;
-
-						var o = (ObstacleData)bme;
-
-						if(o.obstacleType == ObstacleType.Top && (o.width > 2 || (o.width == 2 && o.lineIndex == 1))) {
-							hasCrouchwalls = true;
-							break;
-						}
-					}
-
-					if(hasCrouchwalls)
-						break;
-				}
-
-				if(hasCrouchwalls) {
-					obstaclesText.richText = true;
-					obstaclesText.fontStyle = FontStyles.Normal;
-					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
-				}
+			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun && 
+				BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData)
+			) {
+				obstaclesText.richText = true;
+				obstaclesText.fontStyle = FontStyles.Normal;
+				obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
 			}
 
 			if(fields != null) {
