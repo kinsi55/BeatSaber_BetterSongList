@@ -146,7 +146,7 @@ namespace BetterSongList.UI {
 		}
 
 		static void SelectRandom() {
-			var x = Resources.FindObjectsOfTypeAll<LevelCollectionTableView>().FirstOrDefault();
+			var x = Object.FindObjectOfType<LevelCollectionTableView>();
 
 			if(x == null)
 				return;

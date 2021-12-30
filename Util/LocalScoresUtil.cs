@@ -9,7 +9,7 @@ namespace BetterSongList.Util {
 		public static bool hasScores => playerDataModel != null;
 
 		public static void Load() {
-			playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
+			playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
 		}
 
 		public static bool HasLocalScore(string levelId) {

@@ -27,10 +27,8 @@ namespace BetterSongList.Util {
 			}
 
 			if(builtinPacks == null) {
-				var p = Resources.FindObjectsOfTypeAll<BeatmapLevelsModel>().First(x => x.ostAndExtrasPackCollection != null);
-
 				builtinPacks =
-					p.allLoadedBeatmapLevelWithoutCustomLevelPackCollection.beatmapLevelPacks
+					SongCore.Loader.BeatmapLevelsModelSO.allLoadedBeatmapLevelWithoutCustomLevelPackCollection.beatmapLevelPacks
 					// There shouldnt be any duplicate name basegame playlists... But better be safe
 					.GroupBy(x => x.shortPackName)
 					.Select(x => x.First())
