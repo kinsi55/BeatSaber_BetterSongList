@@ -21,7 +21,7 @@ namespace BetterSongList.Util {
 				var o = (ObstacleData)bme;
 
 				// Ignore 1 wide walls on left
-				if(o.lineIndex == 1 && o.width == 1)
+				if(o.lineIndex == 0 && o.width == 1)
 					continue;
 
 				// Filter out fake walls, they dont drain energy
@@ -37,11 +37,11 @@ namespace BetterSongList.Util {
 
 				// Check if the other half has an active wall, which would mean there is one on both halfs
 				// I know this technically does not check if one of the halves is half-height, but whatever
-				// Extend wall lengths by 200ms so that staggered crouchwalls that dont overlap are caught
-				if(wallExistence[isLeftHalf ? 1 : 0] + 0.2f >= o.time)
+				if(wallExistence[isLeftHalf ? 1 : 0] >= o.time)
 					return true;
 
-				wallExistence[isLeftHalf ? 0 : 1] = Math.Max(wallExistence[isLeftHalf ? 0 : 1], o.time + o.duration);
+				// Extend wall lengths by 200ms so that staggered crouchwalls that dont overlap are caught
+				wallExistence[isLeftHalf ? 0 : 1] = Math.Max(wallExistence[isLeftHalf ? 0 : 1], o.time + o.duration + 0.2f);
 			}
 			return false;
 		}
