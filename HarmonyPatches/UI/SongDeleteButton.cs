@@ -99,7 +99,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 	static class deletebuttont {
 		static MethodBase TargetMethod() => IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlus")?
 			.Assembly.GetType("BeatSaberPlus.Modules.GameTweaker.Patches.PStandardLevelDetailView")?
-			.GetMethod("SetPlayButtonState", BindingFlags.Static |BindingFlags.NonPublic);
+			.GetMethod("SetDeleteSongButtonEnabled", BindingFlags.Static | BindingFlags.NonPublic);
 		static Exception Cleanup(Exception ex) => null;
 		static bool Prefix() => false;
 	}
