@@ -50,6 +50,7 @@ namespace BetterSongList.UI {
 			{ "Unplayed", FilterMethods.unplayed },
 			{ "Played", FilterMethods.played },
 			{ "Requirements", FilterMethods.requirements },
+			{ "Not on Beatsaver", FilterMethods.notOnBeatsaver },
 			{ "Unranked", FilterMethods.unranked },
 		};
 
@@ -84,13 +85,6 @@ namespace BetterSongList.UI {
 			}
 
 			XD.FunnyNull(persistentNuts._sortDropdown)?.SelectCellWithIdx(_sortOptions.IndexOf(selected));
-		}
-
-		static void SettingsClosed() {
-			SongDeleteButton.UpdateState();
-			ScrollEnhancements.UpdateState();
-			ExtraLevelParams.UpdateState();
-			Config.Instance.Changed();
 		}
 
 		public static void ClearFilter(bool reloadTable = false) => SetFilter(null, false, reloadTable);
@@ -191,8 +185,6 @@ namespace BetterSongList.UI {
 		[UIComponent("filterDropdown")] readonly DropdownWithTableView _filterDropdown = null;
 		[UIComponent("sortDirection")] readonly ClickableText _sortDirection = null;
 		[UIComponent("failTextLabel")] readonly TextMeshProUGUI _failTextLabel = null;
-		readonly string version = $"BetterSongList v{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)} by Kinsi55";
-		Config cfgi => Config.Instance;
 
 		internal static void Init() {
 			SetSort(Config.Instance.LastSort, true, false);
@@ -214,9 +206,12 @@ namespace BetterSongList.UI {
 		}
 
 		bool settingsWereOpened = false;
+		BSMLParserParams settingsViewParams = null;
 		void SettingsOpened() {
 			Config.Instance.SettingsSeenInVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			settingsWereOpened = true;
+
+			BSMLStuff.InitSplitView(ref settingsViewParams, rootTransform.gameObject, SplitViews.Settings.instance).EmitEvent("ShowSettings");
 		}
 		[UIComponent("settingsButton")] readonly ClickableImage _settingsButton = null;
 		[UIComponent("settingsButtonArrow")] readonly TextMeshProUGUI _settingsButtonArrow = null;
@@ -226,8 +221,18 @@ namespace BetterSongList.UI {
 			HackDropdown(_sortDropdown);
 			HackDropdown(_filterDropdown);
 
-			SetSort((string)sortOptions.Select(x => new object[] { x.Key, x.Value }).FirstOrDefault(x => x[1] == HookLevelCollectionTableSet.sorter)?[0], false, false);
-			SetFilter((string)filterOptions.Select(x => new object[] { x.Key, x.Value }).FirstOrDefault(x => x[1] == HookLevelCollectionTableSet.filter)?[0], false, false);
+			foreach(var x in sortOptions) {
+				if(x.Value == HookLevelCollectionTableSet.sorter) {
+					SetSort(x.Key, false, false);
+					break;
+				}
+			}
+			foreach(var x in filterOptions) {
+				if(x.Value == HookLevelCollectionTableSet.filter) {
+					SetFilter(x.Key, false, false);
+					break;
+				}
+			}
 
 			SetSortDirection(Config.Instance.SortAsc, false);
 
@@ -281,27 +286,6 @@ namespace BetterSongList.UI {
 
 			var m = ReflectionUtil.GetField<ModalView, DropdownWithTableView>(dropdown, "_modalView");
 			((RectTransform)m.transform).pivot = new Vector2(0.5f, 0.14f - (c * 0.011f));
-		}
-
-
-		[UIComponent("sponsorsText")] CurvedTextMeshPro sponsorsText = null;
-		void OpenSponsorsLink() => Process.Start("https://github.com/sponsors/kinsi55");
-		void OpenSponsorsModal() {
-			parserParams.EmitEvent("CloseSettings");
-			sponsorsText.text = "Loading...";
-			Task.Run(() => {
-				string desc = "Failed to load";
-				try {
-					desc = (new WebClient()).DownloadString("http://kinsi.me/sponsors/bsout.php");
-				} catch { }
-
-				_ = IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory.StartNew(() => {
-					sponsorsText.text = desc;
-					// There is almost certainly a better way to update / correctly set the scrollbar size...
-					sponsorsText.gameObject.SetActive(false);
-					sponsorsText.gameObject.SetActive(true);
-				});
-			}).ConfigureAwait(false);
 		}
 	}
 }

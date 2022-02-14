@@ -10,69 +10,12 @@
 	</horizontal>
 	<horizontal child-expand-width='false' spacing='5' preferred-width='106'>
 		<clickable-image src='#RandomIcon' on-click='SelectRandom' hover-hint='Select a random song from the list' preserve-aspect='true' min-width='7'/>
-		<clickable-image id='settingsButton' on-click='SettingsOpened' src='#SettingsIcon' click-event='ShowSettings' hover-hint='Better Song List settings' preserve-aspect='true' min-width='7'/>
+		<clickable-image id='settingsButton' on-click='SettingsOpened' src='#SettingsIcon' hover-hint='Better Song List settings' preserve-aspect='true' min-width='7'/>
 		<horizontal ignore-layout='true' pad-left='18'>
 			<text id='settingsButtonArrow' font-size='30' text='⬅' color='red' active='false' align='CaplineLeft'/>
 		</horizontal>
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
-
-	<modal move-to-center='true' show-event='ShowSettings' hide-event='CloseSettings' size-delta-x='80' size-delta-y='75'>
-		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='70'>
-			<horizontal pad-bottom='4' pad-top='1'>
-				<horizontal bg='panel-top-gradient'>
-					<text text='BetterSongList - Settings' align='Center' font-size='4'/>
-				</horizontal>
-			</horizontal>
-			<vertical horizontal-fit='Unconstrained' preferred-height='80' child-expand-height='false'>
-				<macro.as-host host='cfgi'>
-					<toggle-setting 
-						text='Allow deleting WIPs' apply-on-change='true' value='AllowWipDelete'
-						hover-hint='Should Work in Progress maps be deleteable?'
-					/>
-					<toggle-setting
-						text='Auto-Filter Unowned DLC Songs' apply-on-change='true' value='AutoFilterUnowned'
-						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
-					/>
-					<toggle-setting
-						text='Show Warning for Duck Walls' apply-on-change='true' value='ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun'
-						hover-hint='Shows a Warning icon next to the Wall Count if the map contains any crouch walls'
-					/>
-					<toggle-setting
-						text='Clear Sort and Filter in Playlists' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'
-						hover-hint='Automatically removes the Sort and Filter when selecting a playlist - Is restored when you leave Playlists again'
-					/>
-					<toggle-setting
-						text='Improve Basegame search' apply-on-change='true' value='ModBasegameSearch'
-						hover-hint='Adds searching by Mapper name and handling of Songs with spaces to the Basegame search'
-					/>
-					<toggle-setting
-						text='Extend Basegame scrollbar' apply-on-change='true' value='ExtendSongsScrollbar'
-						hover-hint='Adds Far-Scroll and Jump to Top / Bottom buttons to Scrollbar'
-					/>
-					<toggle-setting
-						text='Show map JD instead of Offset' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
-						hover-hint='Will display the maps JD instead of its configured offset'
-					/>
-					<slider-setting
-						text='PP Accuracy Scale' apply-on-change='true' value='AccuracyMultiplier' min='0.2' max='2' increment='0.02'
-						hover-hint='Scales the Accuracy used to calculate a PP value with by this amount to be closer to your skill / preference'
-					/>
-				</macro.as-host>
-			</vertical>
-			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false'>
-				<vertical>
-					<primary-button text='Close' click-event='CloseSettings' on-click='SettingsClosed' min-width='20'/>
-				</vertical>
-				<vertical>
-					<horizontal spacing='2'>
-						<text text="~version" font-size="3" font-color="#CC6E3B" align="Center"/>
-						<clickable-text text='♥ Donate' font-size="4" align="Center" click-event="OpenSponsorModal" on-click="OpenSponsorsModal"/>
-					</horizontal>
-				</vertical>
-			</horizontal>
-		</vertical>
-	</modal>
 	
 	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='IncompatabilityNotice' hide-event='Close' size-delta-x='70' size-delta-y='45'>
 		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='70' preferred-height='40'>
@@ -85,25 +28,6 @@
 			<horizontal pad-top='4' pad-bottom='2'>
 				<button text='OK' click-event='Close' min-width='20' on-click='PossiblyShowNextWarning'/>
 			</horizontal>
-		</vertical>
-	</modal>
-
-	<modal move-to-center='true' hide-event='CloseSponsorModal' show-event='OpenSponsorModal' size-delta-x='80' size-delta-y='82'>
-		<vertical preferred-width='80' vertical-fit='PreferredSize' pad-left='2' pad-right='2' spacing='2' child-expand-width='true'>
-			<horizontal pad-bottom='2' pad-top='1'>
-				<horizontal bg='panel-top-gradient'>
-					<text text='BetterSongSearch - Sponsors' align='Center' font-size='4'/>
-				</horizontal>
-			</horizontal>
-			<text text='Are you enjoying my stuff and want to support me?' align='Center'/>
-			<horizontal>
-				<primary-button text='Open Website on Desktop' on-click='OpenSponsorsLink'/>
-				<button text='Close' click-event='CloseSponsorModal'/>
-			</horizontal>
-			<text text='Current sponsors' align='Center'/>
-			<vertical horizontal-fit='Unconstrained' vertical-fit='Unconstrained' preferred-height='45'>
-				<text-page id='sponsorsText' text='Loading...'/>
-			</vertical>
 		</vertical>
 	</modal>
 </horizontal>

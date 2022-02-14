@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <None Remove="UI\BSML\SongDeleteConfirm.bsml" />
+    <None Remove="UI\BSML\SplitViews\Settings.bsml" />
     <None Remove="UI\DoubleArrowIcon.png" />
     <None Remove="UI\SongListBottomUI.bsml" />
   </ItemGroup>
@@ -128,6 +129,7 @@
     <EmbeddedResource Include="manifest.json" />
     <EmbeddedResource Include="UI\BSML\SongDeleteConfirm.bsml" />
     <EmbeddedResource Include="UI\BSML\MainUI.bsml" />
+    <EmbeddedResource Include="UI\BSML\SplitViews\Settings.bsml" />
     <EmbeddedResource Include="UI\DoubleArrowIcon.png" />
   </ItemGroup>
   <ItemGroup>
