@@ -18,14 +18,12 @@
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 	
 	<modal clickerino-offerino-closerino='true' move-to-center='true' show-event='IncompatabilityNotice' hide-event='Close' size-delta-x='70' size-delta-y='45'>
-		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='70' preferred-height='40'>
-			<horizontal pad-bottom='4' pad-top='1'>
-				<horizontal bg='panel-top-gradient'>
-					<text text='BetterSongList - UH OH!' align='Center' font-size='4'/>
-				</horizontal>
+		<vertical horizontal-fit='Unconstrained' pad='4' pad-top='11'>
+			<horizontal bg='panel-top-gradient' ignore-layout='true' anchor-max-x='.97' anchor-min-x='.03' anchor-min-y='1' anchor-pos-y='-5'>
+				<text text='BetterSongList - UH OH!' align='Center'/>
 			</horizontal>
 			<text text='' align='Center' font-size='3.3' id='failTextLabel' word-wrapping='true'/>
-			<horizontal pad-top='4' pad-bottom='2'>
+			<horizontal pad-top='4'>
 				<button text='OK' click-event='Close' min-width='20' on-click='PossiblyShowNextWarning'/>
 			</horizontal>
 		</vertical>
