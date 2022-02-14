@@ -93,14 +93,4 @@ namespace BetterSongList.HarmonyPatches.UI {
 			UpdateState();
 		}
 	}
-
-	//Having both ends up overlapping the fast scroll buttons and that is kind of annoying
-	[HarmonyPatch]
-	static class deletebuttont {
-		static MethodBase TargetMethod() => IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlus")?
-			.Assembly.GetType("BeatSaberPlus.Modules.GameTweaker.Patches.PStandardLevelDetailView")?
-			.GetMethod("SetDeleteSongButtonEnabled", BindingFlags.Static | BindingFlags.NonPublic);
-		static Exception Cleanup(Exception ex) => null;
-		static bool Prefix() => false;
-	}
 }
