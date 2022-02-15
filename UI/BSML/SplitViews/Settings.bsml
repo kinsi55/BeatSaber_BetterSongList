@@ -57,7 +57,7 @@
 	<modal move-to-center='true' hide-event='CloseSponsorModal' show-event='OpenSponsorModal' size-delta-x='80' size-delta-y='82'>
 		<vertical horizontal-fit='Unconstrained' pad='2' pad-top='9'>
 			<horizontal bg='panel-top-gradient' ignore-layout='true' anchor-max-x='.97' anchor-min-x='.03' anchor-min-y='1' anchor-pos-y='-5'>
-				<text text='BetterSongSearch - Sponsors' align='Center'/>
+				<text text='BetterSongList - Sponsors' align='Center'/>
 			</horizontal>
 			<text text='Are you enjoying my stuff and want to support me?' align='Center'/>
 			<horizontal>
