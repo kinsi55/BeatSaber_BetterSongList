@@ -1,0 +1,11 @@
+[*]
+indent_size = 4
+charset = utf-8-bom
+
+[*.cs]
+indent_style = tab
+
+csharp_new_line_before_catch = false
+csharp_new_line_before_else = false
+csharp_new_line_before_open_brace=none
+csharp_space_after_keywords_in_control_flow_statements = false
