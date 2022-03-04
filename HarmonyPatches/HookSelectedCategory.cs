@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BetterSongList.UI;
+using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {
 	// Hook and save the last selected tab
@@ -15,6 +16,7 @@ namespace BetterSongList.HarmonyPatches {
 			Plugin.Log.Warn("SelectLevelCategoryViewController.LevelFilterCategoryIconSegmentedControlDidSelectCell():Prefix => ResetScroll()");
 #endif
 			RestoreTableScroll.ResetScroll();
+			FilterUI.persistentNuts?.UpdateTransformerOptionsAndDropdowns();
 		}
 
 		[HarmonyPriority(int.MinValue)]

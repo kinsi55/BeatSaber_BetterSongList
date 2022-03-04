@@ -40,8 +40,8 @@ namespace BetterSongList.Util {
 				if(wallExistence[isLeftHalf ? 1 : 0] >= o.time)
 					return true;
 
-				// Extend wall lengths by 200ms so that staggered crouchwalls that dont overlap are caught
-				wallExistence[isLeftHalf ? 0 : 1] = Math.Max(wallExistence[isLeftHalf ? 0 : 1], o.time + o.duration + 0.2f);
+				// Extend wall lengths by 120ms so that staggered crouchwalls that dont overlap are caught
+				wallExistence[isLeftHalf ? 0 : 1] = Math.Max(wallExistence[isLeftHalf ? 0 : 1], o.time + o.duration + 0.12f);
 			}
 			return false;
 		}

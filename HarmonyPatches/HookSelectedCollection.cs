@@ -29,6 +29,7 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			lastSelectedCollection = beatmapLevelCollection;
+			FilterUI.persistentNuts?.UpdateTransformerOptionsAndDropdowns();
 		}
 
 		[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.UpdateSecondChildControllerContent))]

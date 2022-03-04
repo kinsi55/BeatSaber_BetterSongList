@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.FilterModels {
-	class RequirementsFilter : IFilter {
+	public sealed class RequirementsFilter : IFilter {
 		public bool isReady => SongCore.Loader.AreSongsLoaded;
 
 		static TaskCompletionSource<bool> wipTask = null;

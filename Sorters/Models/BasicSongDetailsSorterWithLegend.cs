@@ -1,4 +1,5 @@
-﻿using BetterSongList.Util;
+﻿using BetterSongList.Interfaces;
+using BetterSongList.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.SortModels {
-	class BasicSongDetailsSorterWithLegend : ISorterWithLegend, ISorterPrimitive, IAvailabilityCheck {
+	public class BasicSongDetailsSorterWithLegend : ISorterWithLegend, ISorterPrimitive, IAvailabilityCheck {
 		public bool isReady => SongDetailsUtil.finishedInitAttempt;
 
 #nullable enable
@@ -23,7 +24,7 @@ namespace BetterSongList.SortModels {
 			this.legendValueTransformer = (x) => sortValueTransformer(x).ToString();
 		}
 
-		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
 			if(SongDetailsUtil.songDetails == null)
 				return null;
 
@@ -45,41 +46,22 @@ namespace BetterSongList.SortModels {
 			return null;
 		}
 
-		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels) {
+		public float? GetValueFor(IPreviewBeatmapLevel x) {
+			// Make N/A always end up at the bottom in either sort direction
 			if(SongDetailsUtil.songDetails == null)
-				return;
+				return null;
 
-			float Sorter(IPreviewBeatmapLevel x) {
-				//if(!GetSongFromBeatmap(x, out var song))
-				//	return Config.Instance.SortAsc ? 0 : 0;
-
-				var def = Config.Instance.SortAsc ? float.MaxValue : float.MinValue;
-
+			float? _Get(IPreviewBeatmapLevel x) {
 				var h = BeatmapsUtil.GetHashOfPreview(x);
 				if(h == null || !SongDetailsUtil.songDetails.instance.songs.FindByHash(h, out var song))
-					return def;
+					return null;
 
-				return sortValueTransformer(song) ?? def;
+				return sortValueTransformer(song);
 			}
 
-			if(Config.Instance.SortAsc) {
-				levels = levels.OrderBy(Sorter);
-			} else {
-				levels = levels.OrderByDescending(Sorter);
-			}
+			return _Get(x);
 		}
 
-		public int Compare(IPreviewBeatmapLevel x, IPreviewBeatmapLevel y) => throw new MissingMethodException();
-
-		//TODO: Switch to this later when SongDetailsCache update with Song.none is established
-		//bool GetSongFromBeatmap(IPreviewBeatmapLevel level, out Song song) {
-		//	song = Song.none;
-		//	var h = BeatmapsUtil.GetHashOfPreview(level);
-		//	if(h == null)
-		//		return false;
-
-		//	return SongDetailsUtil.instance.songs.FindByHash(h, out song);
-		//}
 		public string GetUnavailabilityReason() => SongDetailsUtil.GetUnavailabilityReason();
 
 		public Task Prepare(CancellationToken cancelToken) {
@@ -88,6 +70,5 @@ namespace BetterSongList.SortModels {
 
 			return Task.CompletedTask;
 		}
-
 	}
 }

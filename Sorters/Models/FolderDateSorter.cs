@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.SortModels {
-	class FolderDateSorter : ISorterWithLegend {
+	public sealed class FolderDateSorter : ISorterWithLegend, ISorterPrimitive {
 		public bool isReady => wipTask == null && songTimes != null;
 
 		/*
@@ -19,11 +19,11 @@ namespace BetterSongList.SortModels {
 
 		static TaskCompletionSource<bool> wipTask = null;
 		static bool isLoading = false;
-		public Task Prepare(CancellationToken cancelToken) => Prepare(cancelToken, false);
-		public Task Prepare(CancellationToken cancelToken, bool fullReload) {
+		public Task Prepare(CancellationToken cancelToken) => Prepare(false);
+		Task Prepare(bool fullReload) {
 			if(songTimes == null) {
 				songTimes = new ConcurrentDictionary<string, int>();
-				SongCore.Loader.SongsLoadedEvent += (_, _2) => Prepare(CancellationToken.None);
+				SongCore.Loader.SongsLoadedEvent += (_, _2) => Prepare(false);
 			}
 
 			wipTask ??= new TaskCompletionSource<bool>();
@@ -63,17 +63,15 @@ namespace BetterSongList.SortModels {
 			return wipTask.Task;
 		}
 
-		int GetValueFor(IPreviewBeatmapLevel level) {
+		public float? GetValueFor(IPreviewBeatmapLevel level) {
 			if(songTimes.TryGetValue(level.levelID, out var oVal))
-				return Config.Instance.SortAsc ? oVal : -oVal;
+				return oVal;
 
-			return int.MaxValue;
+			return null;
 		}
 
-		public int Compare(IPreviewBeatmapLevel x, IPreviewBeatmapLevel y) => ComparerHelpers.CompareInts(GetValueFor(x), GetValueFor(y));
-
 		const float MONTH_SECS = 1f / (60 * 60 * 24 * 30.4f);
-		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
 			var curUtc = (int)DateTime.UtcNow.ToUnixTime();
 
 			return SongListLegendBuilder.BuildFor(levels, (level) => {

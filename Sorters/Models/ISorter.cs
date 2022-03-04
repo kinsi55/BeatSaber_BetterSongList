@@ -3,32 +3,20 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.SortModels {
-#if DEBUG
-	public
-#endif
-	interface ISorter : IComparer<IPreviewBeatmapLevel> {
+	public interface ISorter {
 		public bool isReady { get; }
 		Task Prepare(CancellationToken cancelToken);
 	}
 
-	interface ISorterWithLegend : ISorter {
-		public List<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels);
+	public interface ISorterWithLegend : ISorter {
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels);
 	}
 
-	interface ISorterPrimitive {
-		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels);
+	public interface ISorterCustom : ISorter {
+		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels, bool ascending);
 	}
 
-	static class ComparerHelpers {
-		public static int CompareFloats(float a, float b) {
-			if(a == b) return 0;
-
-			return a > b ? 1 : -1;
-		}
-		public static int CompareInts(int a, int b) {
-			if(a == b) return 0;
-
-			return a > b ? 1 : -1;
-		}
+	public interface ISorterPrimitive : ISorter {
+		public float? GetValueFor(IPreviewBeatmapLevel level);
 	}
 }

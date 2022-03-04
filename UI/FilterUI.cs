@@ -5,10 +5,12 @@ using BeatSaberMarkupLanguage.Parser;
 using BetterSongList.FilterModels;
 using BetterSongList.HarmonyPatches;
 using BetterSongList.HarmonyPatches.UI;
+using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
 using IPA.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,29 +35,46 @@ namespace BetterSongList.UI {
 
 		FilterUI() { }
 
-		static Dictionary<string, ISorter> sortOptions = new Dictionary<string, ISorter>() {
-			{ "Song Name", SortMethods.alphabeticalSongname },
-			{ "Download Date", SortMethods.downloadTime },
-			{ "Ranked Stars", SortMethods.stars },
-			{ "Song Length", SortMethods.songLength },
-			{ "BPM", SortMethods.bpm },
-			{ "BeatSaver Date", SortMethods.beatSaverDate },
-			{ "Default", null }
-		};
+		[UIComponent("sortDropdown")] readonly DropdownWithTableView _sortDropdown = null;
+		[UIComponent("filterDropdown")] readonly DropdownWithTableView _filterDropdown = null;
 
-		static Dictionary<string, IFilter> filterOptions = new Dictionary<string, IFilter>() {
-			{ "All", null },
-			{ "Ranked", FilterMethods.ranked },
-			{ "Qualified", FilterMethods.qualified },
-			{ "Unplayed", FilterMethods.unplayed },
-			{ "Played", FilterMethods.played },
-			{ "Requirements", FilterMethods.requirements },
-			{ "Not on Beatsaver", FilterMethods.notOnBeatsaver },
-			{ "Unranked", FilterMethods.unranked },
-		};
 
-		[UIValue("_sortOptions")] static List<object> _sortOptions = sortOptions.Keys.ToList<object>();
-		[UIValue("_filterOptions")] static List<object> _filterOptions = filterOptions.Keys.ToList<object>();
+		static Dictionary<string, ISorter> sortOptions = null;
+		static Dictionary<string, IFilter> filterOptions = null;
+
+		[UIValue("_sortOptions")] static List<object> _sortOptions = null;
+		[UIValue("_filterOptions")] static List<object> _filterOptions = null;
+
+		static void UpdateVisibleTransformers() {
+			sortOptions = SortMethods.methods
+				.Where(x => !(x.Value is ITransformerPlugin plugin) || plugin.visible)
+				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1).ToDictionary(x => x.Key, x => x.Value);
+
+			_sortOptions = sortOptions.Select(x => x.Key).ToList<object>();
+
+			filterOptions = FilterMethods.methods
+				.Where(x => !(x.Value is ITransformerPlugin plugin) || plugin.visible)
+				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1)
+				.ToDictionary(x => x.Key, x => x.Value);
+
+			_filterOptions = filterOptions.Select(x => x.Key).ToList<object>();
+		}
+		public void UpdateDropdowns() {
+			if(_sortDropdown != null) {
+				_sortDropdown.ReloadData();
+				HackDropdown(_sortDropdown);
+			}
+			if(_filterDropdown != null) {
+				_filterDropdown.ReloadData();
+				HackDropdown(_filterDropdown);
+			}
+		}
+
+		public void UpdateTransformerOptionsAndDropdowns() {
+			UpdateVisibleTransformers();
+			UpdateDropdowns();
+		}
+
 
 		void _SetSort(string selected) => SetSort(selected);
 		internal static void SetSort(string selected, bool storeToConfig = true, bool refresh = true) {
@@ -91,7 +110,7 @@ namespace BetterSongList.UI {
 		void _SetFilter(string selected) => SetFilter(selected);
 		internal static void SetFilter(string selected, bool storeToConfig = true, bool refresh = true) {
 			if(selected == null || !filterOptions.ContainsKey(selected))
-				selected = filterOptions.Keys.First();
+				selected = filterOptions.Keys.Last();
 
 			var newFilter = filterOptions[selected];
 			var unavReason = (newFilter as IAvailabilityCheck)?.GetUnavailabilityReason();
@@ -139,8 +158,9 @@ namespace BetterSongList.UI {
 			SetSortDirection(!Config.Instance.SortAsc);
 		}
 
+		static System.Random ran = new System.Random();
 		static void SelectRandom() {
-			var x = Object.FindObjectOfType<LevelCollectionTableView>();
+			var x = UnityEngine.Object.FindObjectOfType<LevelCollectionTableView>();
 
 			if(x == null)
 				return;
@@ -150,7 +170,7 @@ namespace BetterSongList.UI {
 			if(ml.Length < 2)
 				return;
 
-			x.SelectLevel(ml[Random.Range(0, ml.Length)]);
+			x.SelectLevel(ml[ran.Next(0, ml.Length)]);
 		}
 
 		Queue<string> warnings = new Queue<string>();
@@ -181,19 +201,18 @@ namespace BetterSongList.UI {
 
 
 		[UIComponent("filterLoadingIndicator")] internal readonly ImageView _filterLoadingIndicator = null;
-		[UIComponent("sortDropdown")] readonly DropdownWithTableView _sortDropdown = null;
-		[UIComponent("filterDropdown")] readonly DropdownWithTableView _filterDropdown = null;
 		[UIComponent("sortDirection")] readonly ClickableText _sortDirection = null;
 		[UIComponent("failTextLabel")] readonly TextMeshProUGUI _failTextLabel = null;
 
 		internal static void Init() {
+			UpdateVisibleTransformers();
 			SetSort(Config.Instance.LastSort, true, false);
 			SetFilter(Config.Instance.LastFilter, true, false);
 			SetSortDirection(Config.Instance.SortAsc);
 
 			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed()) {
 				BlockSongDataCoreLoad.doBlock = true;
-				persistentNuts.ShowErrorASAP("You have the Plugin 'SongDataCore' installed. It's advised to delete it as it can increase load times.\nIf you use ModAssistant you need to remove SongBrowser (Disabled by BetterSongList) to be able to remove SongDataCore");
+				Plugin.Log.Warn("SongDataCore detected without any Plugins depending on it. Its function will be blocked. More Info: https://github.com/halsafar/BeatSaberSongDataCore/pull/16");
 			}
 		}
 
@@ -218,8 +237,7 @@ namespace BetterSongList.UI {
 
 		[UIAction("#post-parse")]
 		void Parsed() {
-			HackDropdown(_sortDropdown);
-			HackDropdown(_filterDropdown);
+			UpdateVisibleTransformers();
 
 			foreach(var x in sortOptions) {
 				if(x.Value == HookLevelCollectionTableSet.sorter) {
@@ -234,11 +252,11 @@ namespace BetterSongList.UI {
 				}
 			}
 
+			UpdateDropdowns();
+
 			SetSortDirection(Config.Instance.SortAsc, false);
 
-#if !DEBUG
 			SharedCoroutineStarter.instance.StartCoroutine(PossiblyDrawUserAttentionToSettingsButton());
-#endif
 		}
 
 		IEnumerator PossiblyDrawUserAttentionToSettingsButton() {
@@ -249,24 +267,14 @@ namespace BetterSongList.UI {
 				}
 			} catch { }
 
-			var blinks = 0;
 			while(!settingsWereOpened) {
-				if(blinks++ == 120)
-					_settingsButtonArrow.gameObject.SetActive(true);
-
-				yield return new WaitForSeconds(blinks < 100 ? .5f : 0.25f);
+				yield return new WaitForSeconds(.5f);
 				if(_settingsButton != null)
 					_settingsButton.color = Color.green;
 
-				if(blinks > 150 && _settingsButtonArrow != null)
-					_settingsButtonArrow.gameObject.SetActive(true);
-
-				yield return new WaitForSeconds(blinks < 100 ? .5f : 0.25f);
+				yield return new WaitForSeconds(.5f);
 				if(_settingsButton != null)
 					_settingsButton.color = Color.white;
-
-				if(blinks > 150 && _settingsButtonArrow != null)
-					_settingsButtonArrow.gameObject.SetActive(false);
 			}
 
 			if(_settingsButton != null)

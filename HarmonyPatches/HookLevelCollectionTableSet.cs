@@ -81,17 +81,20 @@ namespace BetterSongList.HarmonyPatches {
 					outV = outV.Where(filter.GetValueFor);
 
 				if(sorter?.isReady == true) {
-					if(sorter is ISorterPrimitive) {
-						((ISorterPrimitive)sorter).DoSort(ref outV);
+					if(sorter is ISorterCustom customSorter) {
+						customSorter.DoSort(ref outV, Config.Instance.SortAsc);
 					} else {
-						outV = outV.OrderBy(x => x, sorter);
+						var pSorter = (ISorterPrimitive)sorter;
+						outV = Config.Instance.SortAsc ? 
+							outV.OrderBy(x => pSorter.GetValueFor(x) ?? float.MaxValue) :
+							outV.OrderByDescending(x => pSorter.GetValueFor(x) ?? float.MinValue);
 					}
 				}
 
 				previewBeatmapLevels = outV.ToArray();
 
-				if(sorter is ISorterWithLegend && Config.Instance.EnableAlphabetScrollbar)
-					customLegend = ((ISorterWithLegend)sorter).BuildLegend(previewBeatmapLevels);
+				if(sorter is ISorterWithLegend sl && Config.Instance.EnableAlphabetScrollbar)
+					customLegend = sl.BuildLegend(previewBeatmapLevels).ToList();
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
 			}

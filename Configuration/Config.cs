@@ -27,6 +27,8 @@ namespace BetterSongList {
 		public float AccuracyMultiplier { get; set; } = 1f;
 		public bool EnableAlphabetScrollbar { get; set; } = true;
 
+		public bool AllowPluginSortsAndFilters { get; set; } = true;
+
 		/// <summary>
 		/// This is called whenever BSIPA reads the config from disk (including when file changes are detected).
 		/// </summary>

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.FilterModels {
-	class FunctionFilter : IFilter {
+	public sealed class FunctionFilter : IFilter {
 		public bool isReady => true;
 
 		Func<IPreviewBeatmapLevel, bool> valueProvider;

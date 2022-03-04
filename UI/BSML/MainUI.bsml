@@ -11,9 +11,6 @@
 	<horizontal child-expand-width='false' spacing='5' preferred-width='106'>
 		<clickable-image src='#RandomIcon' on-click='SelectRandom' hover-hint='Select a random song from the list' preserve-aspect='true' min-width='7'/>
 		<clickable-image id='settingsButton' on-click='SettingsOpened' src='#SettingsIcon' hover-hint='Better Song List settings' preserve-aspect='true' min-width='7'/>
-		<horizontal ignore-layout='true' pad-left='18'>
-			<text id='settingsButtonArrow' font-size='30' text='⬅' color='red' active='false' align='CaplineLeft'/>
-		</horizontal>
 	</horizontal>
 	<loading-indicator preferred-height='8' preferred-width='8' id='filterLoadingIndicator' active='false' ignore-layout='true'/>
 	

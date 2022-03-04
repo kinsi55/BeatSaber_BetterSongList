@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.Filters.Models {
-	class PlayedFilter : IFilter {
+	public sealed class PlayedFilter : IFilter {
 		public bool isReady => LocalScoresUtil.hasScores;
 
 		bool intendedPlayedState = false;
