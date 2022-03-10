@@ -1,5 +1,4 @@
 ﻿using BetterSongList.FilterModels;
-using BetterSongList.Filters.Models;
 using BetterSongList.Interfaces;
 using SongDetailsCache.Structs;
 using System;
