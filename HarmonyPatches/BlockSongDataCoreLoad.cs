@@ -8,7 +8,8 @@ namespace BetterSongList.HarmonyPatches {
 		public static bool doBlock = false;
 		static bool Prefix() => !doBlock;
 
-		static MethodBase TargetMethod() => IPA.Loader.PluginManager.GetPluginFromId("SongDataCore")?
+		static bool Prepare() => IPA.Loader.PluginManager.GetPluginFromId("SongDataCore") != null;
+		static MethodBase TargetMethod() => IPA.Loader.PluginManager.GetPluginFromId("SongDataCore")
 			.Assembly.GetType("SongDataCore.Plugin")?
 			.GetMethod("LoadDatabases", BindingFlags.Instance | BindingFlags.NonPublic);
 		static Exception Cleanup(Exception ex) => null;
