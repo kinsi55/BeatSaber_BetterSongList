@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BetterSongList.Filters.Models {
+namespace BetterSongList.FilterModels {
 	public sealed class BasicSongDetailsFilter : IFilter, IAvailabilityCheck {
 		public bool isReady => SongDetailsUtil.finishedInitAttempt;
 

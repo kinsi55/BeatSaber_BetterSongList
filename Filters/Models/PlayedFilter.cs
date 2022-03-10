@@ -3,7 +3,7 @@ using BetterSongList.Util;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BetterSongList.Filters.Models {
+namespace BetterSongList.FilterModels {
 	public sealed class PlayedFilter : IFilter {
 		public bool isReady => LocalScoresUtil.hasScores;
 
