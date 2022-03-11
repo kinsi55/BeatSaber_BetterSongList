@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace BetterSongList.Util {
 
-namespace BetterSongList.Util {
-	public static class BeatmapPatternDetection {
 #if !PRE_1_20
+	using System;
+	using System.Collections.Generic;
+
+	public static class BeatmapPatternDetection {
 		public static bool CheckForCrouchWalls(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obstacles) {
 			if(obstacles == null || obstacles.Count == 0)
 				return false;
@@ -41,6 +40,10 @@ namespace BetterSongList.Util {
 			return false;
 		}
 #else
+	using System;
+	using System.Linq;
+
+	public static class BeatmapPatternDetection {
 		public static bool CheckForCrouchWalls(BeatmapData beatmapData) {
 			if(beatmapData.obstaclesCount == 0)
 				return false;
@@ -80,6 +83,6 @@ namespace BetterSongList.Util {
 			}
 			return false;
 		}
-#endif
 	}
+#endif
 }
