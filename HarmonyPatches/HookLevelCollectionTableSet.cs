@@ -93,7 +93,9 @@ namespace BetterSongList.HarmonyPatches {
 				}
 
 				if(sorter?.isReady == true) {
+#if DEBUG
 					sw.Restart();
+#endif
 					if(sorter is ISorterCustom customSorter) {
 						customSorter.DoSort(ref outV, Config.Instance.SortAsc);
 					} else {
