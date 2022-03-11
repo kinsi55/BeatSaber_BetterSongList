@@ -5,6 +5,7 @@ using HMUI;
 using IPA.Utilities;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -77,12 +78,30 @@ namespace BetterSongList.HarmonyPatches.UI {
 			obstaclesText.fontStyle = FontStyles.Italic;
 
 			// Crouchwalls HAHABALLS
-			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun && 
-				BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData)
-			) {
+			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun) {
 				obstaclesText.richText = true;
-				obstaclesText.fontStyle = FontStyles.Normal;
-				obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
+#if !PRE_1_20
+				// I am in a lot of pain 😀👍
+				if(____selectedDifficultyBeatmap is CustomDifficultyBeatmap customdiff) {
+					j(customdiff.beatmapSaveData.obstacles);
+				} else {
+					// Wont care about OST for now
+					j(null);
+				}
+
+				void j(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obst) {
+					if(!BeatmapPatternDetection.CheckForCrouchWalls(obst))
+						return;
+
+					obstaclesText.fontStyle = FontStyles.Normal;
+					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
+				}
+#else
+				if(BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData) {
+					obstaclesText.fontStyle = FontStyles.Normal;
+					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
+				}
+#endif
 			}
 
 			if(fields != null) {

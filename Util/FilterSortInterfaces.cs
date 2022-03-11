@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using BetterSongList.SortModels;
 using static SelectLevelCategoryViewController;
 
+#nullable enable
+
 namespace BetterSongList.Interfaces {
 	public interface IAvailabilityCheck {
 		public string GetUnavailabilityReason();
@@ -21,6 +23,6 @@ namespace BetterSongList.Interfaces {
 		/// </summary>
 		/// <param name="levelCategory"></param>
 		/// <param name="playlist"></param>
-		public void ContextSwitch(LevelCategory levelCategory, IPlaylist? playlist);
+		public void ContextSwitch(LevelCategory levelCategory, IAnnotatedBeatmapLevelCollection? playlist);
 	}
 }

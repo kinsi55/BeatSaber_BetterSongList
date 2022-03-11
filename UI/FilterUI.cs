@@ -46,19 +46,25 @@ namespace BetterSongList.UI {
 		[UIValue("_filterOptions")] static List<object> _filterOptions = null;
 
 		static void UpdateVisibleTransformers() {
+			bool CheckIsVisible(ITransformerPlugin plugin) {
+				plugin.ContextSwitch(HookSelectedCategory.lastSelectedCategory, HookSelectedCollection.lastSelectedCollection);
+				return plugin.visible;
+			}
+
 			sortOptions = SortMethods.methods
-				.Where(x => !(x.Value is ITransformerPlugin plugin) || plugin.visible)
+				.Where(x => !(x.Value is ITransformerPlugin plugin) || CheckIsVisible(plugin))
 				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1).ToDictionary(x => x.Key, x => x.Value);
 
 			_sortOptions = sortOptions.Select(x => x.Key).ToList<object>();
 
 			filterOptions = FilterMethods.methods
-				.Where(x => !(x.Value is ITransformerPlugin plugin) || plugin.visible)
+				.Where(x => !(x.Value is ITransformerPlugin plugin) || CheckIsVisible(plugin))
 				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1)
 				.ToDictionary(x => x.Key, x => x.Value);
 
 			_filterOptions = filterOptions.Select(x => x.Key).ToList<object>();
 		}
+
 		public void UpdateDropdowns() {
 			if(_sortDropdown != null) {
 				_sortDropdown.ReloadData();
@@ -206,8 +212,8 @@ namespace BetterSongList.UI {
 
 		internal static void Init() {
 			UpdateVisibleTransformers();
-			SetSort(Config.Instance.LastSort, true, false);
-			SetFilter(Config.Instance.LastFilter, true, false);
+			SetSort(Config.Instance.LastSort, false, false);
+			SetFilter(Config.Instance.LastFilter, false, false);
 			SetSortDirection(Config.Instance.SortAsc);
 
 			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed()) {
