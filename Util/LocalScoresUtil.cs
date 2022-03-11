@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BetterSongList.Util {
@@ -13,11 +13,20 @@ namespace BetterSongList.Util {
 		}
 
 		public static bool HasLocalScore(string levelId) {
-			return playerDataModel.playerData.levelsStatsData.Find(x => x.levelID == levelId && x.validScore) != null;
+			return playerDataModel.playerData.levelsStatsData.Find(x => x.validScore && x.levelID == levelId) != null;
 		}
 
-		public static bool HasLocalScore(IPreviewBeatmapLevel levelId) {
-			return HasLocalScore(levelId.levelID);
+		static HashSet<IPreviewBeatmapLevel> playedMaps = new HashSet<IPreviewBeatmapLevel>();
+		public static bool HasLocalScore(IPreviewBeatmapLevel level) {
+			if(playedMaps.Contains(level))
+				return true;
+
+			if(HasLocalScore(level.levelID)) {
+				playedMaps.Add(level);
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
