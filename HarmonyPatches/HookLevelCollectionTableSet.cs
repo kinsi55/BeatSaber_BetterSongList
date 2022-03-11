@@ -34,7 +34,7 @@ namespace BetterSongList.HarmonyPatches {
 		/// Refresh the SongList with the last used BeatMaps array
 		/// </summary>
 		/// <param name="processAsync"></param>
-		public static void Refresh(bool processAsync = false) {
+		public static void Refresh(bool processAsync = false, bool clearAsyncResult = true) {
 			if(lastInMapList == null)
 				return;
 #if TRACE
@@ -45,14 +45,15 @@ namespace BetterSongList.HarmonyPatches {
 			 * Pre-processes the desired songlist state in a second thread - This will then get stored in
 			 * a vaiable and used as the result on the next SetData() in the Prefix hook below
 			 */
-			asyncPreprocessed = null;
+			if(clearAsyncResult)
+				asyncPreprocessed = null;
 			if(processAsync) {
 				PrepareStuffIfNecessary(async () => {
 					// TODO: Maybe cancellationsource etc
 					var inList = lastInMapList;
 					await Task.Run(() => FilterWrapper(ref inList));
 					asyncPreprocessed = inList;
-					Refresh(false);
+					Refresh(false, false);
 				}, true);
 				return;
 			}
@@ -71,16 +72,28 @@ namespace BetterSongList.HarmonyPatches {
 				return;
 
 #if TRACE
-			Plugin.Log.Debug("FilterWrapper()");
+			Plugin.Log.Info(string.Format("FilterWrapper() - Main thread: {0}", IPA.Utilities.UnityGame.OnMainThread));
 #endif
 
 			try {
+#if DEBUG
+				var sw = new System.Diagnostics.Stopwatch();
+				sw.Start();
+#endif
+
 				var outV = previewBeatmapLevels.AsEnumerable();
 
-				if(filter?.isReady == true)
+				if(filter?.isReady == true) {
 					outV = outV.Where(filter.GetValueFor);
 
+#if DEBUG
+					outV = outV.ToList();
+					Plugin.Log.Info(string.Format("Filtering with {0} took {1}ms", filter, sw.Elapsed.TotalMilliseconds));
+#endif
+				}
+
 				if(sorter?.isReady == true) {
+					sw.Restart();
 					if(sorter is ISorterCustom customSorter) {
 						customSorter.DoSort(ref outV, Config.Instance.SortAsc);
 					} else {
@@ -89,6 +102,10 @@ namespace BetterSongList.HarmonyPatches {
 							outV.OrderBy(x => pSorter.GetValueFor(x) ?? float.MaxValue) :
 							outV.OrderByDescending(x => pSorter.GetValueFor(x) ?? float.MinValue);
 					}
+#if DEBUG
+					outV = outV.ToList();
+					Plugin.Log.Info(string.Format("Sorting with {0} took {1}ms", sorter, sw.Elapsed.TotalMilliseconds));
+#endif
 				}
 
 				previewBeatmapLevels = outV.ToArray();
