@@ -97,7 +97,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
 				}
 #else
-				if(BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData) {
+				if(BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData)) {
 					obstaclesText.fontStyle = FontStyles.Normal;
 					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
 				}
