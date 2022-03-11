@@ -28,7 +28,7 @@ namespace BetterSongList.FilterModels {
 		public string GetUnavailabilityReason() => SongDetailsUtil.GetUnavailabilityReason();
 
 		public bool GetValueFor(IPreviewBeatmapLevel level) {
-			if(SongDetailsUtil.songDetails == null)
+			if(!LocalScoresUtil.hasScores)
 				return true;
 
 			return LocalScoresUtil.HasLocalScore(level) == intendedPlayedState;
