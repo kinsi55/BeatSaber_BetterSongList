@@ -13,7 +13,7 @@ namespace BetterSongList.Util {
 			playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
 
 			foreach(var x in playerDataModel?.playerData?.levelsStatsData) {
-				if(!x.validScore || playedMaps.Contains(x.levelID))
+				if(x.validScore && !playedMaps.Contains(x.levelID))
 					playedMaps.Add(x.levelID);
 			}
 		}
