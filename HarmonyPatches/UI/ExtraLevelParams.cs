@@ -20,12 +20,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static TextMeshProUGUI[] fields = null;
 
 		static HoverHintController hhc = null;
-		static FieldInfo FIELD_LevelParamsPanel_obstaclesCount = AccessTools.Field(typeof(LevelParamsPanel), "_obstaclesCountText");
+		static readonly FieldInfo FIELD_LevelParamsPanel_obstaclesCount = AccessTools.Field(typeof(LevelParamsPanel), "_obstaclesCountText");
 		static IEnumerator ProcessFields() {
 			//Need to wait until the end of frame for reasons beyond my understanding
 			yield return new WaitForEndOfFrame();
 
-			void ModifyValue(TextMeshProUGUI text, string hoverHint, string icon) {
+			static void ModifyValue(TextMeshProUGUI text, string hoverHint, string icon) {
 				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}");
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();

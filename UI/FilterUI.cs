@@ -29,7 +29,7 @@ namespace BetterSongList.UI {
 	class FilterUI {
 		internal static readonly FilterUI persistentNuts = new FilterUI();
 #pragma warning disable 649
-		[UIComponent("root")] private RectTransform rootTransform;
+		[UIComponent("root")] private readonly RectTransform rootTransform;
 #pragma warning restore
 		[UIParams] readonly BSMLParserParams parserParams = null;
 
@@ -46,7 +46,7 @@ namespace BetterSongList.UI {
 		[UIValue("_filterOptions")] static List<object> _filterOptions = null;
 
 		static void UpdateVisibleTransformers() {
-			bool CheckIsVisible(ITransformerPlugin plugin) {
+			static bool CheckIsVisible(ITransformerPlugin plugin) {
 				plugin.ContextSwitch(HookSelectedCategory.lastSelectedCategory, HookSelectedCollection.lastSelectedCollection);
 				return plugin.visible;
 			}
@@ -164,7 +164,7 @@ namespace BetterSongList.UI {
 			SetSortDirection(!Config.Instance.SortAsc);
 		}
 
-		static System.Random ran = new System.Random();
+		static readonly System.Random ran = new System.Random();
 		static void SelectRandom() {
 			var x = UnityEngine.Object.FindObjectOfType<LevelCollectionTableView>();
 
@@ -179,7 +179,7 @@ namespace BetterSongList.UI {
 			x.SelectLevel(ml[ran.Next(0, ml.Length)]);
 		}
 
-		Queue<string> warnings = new Queue<string>();
+		readonly Queue<string> warnings = new Queue<string>();
 		bool warningLoadInProgress;
 		public void ShowErrorASAP(string text = null) {
 			if(text != null)
