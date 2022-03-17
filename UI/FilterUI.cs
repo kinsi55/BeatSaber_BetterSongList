@@ -215,11 +215,6 @@ namespace BetterSongList.UI {
 			SetSort(Config.Instance.LastSort, false, false);
 			SetFilter(Config.Instance.LastFilter, false, false);
 			SetSortDirection(Config.Instance.SortAsc);
-
-			if(!SongDataCoreChecker.didCheck && SongDataCoreChecker.IsInstalled() && !SongDataCoreChecker.IsUsed()) {
-				BlockSongDataCoreLoad.doBlock = true;
-				Plugin.Log.Warn("SongDataCore detected without any Plugins depending on it. Its function will be blocked. More Info: https://github.com/halsafar/BeatSaberSongDataCore/pull/16");
-			}
 		}
 
 		internal static void AttachTo(Transform target) {
