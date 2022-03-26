@@ -30,6 +30,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();
 
+				if(hhint == null)
+					return;
+
 				if(hhc == null)
 					hhc = UnityEngine.Object.FindObjectOfType<HoverHintController>();
 
