@@ -132,7 +132,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 							} else if(!diff.ranked) {
 								fields[0].text = fields[1].text = "-";
 							} else {
-								var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (14f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
+								var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (12.5f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
 								//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
 								var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
 
