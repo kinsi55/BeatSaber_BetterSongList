@@ -54,7 +54,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static StandardLevelDetailView lastInstance = null;
 
 		public static void UpdateState() {
-			if(lastInstance != null)
+			if(lastInstance != null && lastInstance.isActiveAndEnabled)
 				lastInstance.RefreshContent();
 		}
 

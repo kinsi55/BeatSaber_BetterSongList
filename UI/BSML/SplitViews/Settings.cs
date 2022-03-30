@@ -24,7 +24,10 @@ namespace BetterSongList.UI.SplitViews {
 		static void SettingsClosed() {
 			SongDeleteButton.UpdateState();
 			ScrollEnhancements.UpdateState();
-			ExtraLevelParams.UpdateState();
+			// In some cases this can throw - Too bad!
+			try {
+				ExtraLevelParams.UpdateState(); 
+			} catch { }
 			Config.Instance.Changed();
 		}
 
