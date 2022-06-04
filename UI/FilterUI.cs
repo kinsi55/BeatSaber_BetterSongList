@@ -234,7 +234,6 @@ namespace BetterSongList.UI {
 			BSMLStuff.InitSplitView(ref settingsViewParams, rootTransform.gameObject, SplitViews.Settings.instance).EmitEvent("ShowSettings");
 		}
 		[UIComponent("settingsButton")] readonly ClickableImage _settingsButton = null;
-		[UIComponent("settingsButtonArrow")] readonly TextMeshProUGUI _settingsButtonArrow = null;
 
 		[UIAction("#post-parse")]
 		void Parsed() {
@@ -277,9 +276,6 @@ namespace BetterSongList.UI {
 				if(_settingsButton != null)
 					_settingsButton.color = Color.white;
 			}
-
-			if(_settingsButton != null)
-				_settingsButtonArrow.gameObject.SetActive(false);
 		}
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
