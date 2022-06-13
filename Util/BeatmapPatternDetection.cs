@@ -24,7 +24,7 @@ namespace BetterSongList.Util {
 
 				// Detect >2 wide walls anywhere, or 2 wide wall in middle
 				if(o.width > 2 || (o.width == 2 && o.line == 1)) {
-					if(o.layer == 2 || o.layer == 2 && (o.height - o.layer >= 2))
+					if(o.layer == 2 || o.layer != 0 && (o.height - o.layer >= 2))
 						return true;
 				}
 
