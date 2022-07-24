@@ -37,6 +37,8 @@ namespace BetterSongList.SortModels {
 					var xy = new System.Diagnostics.Stopwatch();
 					xy.Start();
 
+					var fpath = Path.DirectorySeparatorChar + "info.dat";
+
 					foreach(var song in 
 						SongCore.Loader.BeatmapLevelsModelSO
 						.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks.Where(x => x is SongCore.OverrideClasses.SongCoreCustomBeatmapLevelPack)
@@ -50,7 +52,7 @@ namespace BetterSongList.SortModels {
 						 * There isnt really any "good" setup - LastWriteTime is cloned when copying a file and retained when manually
 						 * extracing from a zip, but the createtime is obviously "reset" when you copy files
 						 */
-						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(song.customLevelPath + Path.DirectorySeparatorChar + "info.dat").ToUnixTime();
+						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(song.customLevelPath + fpath).ToUnixTime();
 					}
 
 					Plugin.Log.Debug(string.Format("Getting SongFolder dates took {0}ms", xy.ElapsedMilliseconds));
