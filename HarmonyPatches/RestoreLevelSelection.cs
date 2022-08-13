@@ -8,9 +8,34 @@ using System.Reflection;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
+		public static BeatmapLevelPack restoredPack = null;
+
+		public static void LoadPackFromCollectionName() {
+			if(restoredPack?.shortPackName == Config.Instance.LastPack)
+				return;
+
+			if(Config.Instance.LastPack == null) {
+				restoredPack = null;
+				return;
+			}
+
+			var pid = PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
+
+			if(pid == null) {
+				restoredPack = null;
+				return;
+			}
+
+			restoredPack = new BeatmapLevelPack(pid, null, Config.Instance.LastPack, null, null, null);
+		}
+
 		[HarmonyPriority(int.MinValue)]
 		static void Prefix(ref string ____levelPackIdToBeSelectedAfterPresent) {
-			____levelPackIdToBeSelectedAfterPresent ??= LevelSelectionFlowCoordinator_DidActivate.restoredPackid;
+			if(____levelPackIdToBeSelectedAfterPresent != null)
+				return;
+
+			LoadPackFromCollectionName();
+			____levelPackIdToBeSelectedAfterPresent = restoredPack?.packID;
 		}
 	}
 
@@ -23,10 +48,7 @@ namespace BetterSongList.HarmonyPatches {
 
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
-		public static string restoredPackid = null;
-
 		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState) {
-			restoredPackid = ____startState?.beatmapLevelPack?.packID;
 			if(____startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
@@ -40,11 +62,11 @@ namespace BetterSongList.HarmonyPatches {
 			if(!BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
 				m = null;
 
-			restoredPackid = Config.Instance.LastPack == null ? null : PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
+			PackPreselect.LoadPackFromCollectionName();
 
 			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
 				restoreCategory,
-				restoredPackid == null ? null : new BeatmapLevelPack(restoredPackid, null, null, null, null, null),
+				PackPreselect.restoredPack,
 				m,
 				null
 			});
