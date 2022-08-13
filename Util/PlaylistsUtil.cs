@@ -35,7 +35,7 @@ namespace BetterSongList.Util {
 				return p;
 			} else if(hasPlaylistLib) {
 				IBeatmapLevelPack wrapper() {
-					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists()) {
+					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists(true)) {
 						if(x.packName == packName)
 							return x;
 					}

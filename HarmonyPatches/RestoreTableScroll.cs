@@ -11,7 +11,6 @@ namespace BetterSongList.HarmonyPatches {
 
 		static int? scrollToIndex = null;
 		static bool doResetScrollOnNext = false;
-		static bool gotoLastSelectedOnNextSetData = false;
 
 		public static void ResetScroll() {
 			scrollToIndex = 0;
@@ -20,10 +19,6 @@ namespace BetterSongList.HarmonyPatches {
 #if TRACE
 			Plugin.Log.Warn("RestoreTableScroll.ResetScroll()");
 #endif
-		}
-
-		public static void GotoLastSelectedOnNextSetData() {
-			gotoLastSelectedOnNextSetData = true;
 		}
 
 		[HarmonyPriority(int.MaxValue)]
@@ -45,38 +40,18 @@ namespace BetterSongList.HarmonyPatches {
 #if TRACE
 				Plugin.Log.Warn(string.Format("DoTheFunnySelect -> LevelCollectionTableView.SetData():Postfix scrollToIndex: {0}", scrollToIndex));
 #endif
-				bool specificMap = false;
-
-				if(scrollToIndex == null || gotoLastSelectedOnNextSetData) {
-					gotoLastSelectedOnNextSetData = false;
-					// If we havent saved an index yet where to scroll to, work with the last selected level
-					for(int i = 0; i < (____previewBeatmapLevels?.Length ?? 0); i++) {
-						if(____previewBeatmapLevels[i].levelID == Config.Instance.LastSong) {
-							scrollToIndex = i;
-							specificMap = true;
-
-							if(____showLevelPackHeader)
-								scrollToIndex++;
-
-							break;
-						}
-					}
-				}
 
 				if(scrollToIndex == null || scrollToIndex < 0)
 					return;
 
 #if TRACE
-				Plugin.Log.Warn(string.Format("-> Scrolling to {0} (Specific map: {1})", scrollToIndex, specificMap));
+				Plugin.Log.Warn(string.Format("-> Scrolling to {0}", scrollToIndex));
 #endif
-
-				if(specificMap)
-					____tableView.SelectCellWithIdx((int)scrollToIndex, false);
 
 				____tableView.ScrollToCellWithIdx(
 					(int)scrollToIndex,
-					specificMap ? TableView.ScrollPositionType.Center : TableView.ScrollPositionType.Beginning,
-					specificMap
+					TableView.ScrollPositionType.Beginning,
+					false
 				);
 			}
 		}

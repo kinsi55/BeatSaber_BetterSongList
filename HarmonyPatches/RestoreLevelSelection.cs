@@ -6,6 +6,14 @@ using System.Linq;
 using System.Reflection;
 
 namespace BetterSongList.HarmonyPatches {
+	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
+	static class PackPreselect {
+		[HarmonyPriority(int.MinValue)]
+		static void Prefix(ref string ____levelPackIdToBeSelectedAfterPresent) {
+			____levelPackIdToBeSelectedAfterPresent ??= LevelSelectionFlowCoordinator_DidActivate.restoredPackid;
+		}
+	}
+
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), "DidActivate")]
 	static class LevelSelectionFlowCoordinator_DidActivate {
 		static readonly ConstructorInfo thingy = AccessTools.FirstConstructor(typeof(LevelSelectionFlowCoordinator.State), x => x.GetParameters().Length == 4);
@@ -15,7 +23,10 @@ namespace BetterSongList.HarmonyPatches {
 
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
+		public static string restoredPackid = null;
+
 		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState) {
+			restoredPackid = ____startState?.beatmapLevelPack?.packID;
 			if(____startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
@@ -29,11 +40,11 @@ namespace BetterSongList.HarmonyPatches {
 			if(!BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
 				m = null;
 
-			var packId = Config.Instance.LastPack == null ? null : PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
+			restoredPackid = Config.Instance.LastPack == null ? null : PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
 
 			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
 				restoreCategory,
-				packId == null ? null : new BeatmapLevelPack(packId, null, null, null, null, null),
+				restoredPackid == null ? null : new BeatmapLevelPack(restoredPackid, null, null, null, null, null),
 				m,
 				null
 			});
