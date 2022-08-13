@@ -65,11 +65,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
 				GameObject.Destroy(extraUI.GetComponent<LevelParamsPanel>());
 
-				// TODO: Remove this funny business when required game version >= 1.19.0
-				var isPostGagaUI = UnityGame.GameVersion >= new AlmostVersion("1.19.0");
-
-				____levelParamsPanel.transform.localPosition += new Vector3(0, isPostGagaUI ? 3.5f : 1);
-				extraUI.transform.localPosition -= new Vector3(0, isPostGagaUI ? 1f : 4);
+				____levelParamsPanel.transform.localPosition += new Vector3(0, 3.5f);
+				extraUI.transform.localPosition -= new Vector3(0, 1f);
 
 				fields = extraUI.GetComponentsInChildren<CurvedTextMeshPro>();
 				SharedCoroutineStarter.instance.StartCoroutine(ProcessFields());
@@ -83,7 +80,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			// Crouchwalls HAHABALLS
 			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun) {
 				obstaclesText.richText = true;
-#if !PRE_1_20
+
 				// I am in a lot of pain 😀👍
 				if(____selectedDifficultyBeatmap is CustomDifficultyBeatmap customdiff) {
 					j(customdiff.beatmapSaveData.obstacles);
@@ -99,12 +96,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 					obstaclesText.fontStyle = FontStyles.Normal;
 					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
 				}
-#else
-				if(BeatmapPatternDetection.CheckForCrouchWalls(____selectedDifficultyBeatmap.beatmapData)) {
-					obstaclesText.fontStyle = FontStyles.Normal;
-					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
-				}
-#endif
 			}
 
 			if(fields != null) {
