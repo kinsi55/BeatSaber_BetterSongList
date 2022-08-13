@@ -171,13 +171,8 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			// Playlistlib has its own custom wrapping class for Playlists so it can properly track duplicates, so we need to use its collection
-			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib) {
-				if(PlaylistsUtil.requiresListCast) {
-					previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection)?.Cast<IPreviewBeatmapLevel>().ToArray() ?? previewBeatmapLevels;
-				} else {
-					previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
-				}
-			}
+			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
+				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
 
 			lastInMapList = previewBeatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
