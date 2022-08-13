@@ -20,11 +20,5 @@ namespace BetterSongList.HarmonyPatches {
 #endif
 			FilterUI.SetFilter(null, false, false);
 		}
-
-		//TODO: for some reason basegame clears the input field, but retains the search text
-		//Reported, remove this when fixed in basegame.
-		static void Postfix(LevelFilterParams ____currentFilterParams) {
-			____currentFilterParams.searchText = "";
-		}
 	}
 }
