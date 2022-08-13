@@ -37,7 +37,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			r.anchorMax = new Vector2(1, 0.953f - vOffs);
 
 			var i = newBtn.GetComponentInChildren<ImageView>();
-			if(Icon[0] == '#')
+			if(Icon?[0] == '#')
 				i.SetImage(Icon);
 
 			// Put the Icon in the middle of the touchable rect
@@ -84,20 +84,17 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 
-			var btnUpFast = BuildButton(buton, "-", 0, -90, () => Scroll(0.1f, -1));
-			var btnDownFast = BuildButton(buton, "-", 0.86f, 90, () => Scroll(0.1f, 1));
+			var btnUpFast = BuildButton(buton, null, 0, -90, () => Scroll(0.1f, -1));
+			var btnDownFast = BuildButton(buton, null, 0.86f, 90, () => Scroll(0.1f, 1));
 
 			buttons = new[] {
 				btnUpFast,
-				BuildButton(buton, "#HeightIcon", 0.09f, 0, () => Scroll(1, 0)),
-				BuildButton(buton, "#HeightIcon", 0.77f, 180, () => Scroll(1, 1)),
+				BuildButton(buton, "#HeightIcon", 0.10f, 0, () => Scroll(1, 0)),
+				BuildButton(buton, "#HeightIcon", 0.76f, 180, () => Scroll(1, 1)),
 				btnDownFast
 			}.Select(x => x.gameObject).ToArray();
 
-			var Tex2D = new Texture2D(2, 2);
-			Tex2D.LoadImage(Utilities.GetResource(Assembly.GetExecutingAssembly(), "BetterSongList.UI.DoubleArrowIcon.png"));
-
-			var sp = Sprite.Create(Tex2D, new Rect(0, 0, Tex2D.width, Tex2D.height), Vector2.zero, 10);
+			var sp =  Utilities.LoadSpriteRaw(Utilities.GetResource(Assembly.GetExecutingAssembly(), "BetterSongList.UI.DoubleArrowIcon.png"));
 
 			btnUpFast.GetComponentInChildren<ImageView>().sprite = sp;
 			btnDownFast.GetComponentInChildren<ImageView>().sprite = sp;
