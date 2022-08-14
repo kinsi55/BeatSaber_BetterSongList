@@ -14,13 +14,8 @@ namespace BetterSongList.FilterModels {
 			if(wipTask?.Task.IsCompleted != false)
 				wipTask = new TaskCompletionSource<bool>();
 
-			if(!inited && (inited = true)) {
-				void loaded(SongCore.Loader _, System.Collections.IDictionary _2) {
-					SongCore.Loader.SongsLoadedEvent -= loaded;
-					wipTask.SetResult(true);
-				}
-				SongCore.Loader.SongsLoadedEvent += loaded;
-			}
+			if(!inited && (inited = true))
+				SongCore.Loader.SongsLoadedEvent += (_, _2) => wipTask.SetResult(true);
 
 			return wipTask.Task;
 		}
