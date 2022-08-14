@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterSongList.FilterModels {
-	public sealed class BasicSongDetailsFilter : IFilter, IAvailabilityCheck {
+	public class BasicSongDetailsFilter : IFilter, IAvailabilityCheck {
 		public bool isReady => SongDetailsUtil.finishedInitAttempt;
 
 		Func<object, bool> filterValueTransformer;

@@ -20,7 +20,7 @@ namespace BetterSongList.SortModels {
 		}
 	}
 
-	public sealed class PrimitiveFunctionSorterWithLegend : PrimitiveFunctionSorter, ISorterWithLegend {
+	public class PrimitiveFunctionSorterWithLegend : PrimitiveFunctionSorter, ISorterWithLegend {
 		Func<IPreviewBeatmapLevel, string> legendBuilder = null;
 		public PrimitiveFunctionSorterWithLegend(Func<IPreviewBeatmapLevel, float?> sortValueGetter, Func<IPreviewBeatmapLevel, string> legendBuilder) : base(sortValueGetter) {
 			this.legendBuilder = legendBuilder;
@@ -57,7 +57,7 @@ namespace BetterSongList.SortModels {
 		}
 	}
 
-	public sealed class ComparableFunctionSorterWithLegend : ComparableFunctionSorter, ISorterWithLegend {
+	public class ComparableFunctionSorterWithLegend : ComparableFunctionSorter, ISorterWithLegend {
 		Func<IPreviewBeatmapLevel, string> legendBuilder = null;
 		public ComparableFunctionSorterWithLegend(
 			Func<IPreviewBeatmapLevel, IPreviewBeatmapLevel, int> sortValueGetter, 
