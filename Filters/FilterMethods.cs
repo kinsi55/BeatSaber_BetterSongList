@@ -23,7 +23,7 @@ namespace BetterSongList {
 			{ "All", null }
 		};
 
-		static bool Register<T>(T filter) where T: ITransformerPlugin, IFilter {
+		public static bool Register<T>(T filter) where T: ITransformerPlugin, IFilter {
 			var name = filter.name;
 
 			if(name.Length > 20)
