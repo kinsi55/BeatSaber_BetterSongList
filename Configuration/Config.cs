@@ -17,7 +17,6 @@ namespace BetterSongList {
 		public string LastPack { get; set; } = "";
 
 		public bool AllowWipDelete { get; set; } = false;
-		public bool ReselectLastSong { get; set; } = true;
 		public bool AutoFilterUnowned { get; set; } = true;
 		public bool ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun { get; set; } = true;
 		public bool ClearFiltersOnPlaylistSelect { get; set; } = true;
