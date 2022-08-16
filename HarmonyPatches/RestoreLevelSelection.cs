@@ -8,7 +8,7 @@ using System.Reflection;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
-		public static BeatmapLevelPack restoredPack = null;
+		public static IBeatmapLevelPack restoredPack = null;
 
 		public static void LoadPackFromCollectionName() {
 			if(restoredPack?.shortPackName == Config.Instance.LastPack)
@@ -19,14 +19,7 @@ namespace BetterSongList.HarmonyPatches {
 				return;
 			}
 
-			var pid = PlaylistsUtil.GetPack(Config.Instance.LastPack)?.packID;
-
-			if(pid == null) {
-				restoredPack = null;
-				return;
-			}
-
-			restoredPack = new BeatmapLevelPack(pid, null, Config.Instance.LastPack, null, null, null);
+			restoredPack = PlaylistsUtil.GetPack(Config.Instance.LastPack);
 		}
 
 		[HarmonyPriority(int.MinValue)]
@@ -48,8 +41,8 @@ namespace BetterSongList.HarmonyPatches {
 
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
-		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState) {
-			if(____startState != null) {
+		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool firstActivation) {
+			if(____startState != null || !firstActivation) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
 #endif
