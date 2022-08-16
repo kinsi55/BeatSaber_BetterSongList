@@ -8,21 +8,18 @@ using System.Reflection;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
-		static string lastLoadedPackName = null;
 		public static IBeatmapLevelPack restoredPack = null;
 
 		public static void LoadPackFromCollectionName() {
-			if(lastLoadedPackName == Config.Instance.LastPack)
+			if(restoredPack?.shortPackName == Config.Instance.LastPack)
 				return;
 
-			lastLoadedPackName = Config.Instance.LastPack;
-
-			if(lastLoadedPackName == null) {
+			if(Config.Instance.LastPack == null) {
 				restoredPack = null;
 				return;
 			}
 
-			restoredPack = PlaylistsUtil.GetPack(lastLoadedPackName);
+			restoredPack = PlaylistsUtil.GetPack(Config.Instance.LastPack);
 		}
 
 		[HarmonyPriority(int.MinValue)]

@@ -10,28 +10,22 @@ namespace BetterSongList.Util {
 			hasPlaylistLib = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlaylistsLib") != null;
 		}
 
-		public static Dictionary<string, IBeatmapLevelPack> builtinPacks = null;
+		public static Dictionary<string, IBeatmapLevelPack> packs = null;
 
 		public static IBeatmapLevelPack GetPack(string packName) {
 			if(packName == null)
 				return null;
 
-			if(packName == "Custom Levels") {
-				return SongCore.Loader.CustomLevelsPack;
-			} else if(packName == "WIP Levels") {
-				return SongCore.Loader.WIPLevelsPack;
-			}
-
-			if(builtinPacks == null) {
-				builtinPacks =
-					SongCore.Loader.BeatmapLevelsModelSO.allLoadedBeatmapLevelWithoutCustomLevelPackCollection.beatmapLevelPacks
+			if(packs == null) {
+				packs =
+					SongCore.Loader.BeatmapLevelsModelSO.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks
 					// There shouldnt be any duplicate name basegame playlists... But better be safe
 					.GroupBy(x => x.shortPackName)
 					.Select(x => x.First())
 					.ToDictionary(x => x.shortPackName, x => x);
 			}
 
-			if(builtinPacks.TryGetValue(packName, out var p)) {
+			if(packs.TryGetValue(packName, out var p)) {
 				return p;
 			} else if(hasPlaylistLib) {
 				IBeatmapLevelPack wrapper() {
