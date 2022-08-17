@@ -42,7 +42,7 @@ namespace BetterSongList.HarmonyPatches {
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
 		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool firstActivation) {
-			if(____startState != null || !firstActivation) {
+			if(____startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
 #endif
