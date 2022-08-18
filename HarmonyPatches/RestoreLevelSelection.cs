@@ -1,4 +1,5 @@
-﻿using BetterSongList.Util;
+﻿using BetterSongList.UI;
+using BetterSongList.Util;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,7 @@ namespace BetterSongList.HarmonyPatches {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
 #endif
+				FilterUI.SetFilter(null, false, false);
 				return;
 			}
 

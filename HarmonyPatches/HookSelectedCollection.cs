@@ -1,10 +1,12 @@
-﻿using BetterSongList.UI;
+﻿using BetterSongList.FilterModels;
+using BetterSongList.UI;
 using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), nameof(AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection))]
 	static class HookSelectedCollection {
 		public static IAnnotatedBeatmapLevelCollection lastSelectedCollection { get; private set; }
+		public static bool doRestoreFilter = false;
 
 		[HarmonyPriority(int.MinValue), HarmonyPrefix]
 		static void CollectionSet(IAnnotatedBeatmapLevelCollection beatmapLevelCollection) {
@@ -19,13 +21,19 @@ namespace BetterSongList.HarmonyPatches {
 #endif
 
 			// If its a playlist we want to start off with no sorting and filtering - Requested by Pixel
-			if(beatmapLevelCollection != null && Config.Instance.ClearFiltersOnPlaylistSelect && beatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
-				FilterUI.SetSort(null, false, false);
-				FilterUI.SetFilter(null, false, false);
-				// Restore previously used Sort and filter for non-playlists
-			} else if(lastSelectedCollection != null) {
-				FilterUI.SetSort(Config.Instance.LastSort, false, false);
-				FilterUI.SetFilter(Config.Instance.LastFilter, false, false);
+			if(Config.Instance.ClearFiltersOnPlaylistSelect) {
+				if(beatmapLevelCollection != null && beatmapLevelCollection != SongCore.Loader.CustomLevelsPack) {
+					FilterUI.SetSort(null, false, false);
+
+					if(doRestoreFilter = HookLevelCollectionTableSet.filter != null)
+						FilterUI.SetFilter(null, false, false);
+					// Restore previously used Sort and filter for non-playlists
+				} else if(lastSelectedCollection != null) {
+					FilterUI.SetSort(Config.Instance.LastSort, false, false);
+					if(doRestoreFilter)
+						FilterUI.SetFilter(Config.Instance.LastFilter, false, false);
+					doRestoreFilter = false;
+				}
 			}
 
 			lastSelectedCollection = beatmapLevelCollection;
