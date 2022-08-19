@@ -57,7 +57,7 @@ namespace BetterSongList.HarmonyPatches {
 			if(!Enum.TryParse(Config.Instance.LastCategory, out SelectLevelCategoryViewController.LevelCategory restoreCategory))
 				restoreCategory = SelectLevelCategoryViewController.LevelCategory.None;
 
-			if(!BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
+			if(Config.Instance.LastSong == null || !BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
 				m = null;
 
 			PackPreselect.LoadPackFromCollectionName();
