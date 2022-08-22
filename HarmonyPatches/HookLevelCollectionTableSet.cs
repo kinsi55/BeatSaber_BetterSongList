@@ -113,7 +113,7 @@ namespace BetterSongList.HarmonyPatches {
 				previewBeatmapLevels = outV.ToArray();
 
 				if(sorter is ISorterWithLegend sl && Config.Instance.EnableAlphabetScrollbar)
-					customLegend = sl.BuildLegend(previewBeatmapLevels).ToList();
+					customLegend = sl.BuildLegend(previewBeatmapLevels).ToArray();
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
 			}
@@ -204,7 +204,7 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 
-		static List<KeyValuePair<string, int>> customLegend = null;
+		static KeyValuePair<string, int>[] customLegend = null;
 		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
 			lastOutMapList = previewBeatmapLevels;
 
@@ -221,7 +221,7 @@ namespace BetterSongList.HarmonyPatches {
 
 			// Now that all labels are there we can insert the text we want there...
 			var x = ReflectionUtil.GetField<List<TextMeshProUGUI>, AlphabetScrollbar>(____alphabetScrollbar, "_texts");
-			for(var i = customLegend.Count; i-- != 0;)
+			for(var i = customLegend.Length; i-- != 0;)
 				x[i].text = customLegend[i].Key;
 
 			customLegend = null;
