@@ -48,11 +48,5 @@ namespace BetterSongList.HarmonyPatches {
 					CollectionSet(null);
 			}
 		}
-
-		[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), nameof(AnnotatedBeatmapLevelCollectionsViewController.SetData))]
-		static class HookLevelCollectionInit {
-			// Restore the playlist when re-entering playlists (Does not call HandleDidSelectAnnotatedBeatmapLevelCollection())
-			static void Postfix(AnnotatedBeatmapLevelCollectionsViewController __instance) => CollectionSet(__instance.selectedAnnotatedBeatmapLevelCollection);
-		}
 	}
 }
