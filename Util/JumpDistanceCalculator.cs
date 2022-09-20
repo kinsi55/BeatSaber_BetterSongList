@@ -3,10 +3,9 @@
 namespace BetterSongList.Util {
 	static class JumpDistanceCalculator {
 		static float hjd(float bpm, float njs, float offset) {
-			var noteJumpMovementSpeed = (njs * bpm) / bpm;
 			var num = 60f / bpm;
 			var hjd = 4f;
-			while(noteJumpMovementSpeed * num * hjd > 18f)
+			while(njs * num * hjd > 17.999f)
 				hjd /= 2f;
 
 			hjd += offset;
