@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using static SelectLevelCategoryViewController;
 
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
@@ -54,17 +55,22 @@ namespace BetterSongList.HarmonyPatches {
 				return;
 			}
 
-			if(!Enum.TryParse(Config.Instance.LastCategory, out SelectLevelCategoryViewController.LevelCategory restoreCategory))
-				restoreCategory = SelectLevelCategoryViewController.LevelCategory.None;
+			if(!Enum.TryParse(Config.Instance.LastCategory, out LevelCategory restoreCategory))
+				restoreCategory = LevelCategory.None;
 
 			if(Config.Instance.LastSong == null || !BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
 				m = null;
 
 			PackPreselect.LoadPackFromCollectionName();
 
+			var pack = PackPreselect.restoredPack;
+
+			if(restoreCategory == LevelCategory.All || restoreCategory == LevelCategory.Favorites)
+				pack = null;
+
 			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
 				restoreCategory,
-				PackPreselect.restoredPack,
+				pack,
 				m,
 				null
 			});
