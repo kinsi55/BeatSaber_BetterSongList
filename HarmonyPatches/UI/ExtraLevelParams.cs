@@ -95,7 +95,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 						return;
 
 					obstaclesText.fontStyle = FontStyles.Normal;
-					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠ ({numWalls.ToString()})</color></size></b>";
+					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>({numWalls.ToString()})</color></size></b>";
 				}
 			}
 
