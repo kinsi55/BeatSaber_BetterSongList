@@ -78,7 +78,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			obstaclesText.fontStyle = FontStyles.Italic;
 
 			// Crouchwalls HAHABALLS
-			if(Config.Instance.HowManyCrouchWalls > 0) {
+			if(Config.Instance.ShowNumberOfCrouchWalls) {
 				obstaclesText.richText = true;
 
 				// I am in a lot of pain 😀👍
