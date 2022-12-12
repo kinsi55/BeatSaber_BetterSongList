@@ -14,7 +14,7 @@ namespace BetterSongList.Util {
 			
 			int count = 0;
 			foreach(var o in obstacles) {
-				// Ignore 1 wide walls on left
+				// Ignore 1 wide walls on right and left
 				if(o.line == 3 || (o.line == 0 && o.width == 1))
 					continue;
 
