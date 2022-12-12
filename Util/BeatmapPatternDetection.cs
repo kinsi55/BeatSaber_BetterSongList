@@ -6,12 +6,13 @@ using System.Linq;
 
 namespace BetterSongList.Util {
 	public static class BeatmapPatternDetection {
-		public static bool CheckForCrouchWalls(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obstacles) {
+		public static int CheckForCrouchWalls(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obstacles) {
 			if(obstacles == null || obstacles.Count == 0)
-				return false;
+				return 0;
 
 			var wallExistence = new float[2];
-
+			
+			int count = 0;
 			foreach(var o in obstacles) {
 				// Ignore 1 wide walls on left
 				if(o.line == 3 || (o.line == 0 && o.width == 1))
@@ -24,7 +25,7 @@ namespace BetterSongList.Util {
 				// Detect >2 wide walls anywhere, or 2 wide wall in middle
 				if(o.width > 2 || (o.width == 2 && o.line == 1)) {
 					if(o.layer == 2 || o.layer != 0 && (o.height - o.layer >= 2))
-						return true;
+						count++;
 				}
 
 				// Is the wall on the left or right half?
@@ -33,12 +34,12 @@ namespace BetterSongList.Util {
 				// Check if the other half has an active wall, which would mean there is one on both halfs
 				// I know this technically does not check if one of the halves is half-height, but whatever
 				if(wallExistence[isLeftHalf ? 1 : 0] >= o.beat)
-					return true;
+					count++;
 
 				// Extend wall lengths by 120ms so that staggered crouchwalls that dont overlap are caught
 				wallExistence[isLeftHalf ? 0 : 1] = Math.Max(wallExistence[isLeftHalf ? 0 : 1], o.beat + o.duration + 0.12f);
 			}
-			return false;
+			return count;
 		}
 	}
 }
