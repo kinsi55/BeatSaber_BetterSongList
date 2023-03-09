@@ -66,7 +66,7 @@ namespace BetterSongList.HarmonyPatches {
 			var pack = PackPreselect.restoredPack;
 
 			if(restoreCategory == LevelCategory.All || restoreCategory == LevelCategory.Favorites)
-				pack = null;
+				pack = SongCore.Loader.CustomLevelsPack;
 
 			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
 				restoreCategory,
