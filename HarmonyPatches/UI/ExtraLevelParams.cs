@@ -26,7 +26,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			yield return new WaitForEndOfFrame();
 
 			static void ModifyValue(TextMeshProUGUI text, string hoverHint, string icon) {
-				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}");
+				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}Icon");
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();
 
@@ -41,10 +41,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 				hhint.text = hoverHint;
 			}
 
-			ModifyValue(fields[0], "ScoreSaber PP Value", "DifficultyIcon");
-			ModifyValue(fields[1], "ScoreSaber Star Rating", "FavoritesIcon");
-			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotesIcon");
-			ModifyValue(fields[3], "JD (Jump Distance, how close notes spawn)", "MeasureIcon");
+			ModifyValue(fields[0], "ScoreSaber PP Value", "Difficulty");
+			ModifyValue(fields[1], "ScoreSaber Star Rating", "Favorites");
+			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotes");
+			ModifyValue(fields[3], "BeatSaver upload age (Months)", "Clock");
 
 			fields[0].richText = true;
 			fields[0].characterSpacing = -3f;
