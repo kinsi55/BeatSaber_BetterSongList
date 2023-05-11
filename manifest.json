@@ -19,6 +19,6 @@
     "conflictsWith": {
         "SongBrowser": ">=0.0.0",
         "BeatSaberPlaylistsLib": "<1.6.0",
-        "SongDetailsCache": "<1.1.4"
+        "SongDetailsCache": "<1.2.2"
     }
 }

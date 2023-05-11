@@ -21,6 +21,12 @@ namespace BetterSongList.UI.SplitViews {
 		Config cfgi => Config.Instance;
 		readonly string version = $"BetterSongList v{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)} by Kinsi55";
 
+		static readonly IReadOnlyList<object> preferredLeaderboardChoices = new List<object>() { "ScoreSaber", "BeatLeader" };
+		string preferredLeaderboard {
+			get => Config.Instance.PreferredLeaderboard;
+			set => Config.Instance.PreferredLeaderboard = value;
+		}
+
 		static void SettingsClosed() {
 			SongDeleteButton.UpdateState();
 			ScrollEnhancements.UpdateState();
