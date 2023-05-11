@@ -48,7 +48,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 			fields[0].richText = true;
 			fields[0].characterSpacing = -3f;
-			fields[3].richText = true;
 		}
 
 		static StandardLevelDetailView lastInstance = null;
@@ -139,6 +138,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 									fields[1].text = diff.starsBeatleader.ToString("0.0#");
 								}
 							}
+
+							fields[3].text = SortModels.FolderDateSorter.GetMapAgeMonths((int)song.uploadTimeUnix);
 						}
 					}
 					wrapper();
@@ -157,11 +158,11 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 				fields[2].text = njs.ToString("0.0#");
 
-				var offset = Config.Instance.ShowMapJDInsteadOfOffset ?
-					JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) :
-					____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
+				//var offset = Config.Instance.ShowMapJDInsteadOfOffset ?
+				//	JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) :
+				//	____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
 
-				fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
+				//fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
 			}
 		}
 	}

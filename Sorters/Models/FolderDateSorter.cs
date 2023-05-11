@@ -73,6 +73,19 @@ namespace BetterSongList.SortModels {
 		}
 
 		const float MONTH_SECS = 1f / (60 * 60 * 24 * 30.4f);
+
+		public static string GetMapAgeMonths(int uploadDateUtc, int curUtc = 0) {
+			if(curUtc == 0)
+				curUtc = (int)DateTime.UtcNow.ToUnixTime();
+
+			var months = (curUtc - uploadDateUtc) * MONTH_SECS;
+
+			if(months < 1)
+				return "<1 M";
+
+			return Math.Round(months) + " M";
+		}
+
 		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
 			var curUtc = (int)DateTime.UtcNow.ToUnixTime();
 
@@ -80,12 +93,7 @@ namespace BetterSongList.SortModels {
 				if(!songTimes.ContainsKey(level.levelID))
 					return null;
 
-				var months = (curUtc - songTimes[level.levelID]) * MONTH_SECS;
-
-				if(months < 1)
-					return "<1 M";
-
-				return Math.Round(months) + " M";
+				return GetMapAgeMonths(songTimes[level.levelID]);
 			});
 		}
 	}
