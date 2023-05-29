@@ -15,7 +15,7 @@
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
 				/>
 					<toggle-setting
-						text='Show Warning for Duck Walls' apply-on-change='true' value='ShowNumberOfCrouchWalls'
+						text='Show Warning for Duck Walls' apply-on-change='true' value='ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun'
 						hover-hint='Shows a Warning icon next to the Wall Count if the map contains any crouch walls'
 				/>
 					<toggle-setting
