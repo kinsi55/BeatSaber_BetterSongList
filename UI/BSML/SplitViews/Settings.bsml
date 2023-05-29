@@ -30,12 +30,15 @@
 						text='Extend Basegame scrollbar' apply-on-change='true' value='ExtendSongsScrollbar'
 						hover-hint='Adds Far-Scroll and Jump to Top / Bottom buttons to Scrollbar'
 				/>
-					<toggle-setting
-						text='Show map JD instead of Offset' apply-on-change='true' value='ShowMapJDInsteadOfOffset'
-						hover-hint='Will display the maps JD instead of its configured offset'
+				</macro.as-host>
+				<list-setting
+					text='Preferred Leaderboard' apply-on-change="true" value="preferredLeaderboard"
+					choices="preferredLeaderboardChoices" bind-value="true"
+					hover-hint="Which leaderboards Star value to display"
 				/>
+				<macro.as-host host='cfgi'>
 					<slider-setting
-						text='PP Accuracy Scale' apply-on-change='true' value='AccuracyMultiplier' min='0.2' max='2' increment='0.02'
+						text='PP Accuracy Scale (SS Only)' apply-on-change='true' value='AccuracyMultiplier' min='0.2' max='2' increment='0.02'
 						hover-hint='Scales the Accuracy used to calculate a PP value with by this amount to be closer to your skill / preference'
 				/>
 				</macro.as-host>

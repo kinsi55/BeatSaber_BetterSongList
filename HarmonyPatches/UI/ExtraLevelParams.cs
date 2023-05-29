@@ -26,7 +26,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			yield return new WaitForEndOfFrame();
 
 			static void ModifyValue(TextMeshProUGUI text, string hoverHint, string icon) {
-				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}");
+				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}Icon");
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();
 
@@ -41,14 +41,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 				hhint.text = hoverHint;
 			}
 
-			ModifyValue(fields[0], "ScoreSaber PP Value", "DifficultyIcon");
-			ModifyValue(fields[1], "ScoreSaber Star Rating", "FavoritesIcon");
-			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotesIcon");
-			ModifyValue(fields[3], "JD (Jump Distance, how close notes spawn)", "MeasureIcon");
+			ModifyValue(fields[0], "ScoreSaber PP Value", "Difficulty");
+			ModifyValue(fields[1], "ScoreSaber Star Rating", "Favorites");
+			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotes");
+			ModifyValue(fields[3], "BeatSaver upload age (Months)", "Clock");
 
 			fields[0].richText = true;
 			fields[0].characterSpacing = -3f;
-			fields[3].richText = true;
 		}
 
 		static StandardLevelDetailView lastInstance = null;
@@ -120,17 +119,28 @@ namespace BetterSongList.HarmonyPatches.UI {
 									ch
 								)
 							) {
-								fields[0].text = fields[1].text = "?";
-							} else if(!diff.ranked) {
-								fields[0].text = fields[1].text = "-";
+								fields[0].text = fields[1].text = fields[3].text = "?";
+								return;
 							} else {
-								var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (12.5f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
-								//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
-								var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
+								var isSs = Config.Instance.PreferredLeaderboard == "ScoreSaber";
+								float stars = isSs ? diff.stars : diff.starsBeatleader;
 
-								fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
-								fields[1].text = diff.stars.ToString("0.0#");
+								if(stars <= 0) {
+									fields[0].text = fields[1].text = "-";
+								} else if(isSs) {
+									var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (12.5f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
+									//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
+									var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
+
+									fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
+									fields[1].text = diff.stars.ToString("0.0#");
+								} else {
+									fields[0].text = "?";
+									fields[1].text = diff.starsBeatleader.ToString("0.0#");
+								}
 							}
+
+							fields[3].text = SortModels.FolderDateSorter.GetMapAgeMonths((int)song.uploadTimeUnix);
 						}
 					}
 					wrapper();
@@ -149,11 +159,11 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 				fields[2].text = njs.ToString("0.0#");
 
-				var offset = Config.Instance.ShowMapJDInsteadOfOffset ?
-					JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) :
-					____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
+				//var offset = Config.Instance.ShowMapJDInsteadOfOffset ?
+				//	JumpDistanceCalculator.GetJd(____selectedDifficultyBeatmap.level.beatsPerMinute, njs, ____selectedDifficultyBeatmap.noteJumpStartBeatOffset) :
+				//	____selectedDifficultyBeatmap.noteJumpStartBeatOffset;
 
-				fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
+				//fields[3].text = offset.ToString(Config.Instance.ShowMapJDInsteadOfOffset ? "0.0" : "0.0#");
 			}
 		}
 	}
