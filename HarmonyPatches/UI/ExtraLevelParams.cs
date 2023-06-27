@@ -42,7 +42,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 			ModifyValue(fields[0], "ScoreSaber PP Value", "Difficulty");
-			ModifyValue(fields[1], "ScoreSaber Star Rating", "Favorites");
+			ModifyValue(fields[1], "Star Rating", "Favorites");
 			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotes");
 			ModifyValue(fields[3], "BeatSaver upload age (Months)", "Clock");
 

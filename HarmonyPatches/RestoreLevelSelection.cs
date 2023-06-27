@@ -37,9 +37,6 @@ namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), "DidActivate")]
 	static class LevelSelectionFlowCoordinator_DidActivate {
 		static readonly ConstructorInfo thingy = AccessTools.FirstConstructor(typeof(LevelSelectionFlowCoordinator.State), x => x.GetParameters().Length == 4);
-		// Why this isnt publicly accessible through a method? Nobody fucking knows.
-		static readonly IPA.Utilities.FieldAccessor<BeatmapLevelsModel, Dictionary<string, IPreviewBeatmapLevel>>.Accessor BeatmapLevelsModel_loadedPreviewBeatmapLevels =
-			IPA.Utilities.FieldAccessor<BeatmapLevelsModel, Dictionary<string, IPreviewBeatmapLevel>>.GetAccessor("_loadedPreviewBeatmapLevels");
 
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
@@ -58,7 +55,7 @@ namespace BetterSongList.HarmonyPatches {
 			if(!Enum.TryParse(Config.Instance.LastCategory, out LevelCategory restoreCategory))
 				restoreCategory = LevelCategory.None;
 
-			if(Config.Instance.LastSong == null || !BeatmapLevelsModel_loadedPreviewBeatmapLevels(ref beatmapLevelsModel).TryGetValue(Config.Instance.LastSong, out var m))
+			if(Config.Instance.LastSong == null || !beatmapLevelsModel._loadedPreviewBeatmapLevels.TryGetValue(Config.Instance.LastSong, out var m))
 				m = null;
 
 			PackPreselect.LoadPackFromCollectionName();
