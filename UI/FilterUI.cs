@@ -154,7 +154,8 @@ namespace BetterSongList.UI {
 					HookLevelCollectionTableSet.Refresh(true);
 			}
 
-			XD.FunnyNull(persistentNuts._sortDirection)?.SetText(ascending ? "▲" : "▼");
+			if(persistentNuts._sortDirection != null)
+				persistentNuts._sortDirection.text = ascending ? "▲" : "▼";
 		}
 
 		static void ToggleSortDirection() {
