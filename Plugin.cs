@@ -20,6 +20,8 @@ namespace BetterSongList {
 			Instance = this;
 			Log = logger;
 
+			SharedCoroutineStarter.Init();
+
 			Config.Instance = conf.Generated<Config>();
 		}
 
