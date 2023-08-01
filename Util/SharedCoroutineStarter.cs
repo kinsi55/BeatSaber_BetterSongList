@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 
 public class SharedCoroutineStarter : MonoBehaviour {
-	public static MonoBehaviour instance;
-
-	public static void Init() {
-		instance = new GameObject().AddComponent<SharedCoroutineStarter>();
-	}
+	static MonoBehaviour _instance = null;
+	public static MonoBehaviour instance => _instance ??= new GameObject().AddComponent<SharedCoroutineStarter>();
 
 	void Awake() {
 		GameObject.DontDestroyOnLoad(gameObject);
