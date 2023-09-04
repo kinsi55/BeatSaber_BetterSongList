@@ -1,23 +1,31 @@
 ﻿using HarmonyLib;
-using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace BetterSongList.HarmonyPatches {
-	[HarmonyPatch(typeof(BeatmapLevelFilterModel), "LevelContainsText")]
+	[HarmonyPatch(typeof(BeatmapLevelSearchHelper), nameof(BeatmapLevelSearchHelper.SearchAndSortBeatmapLevels))]
 	static class ImproveBasegameSearch {
-		[HarmonyPriority(int.MinValue + 10)]
-		static bool Prefix(IPreviewBeatmapLevel beatmapLevel, ref string[] searchTexts, ref bool __result) {
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
 			if(!Config.Instance.ModBasegameSearch)
-				return true;
+				return instructions;
 
-			if(searchTexts.Any(x => x.Length > 2 && beatmapLevel.levelAuthorName.IndexOf(x, 0, StringComparison.CurrentCultureIgnoreCase) != -1)) {
-				__result = true;
-				return false;
-			}
-			if(searchTexts.Length > 1)
-				searchTexts = new string[] { string.Join(" ", searchTexts) };
-
-			return true;
+			// This appends a space and the levelAuthorName to the levelString variable.
+			return new CodeMatcher(instructions)
+				.MatchForward(false, new CodeMatch(OpCodes.Newarr))
+				.Advance(-1)
+				.SetOpcodeAndAdvance(OpCodes.Ldc_I4_7)
+				.MatchForward(false, new CodeMatch(OpCodes.Stelem_Ref),
+					new CodeMatch(OpCodes.Call))
+				.Insert(new CodeInstruction(OpCodes.Stelem_Ref),
+					new CodeInstruction(OpCodes.Dup),
+					new CodeInstruction(OpCodes.Ldc_I4_5),
+					new CodeInstruction(OpCodes.Ldstr, " "),
+					new CodeInstruction(OpCodes.Stelem_Ref),
+					new CodeInstruction(OpCodes.Dup),
+					new CodeInstruction(OpCodes.Ldc_I4_6),
+					new CodeInstruction(OpCodes.Ldloc_S, 5),
+					new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(IPreviewBeatmapLevel), nameof(IPreviewBeatmapLevel.levelAuthorName))))
+				.InstructionEnumeration();
 		}
 	}
 }
