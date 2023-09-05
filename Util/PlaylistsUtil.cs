@@ -29,6 +29,8 @@ namespace BetterSongList.Util {
 				return p;
 			} else if(hasPlaylistLib) {
 				IBeatmapLevelPack wrapper() {
+					if(!SongCore.Loader.AreSongsLoaded)
+						return null;
 					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists(true)) {
 						if(x.packName == packName)
 							return x;
