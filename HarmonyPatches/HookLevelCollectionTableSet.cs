@@ -100,7 +100,7 @@ namespace BetterSongList.HarmonyPatches {
 						customSorter.DoSort(ref outV, Config.Instance.SortAsc);
 					} else {
 						var pSorter = (ISorterPrimitive)sorter;
-						outV = Config.Instance.SortAsc ? 
+						outV = Config.Instance.SortAsc ?
 							outV.OrderBy(x => pSorter.GetValueFor(x) ?? float.MaxValue) :
 							outV.OrderByDescending(x => pSorter.GetValueFor(x) ?? float.MinValue);
 					}
@@ -156,7 +156,7 @@ namespace BetterSongList.HarmonyPatches {
 		[HarmonyPriority(int.MaxValue)]
 		static void Prefix(
 			LevelCollectionTableView __instance, TableView ____tableView,
-			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted
+			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortPreviewBeatmapLevels
 		) {
 #if TRACE
 			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
@@ -176,7 +176,7 @@ namespace BetterSongList.HarmonyPatches {
 
 			lastInMapList = previewBeatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
-			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted);
+			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortPreviewBeatmapLevels);
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
@@ -209,7 +209,7 @@ namespace BetterSongList.HarmonyPatches {
 			lastOutMapList = previewBeatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
-			if(customLegend == null)
+			if(customLegend == null || customLegend.Length == 0)
 				return;
 
 			/*

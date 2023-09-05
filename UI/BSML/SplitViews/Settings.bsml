@@ -24,7 +24,7 @@
 				/>
 					<toggle-setting
 						text='Improve Basegame search' apply-on-change='true' value='ModBasegameSearch'
-						hover-hint='Adds searching by Mapper name and handling of Songs with spaces to the Basegame search'
+						hover-hint='Adds searching by Mapper name to the Basegame search'
 				/>
 					<toggle-setting
 						text='Extend Basegame scrollbar' apply-on-change='true' value='ExtendSongsScrollbar'

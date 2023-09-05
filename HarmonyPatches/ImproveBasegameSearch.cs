@@ -1,23 +1,50 @@
 ﻿using HarmonyLib;
-using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace BetterSongList.HarmonyPatches {
-	[HarmonyPatch(typeof(BeatmapLevelFilterModel), "LevelContainsText")]
+	[HarmonyPatch(typeof(BeatmapLevelSearchHelper), nameof(BeatmapLevelSearchHelper.SearchAndSortBeatmapLevels))]
 	static class ImproveBasegameSearch {
-		[HarmonyPriority(int.MinValue + 10)]
-		static bool Prefix(IPreviewBeatmapLevel beatmapLevel, ref string[] searchTexts, ref bool __result) {
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
 			if(!Config.Instance.ModBasegameSearch)
-				return true;
+				return instructions;
 
-			if(searchTexts.Any(x => x.Length > 2 && beatmapLevel.levelAuthorName.IndexOf(x, 0, StringComparison.CurrentCultureIgnoreCase) != -1)) {
-				__result = true;
-				return false;
-			}
-			if(searchTexts.Length > 1)
-				searchTexts = new string[] { string.Join(" ", searchTexts) };
+			// This appends a space and the levelAuthorName to the levelString variable.
+			var matcher = new CodeMatcher(instructions)
+				.MatchForward(true,
+					new CodeMatch(OpCodes.Ldloc_S, null, "L_previewBeatmapLevel"),
+					new CodeMatch(),
+					new CodeMatch(OpCodes.Stelem_Ref),
+					new CodeMatch(x => x.opcode == OpCodes.Call && (x.operand as MethodInfo)?.Name == nameof(string.Concat), "Call_Concat"),
+					new CodeMatch(OpCodes.Stloc_S, null, "L_levelStringSt")
+				);
 
-			return true;
+			matcher.Advance(1).Insert(
+				new CodeInstruction(OpCodes.Ldc_I4_3),
+				new CodeInstruction(OpCodes.Newarr, typeof(string)),
+
+				new CodeInstruction(OpCodes.Dup),
+				new CodeInstruction(OpCodes.Ldc_I4_0),
+				new CodeInstruction(OpCodes.Ldloc_S, matcher.NamedMatch("L_levelStringSt").operand),
+				new CodeInstruction(OpCodes.Stelem_Ref),
+
+				new CodeInstruction(OpCodes.Dup),
+				new CodeInstruction(OpCodes.Ldc_I4_1),
+				new CodeInstruction(OpCodes.Ldstr, " "),
+				new CodeInstruction(OpCodes.Stelem_Ref),
+
+				new CodeInstruction(OpCodes.Dup),
+				new CodeInstruction(OpCodes.Ldc_I4_2),
+				matcher.NamedMatch("L_previewBeatmapLevel"),
+				new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(IPreviewBeatmapLevel), nameof(IPreviewBeatmapLevel.levelAuthorName))),
+				new CodeInstruction(OpCodes.Stelem_Ref),
+
+				matcher.NamedMatch("Call_Concat"),
+				matcher.NamedMatch("L_levelStringSt")
+			);
+
+			return matcher.InstructionEnumeration();
 		}
 	}
 }

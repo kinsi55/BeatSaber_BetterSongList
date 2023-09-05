@@ -4,7 +4,6 @@ using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
 using System.Reflection;
-using System.Linq;
 using IPALogger = IPA.Logging.Logger;
 
 namespace BetterSongList {
@@ -19,9 +18,6 @@ namespace BetterSongList {
 		public void Init(IPALogger logger, IPA.Config.Config conf) {
 			Instance = this;
 			Log = logger;
-
-			SharedCoroutineStarter.Init();
-
 			Config.Instance = conf.Generated<Config>();
 		}
 
