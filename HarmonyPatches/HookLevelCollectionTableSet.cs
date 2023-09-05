@@ -233,7 +233,7 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			// Basegame already handles cleaning up the legend etc
-			if(customLegend == null)
+			if(customLegend == null || customLegend.Length == 0)
 				return;
 
 			/*
