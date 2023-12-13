@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using HarmonyLib;
 
 namespace BetterSongList.Util {
 	public static class LocalScoresUtil {
@@ -13,22 +13,23 @@ namespace BetterSongList.Util {
 			playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
 
 			foreach(var x in playerDataModel?.playerData?.levelsStatsData) {
-				if(x.validScore && !playedMaps.Contains(x.levelID))
-					playedMaps.Add(x.levelID);
+				if(!x.Value.validScore)
+					continue;
+
+				playedMaps.Add(x.Key.songId);
 			}
 		}
 
-		public static bool HasLocalScore(string levelId) {
-			if(playedMaps.Contains(levelId))
-				return true;
-
-			var l = playerDataModel.playerData.levelsStatsData;
-			for(var i = l.Count; i-- > playedMaps.Count;)
-				if(l[i].validScore && l[i].levelID == levelId)
-					return true;
-
-			return false;
+		[HarmonyPatch(typeof(PlayerLevelStatsData), nameof(PlayerLevelStatsData.UpdateScoreData))]
+		static class InterceptNewScores {
+			static void Postfix(bool ____validScore, string ____levelID) {
+				// Will become valid after this UpdateScoreData() call
+				if(!____validScore)
+					playedMaps.Add(____levelID);
+			}
 		}
+
+		public static bool HasLocalScore(string levelId) => playedMaps.Contains(levelId);
 
 		public static bool HasLocalScore(IPreviewBeatmapLevel level) => HasLocalScore(level.levelID);
 	}
