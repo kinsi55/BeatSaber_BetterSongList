@@ -10,7 +10,8 @@ namespace BetterSongList.Util {
 		public static bool hasScores => playerDataModel != null;
 
 		public static void Load() {
-			playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
+			if (playerDataModel == null)
+				playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
 
 			foreach(var x in playerDataModel?.playerData?.levelsStatsData) {
 				if(!x.Value.validScore)
