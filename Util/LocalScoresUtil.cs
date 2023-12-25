@@ -10,7 +10,8 @@ namespace BetterSongList.Util {
 		public static bool hasScores => playerDataModel != null;
 
 		public static void Load() {
-			playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
+			if (playerDataModel == null)
+				playerDataModel = Object.FindObjectOfType<PlayerDataModel>();
 
 			foreach(var x in playerDataModel?.playerData?.levelsStatsData) {
 				if(!x.Value.validScore)
@@ -22,7 +23,7 @@ namespace BetterSongList.Util {
 
 		[HarmonyPatch(typeof(PlayerLevelStatsData), nameof(PlayerLevelStatsData.UpdateScoreData))]
 		static class InterceptNewScores {
-			static void Postfix(bool ____validScore, string ____levelID) {
+			static void Prefix(bool ____validScore, string ____levelID) {
 				// Will become valid after this UpdateScoreData() call
 				if(!____validScore)
 					playedMaps.Add(____levelID);

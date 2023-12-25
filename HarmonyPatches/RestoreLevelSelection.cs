@@ -34,6 +34,14 @@ namespace BetterSongList.HarmonyPatches {
 		}
 	}
 
+	// Animation might get stuck when switching category if it hasn't finished.
+	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.SelectLevelCategoryViewControllerDidSelectLevelCategory))]
+	static class PackPreselectAnimationFix {
+		static void Postfix(LevelFilteringNavigationController __instance) {
+			__instance._annotatedBeatmapLevelCollectionsViewController._annotatedBeatmapLevelCollectionsGridView._animator.DespawnAllActiveTweens();
+		}
+	}
+
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), "DidActivate")]
 	static class LevelSelectionFlowCoordinator_DidActivate {
 		static readonly ConstructorInfo thingy = AccessTools.FirstConstructor(typeof(LevelSelectionFlowCoordinator.State), x => x.GetParameters().Length == 4);
