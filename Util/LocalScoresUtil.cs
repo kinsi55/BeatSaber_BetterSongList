@@ -22,7 +22,7 @@ namespace BetterSongList.Util {
 
 		[HarmonyPatch(typeof(PlayerLevelStatsData), nameof(PlayerLevelStatsData.UpdateScoreData))]
 		static class InterceptNewScores {
-			static void Postfix(bool ____validScore, string ____levelID) {
+			static void Prefix(bool ____validScore, string ____levelID) {
 				// Will become valid after this UpdateScoreData() call
 				if(!____validScore)
 					playedMaps.Add(____levelID);
