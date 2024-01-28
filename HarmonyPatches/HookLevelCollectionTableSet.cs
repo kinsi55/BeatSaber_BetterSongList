@@ -7,6 +7,7 @@ using HMUI;
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -156,7 +157,7 @@ namespace BetterSongList.HarmonyPatches {
 		[HarmonyPriority(int.MaxValue)]
 		static void Prefix(
 			LevelCollectionTableView __instance, TableView ____tableView,
-			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortPreviewBeatmapLevels
+			ref IReadOnlyList<IPreviewBeatmapLevel> previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortPreviewBeatmapLevels
 		) {
 #if TRACE
 			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
@@ -174,9 +175,13 @@ namespace BetterSongList.HarmonyPatches {
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
 				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
 
-			lastInMapList = previewBeatmapLevels;
+			if(!previewBeatmapLevels.GetType().IsArray)
+				previewBeatmapLevels = previewBeatmapLevels.ToArray();
+			
+			lastInMapList = (IPreviewBeatmapLevel[])previewBeatmapLevels;
+
 			var _isSorted = beatmapLevelsAreSorted;
-			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortPreviewBeatmapLevels);
+			recallLast = overrideData => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortPreviewBeatmapLevels);
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
@@ -200,13 +205,14 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			// Passing these explicitly for thread safety
-			FilterWrapper(ref previewBeatmapLevels);
+			var previewBeatmapLevelsArray = (IPreviewBeatmapLevel[])previewBeatmapLevels;
+			FilterWrapper(ref previewBeatmapLevelsArray);
 		}
 
 
 		static KeyValuePair<string, int>[] customLegend = null;
-		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
-			lastOutMapList = previewBeatmapLevels;
+		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IReadOnlyList<IPreviewBeatmapLevel> previewBeatmapLevels) {
+			lastOutMapList = (IPreviewBeatmapLevel[])previewBeatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
 			if(customLegend == null || customLegend.Length == 0)
