@@ -89,11 +89,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 				}
 
 				void j(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obst) {
-					if(!BeatmapPatternDetection.CheckForCrouchWalls(obst))
+					var numWalls = BeatmapPatternDetection.CheckForCrouchWalls(obst);
+					if(numWalls == 0)
 						return;
 
 					obstaclesText.fontStyle = FontStyles.Normal;
-					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
+					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>({numWalls.ToString()})</color></size></b>";
 				}
 			}
 
@@ -122,7 +123,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 								return;
 							} else {
 								var isSs = Config.Instance.PreferredLeaderboard == "ScoreSaber";
-								float stars = isSs ? diff.stars : diff.starsBeatleader;
+
+								FieldInfo starsBeatLeaderFieldInfo = diff.GetType().GetField("starsBeatLeader");
+
+								float stars = isSs || starsBeatLeaderFieldInfo == null ? diff.stars : (float)starsBeatLeaderFieldInfo.GetValue(diff);
 
 								if(stars <= 0) {
 									fields[0].text = fields[1].text = "-";
@@ -132,10 +136,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 									var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
 
 									fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
-									fields[1].text = diff.stars.ToString("0.0#");
+									fields[1].text = stars.ToString("0.0#");
 								} else {
 									fields[0].text = "?";
-									fields[1].text = diff.starsBeatleader.ToString("0.0#");
+									fields[1].text = stars.ToString("0.0#");
 								}
 							}
 
