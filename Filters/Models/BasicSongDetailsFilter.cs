@@ -24,14 +24,14 @@ namespace BetterSongList.FilterModels {
 
 		public string GetUnavailabilityReason() => SongDetailsUtil.GetUnavailabilityReason();
 
-		public bool GetValueFor(IPreviewBeatmapLevel level) {
+		public bool GetValueFor(BeatmapLevel level) {
 			if(SongDetailsUtil.songDetails == null)
 				return false;
 
 			//if(!GetSongFromBeatmap(level, out var song))
 			//	return false;
 
-			var h = BeatmapsUtil.GetHashOfPreview(level);
+			var h = BeatmapsUtil.GetHashOfLevel(level);
 			if(h == null)
 				return false;
 

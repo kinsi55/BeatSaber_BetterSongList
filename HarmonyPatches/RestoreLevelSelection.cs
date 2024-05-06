@@ -10,7 +10,7 @@ using static SelectLevelCategoryViewController;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
-		public static IBeatmapLevelPack restoredPack = null;
+		public static BeatmapLevelPack restoredPack = null;
 
 		public static void LoadPackFromCollectionName() {
 			if(restoredPack?.shortPackName == Config.Instance.LastPack)
@@ -35,20 +35,16 @@ namespace BetterSongList.HarmonyPatches {
 	}
 
 	// Animation might get stuck when switching category if it hasn't finished.
-	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.SelectLevelCategoryViewControllerDidSelectLevelCategory))]
+	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.HandleSelectLevelCategoryViewControllerDidSelectLevelCategory))]
 	static class PackPreselectAnimationFix {
 		static void Postfix(LevelFilteringNavigationController __instance) {
 			__instance._annotatedBeatmapLevelCollectionsViewController._annotatedBeatmapLevelCollectionsGridView._animator.DespawnAllActiveTweens();
 		}
 	}
 
-	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), "DidActivate")]
+	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), nameof(LevelSelectionFlowCoordinator.DidActivate))]
 	static class LevelSelectionFlowCoordinator_DidActivate {
-		static readonly ConstructorInfo thingy = AccessTools.FirstConstructor(typeof(LevelSelectionFlowCoordinator.State), x => x.GetParameters().Length == 4);
-
-		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
-
-		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
+		static void Prefix(LevelSelectionFlowCoordinator __instance, ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
 			if(!addedToHierarchy)
 				return;
 
@@ -63,8 +59,9 @@ namespace BetterSongList.HarmonyPatches {
 			if(!Enum.TryParse(Config.Instance.LastCategory, out LevelCategory restoreCategory))
 				restoreCategory = LevelCategory.None;
 
-			if(Config.Instance.LastSong == null || !beatmapLevelsModel._loadedPreviewBeatmapLevels.TryGetValue(Config.Instance.LastSong, out var m))
-				m = null;
+			if(Config.Instance.LastSong == null || 
+			   !__instance.levelSelectionNavigationController._levelFilteringNavigationController._beatmapLevelsModel._loadedBeatmapLevels.TryGetValue(Config.Instance.LastSong, out var lastSelectedLevel))
+				lastSelectedLevel = null;
 
 			PackPreselect.LoadPackFromCollectionName();
 
@@ -73,12 +70,11 @@ namespace BetterSongList.HarmonyPatches {
 			if(restoreCategory == LevelCategory.All || restoreCategory == LevelCategory.Favorites)
 				pack = SongCore.Loader.CustomLevelsPack;
 
-			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
-				restoreCategory,
-				pack,
-				m,
-				null
-			});
+			____startState = new LevelSelectionFlowCoordinator.State(
+				restoreCategory, 
+				pack, 
+				new BeatmapKey(), 
+				lastSelectedLevel);
 		}
 	}
 }

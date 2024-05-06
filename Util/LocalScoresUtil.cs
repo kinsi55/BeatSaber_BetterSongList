@@ -17,7 +17,7 @@ namespace BetterSongList.Util {
 				if(!x.Value.validScore)
 					continue;
 
-				playedMaps.Add(x.Key.songId);
+				playedMaps.Add(x.Key.levelId);
 			}
 		}
 
@@ -32,6 +32,6 @@ namespace BetterSongList.Util {
 
 		public static bool HasLocalScore(string levelId) => playedMaps.Contains(levelId);
 
-		public static bool HasLocalScore(IPreviewBeatmapLevel level) => HasLocalScore(level.levelID);
+		public static bool HasLocalScore(BeatmapLevel level) => HasLocalScore(level.levelID);
 	}
 }

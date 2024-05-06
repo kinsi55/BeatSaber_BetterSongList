@@ -58,7 +58,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 		}
 
 
-		static void Postfix(IBeatmapLevel ____level, IDifficultyBeatmap ____selectedDifficultyBeatmap, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
+		static void Postfix(BeatmapLevel ____beatmapLevel, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
+			var beatmapKey = __instance.beatmapKey;
+			
 			if(extraUI == null) {
 				// I wanted to make a custom UI for this with bsml first... But this is MUCH easier and probably looks better
 				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
@@ -81,14 +83,14 @@ namespace BetterSongList.HarmonyPatches.UI {
 				obstaclesText.richText = true;
 
 				// I am in a lot of pain 😀👍
-				if(____selectedDifficultyBeatmap is CustomDifficultyBeatmap customdiff) {
+				if(beatmapKey is CustomDifficultyBeatmap customdiff) {
 					j(customdiff.beatmapSaveData.obstacles);
 				} else {
 					// Wont care about OST for now
 					j(null);
 				}
 
-				void j(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obst) {
+				void j(List<BeatmapSaveDataVersion3.ObstacleData> obst) {
 					if(!BeatmapPatternDetection.CheckForCrouchWalls(obst))
 						return;
 
@@ -103,18 +105,18 @@ namespace BetterSongList.HarmonyPatches.UI {
 				} else if(SongDetailsUtil.songDetails != null) {
 					void wrapper() {
 						// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
-						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
+						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(beatmapKey);
 
 						if(ch != SongDetailsCache.Structs.MapCharacteristic.Standard) {
 							fields[0].text = fields[1].text = "-";
 						} else {
-							var mh = BeatmapsUtil.GetHashOfPreview(____level);
+							var mh = BeatmapsUtil.GetHashOfLevel(____beatmapLevel);
 
 							if(mh == null ||
 								!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
 								!song.GetDifficulty(
 									out var diff,
-									(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
+									(SongDetailsCache.Structs.MapDifficulty)beatmapKey.difficulty,
 									ch
 								)
 							) {
@@ -152,9 +154,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 				}
 
 				// Basegame maps have no NJS or JD
-				var njs = ____selectedDifficultyBeatmap.noteJumpMovementSpeed;
+				var basicData = ____beatmapLevel.GetDifficultyBeatmapData(beatmapKey.beatmapCharacteristic, beatmapKey.difficulty);
+				var njs = basicData?.noteJumpMovementSpeed ?? 0;
 				if(njs == 0)
-					njs = BeatmapDifficultyMethods.NoteJumpMovementSpeed(____selectedDifficultyBeatmap.difficulty);
+					njs = BeatmapDifficultyMethods.NoteJumpMovementSpeed(beatmapKey.difficulty);
 
 				fields[2].text = njs.ToString("0.0#");
 

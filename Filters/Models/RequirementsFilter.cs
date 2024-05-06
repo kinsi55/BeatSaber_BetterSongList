@@ -20,8 +20,8 @@ namespace BetterSongList.FilterModels {
 			return wipTask.Task;
 		}
 
-		public bool GetValueFor(IPreviewBeatmapLevel level) {
-			var mid = BeatmapsUtil.GetHashOfPreview(level);
+		public bool GetValueFor(BeatmapLevel level) {
+			var mid = BeatmapsUtil.GetHashOfLevel(level);
 
 			if(mid == null)
 				return false;

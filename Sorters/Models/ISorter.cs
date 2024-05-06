@@ -9,14 +9,14 @@ namespace BetterSongList.SortModels {
 	}
 
 	public interface ISorterWithLegend : ISorter {
-		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels);
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(BeatmapLevel[] levels);
 	}
 
 	public interface ISorterCustom : ISorter {
-		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels, bool ascending);
+		public void DoSort(ref IEnumerable<BeatmapLevel> levels, bool ascending);
 	}
 
 	public interface ISorterPrimitive : ISorter {
-		public float? GetValueFor(IPreviewBeatmapLevel level);
+		public float? GetValueFor(BeatmapLevel level);
 	}
 }

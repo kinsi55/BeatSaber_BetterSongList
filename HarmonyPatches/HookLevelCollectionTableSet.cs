@@ -23,12 +23,12 @@ namespace BetterSongList.HarmonyPatches {
 		public static ISorter sorter;
 		public static IFilter filter;
 
-		public static IPreviewBeatmapLevel[] lastInMapList { get; private set; }
-		public static IPreviewBeatmapLevel[] lastOutMapList { get; private set; }
-		static Action<IPreviewBeatmapLevel[]> recallLast = null;
+		public static IReadOnlyList<BeatmapLevel> lastInMapList { get; private set; }
+		public static IReadOnlyList<BeatmapLevel> lastOutMapList { get; private set; }
+		static Action<IReadOnlyList<BeatmapLevel>> recallLast = null;
 
 
-		static IPreviewBeatmapLevel[] asyncPreprocessed;
+		static IReadOnlyList<BeatmapLevel> asyncPreprocessed;
 
 		/// <summary>
 		/// Refresh the SongList with the last used BeatMaps array
@@ -67,7 +67,7 @@ namespace BetterSongList.HarmonyPatches {
 			recallLast(ml);
 		}
 
-		static void FilterWrapper(ref IPreviewBeatmapLevel[] previewBeatmapLevels) {
+		static void FilterWrapper(ref IReadOnlyList<BeatmapLevel> previewBeatmapLevels) {
 			if(filter?.isReady != true && sorter?.isReady != true)
 				return;
 
@@ -113,7 +113,7 @@ namespace BetterSongList.HarmonyPatches {
 				previewBeatmapLevels = outV.ToArray();
 
 				if(sorter is ISorterWithLegend sl && Config.Instance.EnableAlphabetScrollbar)
-					customLegend = sl.BuildLegend(previewBeatmapLevels).ToArray();
+					customLegend = sl.BuildLegend(previewBeatmapLevels.ToArray()).ToArray();
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
 			}
@@ -156,27 +156,27 @@ namespace BetterSongList.HarmonyPatches {
 		[HarmonyPriority(int.MaxValue)]
 		static void Prefix(
 			LevelCollectionTableView __instance, TableView ____tableView,
-			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortPreviewBeatmapLevels
+			ref IReadOnlyList<BeatmapLevel> beatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortBeatmapLevels
 		) {
 #if TRACE
 			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
 #endif
 			// If SetData is called with the literal same maplist as before we might as well ignore it
-			if(previewBeatmapLevels == lastInMapList) {
+			if(beatmapLevels == lastInMapList) {
 #if TRACE
-				Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix => previewBeatmapLevels == lastInMapList");
+				Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix => beatmapLevels == lastInMapList");
 #endif
-				previewBeatmapLevels = lastOutMapList;
+				beatmapLevels = lastOutMapList;
 				return;
 			}
 
 			// Playlistlib has its own custom wrapping class for Playlists so it can properly track duplicates, so we need to use its collection
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
-				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
+				beatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? beatmapLevels;
 
-			lastInMapList = previewBeatmapLevels;
+			lastInMapList = beatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
-			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortPreviewBeatmapLevels);
+			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortBeatmapLevels);
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
@@ -191,7 +191,7 @@ namespace BetterSongList.HarmonyPatches {
 			XD.FunnyNull(FilterUI.persistentNuts._filterLoadingIndicator)?.gameObject.SetActive(false);
 
 			if(asyncPreprocessed != null) {
-				previewBeatmapLevels = asyncPreprocessed;
+				beatmapLevels = asyncPreprocessed;
 				asyncPreprocessed = null;
 #if TRACE
 				Plugin.Log.Notice("Used Async-Prefiltered");
@@ -200,13 +200,13 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			// Passing these explicitly for thread safety
-			FilterWrapper(ref previewBeatmapLevels);
+			FilterWrapper(ref beatmapLevels);
 		}
 
 
 		static KeyValuePair<string, int>[] customLegend = null;
-		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
-			lastOutMapList = previewBeatmapLevels;
+		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IReadOnlyList<BeatmapLevel> beatmapLevels) {
+			lastOutMapList = beatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
 			if(customLegend == null || customLegend.Length == 0)

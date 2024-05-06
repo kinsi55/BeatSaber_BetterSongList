@@ -5,17 +5,17 @@ using HarmonyLib;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsViewController), nameof(AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection))]
 	static class HookSelectedCollection {
-		public static IAnnotatedBeatmapLevelCollection lastSelectedCollection { get; private set; }
+		public static BeatmapLevelPack lastSelectedCollection { get; private set; }
 		public static bool doRestoreFilter = false;
 
 		[HarmonyPriority(int.MinValue), HarmonyPrefix]
-		static void CollectionSet(IAnnotatedBeatmapLevelCollection beatmapLevelCollection) {
+		static void CollectionSet(BeatmapLevelPack beatmapLevelCollection) {
 			if(beatmapLevelCollection != null) {
 				// Save the collection we're on for reselection purposes
-				Config.Instance.LastPack = beatmapLevelCollection.collectionName ?? "";
+				Config.Instance.LastPack = beatmapLevelCollection.packName ?? "";
 			}
 #if TRACE
-			Plugin.Log.Warn(string.Format("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection(): {0}", beatmapLevelCollection?.collectionName));
+			Plugin.Log.Warn(string.Format("AnnotatedBeatmapLevelCollectionsViewController.HandleDidSelectAnnotatedBeatmapLevelCollection(): {0}", beatmapLevelCollection?.packName));
 
 			//System.Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 #endif

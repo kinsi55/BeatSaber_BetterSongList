@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BetterSongList.Util {
 	public static class SongListLegendBuilder {
-		public static IEnumerable<KeyValuePair<string, int>> BuildFor(IPreviewBeatmapLevel[] beatmaps, Func<IPreviewBeatmapLevel, string> displayValueTransformer, int entryLengthLimit = 6, int valueLimit = 28) {
+		public static IEnumerable<KeyValuePair<string, int>> BuildFor(BeatmapLevel[] beatmaps, Func<BeatmapLevel, string> displayValueTransformer, int entryLengthLimit = 6, int valueLimit = 28) {
 			var x = beatmaps
 				.Select((x, i) => new KeyValuePair<string, int>(displayValueTransformer(x), i))
 				.Where(x => x.Key != null)

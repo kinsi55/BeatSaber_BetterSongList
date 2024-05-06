@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using SongCore;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 	static class SongDeleteButton {
 		static Button deleteButton = null;
 
-		static CustomPreviewBeatmapLevel lastLevel = null;
+		static BeatmapLevel lastLevel = null;
 
 		static bool isWip => lastLevel != null && lastLevel.levelID.Contains(" WIP");
 
@@ -39,8 +40,15 @@ namespace BetterSongList.HarmonyPatches.UI {
 				if(lastLevel == null)
 					return;
 
+				var path = Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(lastLevel.levelID, out var loadedSaveData)
+					? loadedSaveData.customLevelFolderInfo.folderPath
+					: null;
+				
+				if(string.IsNullOrEmpty(path))
+					return;
+				
 				try {
-					SongCore.Loader.Instance.DeleteSong(lastLevel.customLevelPath, !isWip);
+					Loader.Instance.DeleteSong(path, !isWip);
 				} catch {
 					FilterUI.persistentNuts.ShowErrorASAP("Deleting the map failed because it failed. Deal with it");
 				}
@@ -50,14 +58,14 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 				Task.Run(() => {
 					try {
-						WinApi.DeleteFileOrFolder(lastLevel.customLevelPath);
+						WinApi.DeleteFileOrFolder(path);
 					} catch { }
 				});
 			}
 		}
 
 		[HarmonyPriority(int.MinValue)]
-		static void Postfix(StandardLevelDetailView __instance, Button ____practiceButton, IPreviewBeatmapLevel ____level) {
+		static void Postfix(StandardLevelDetailView __instance, Button ____practiceButton, BeatmapLevel ____beatmapLevel) {
 			if(deleteButton == null && ____practiceButton != null) {
 				var newButton = GameObject.Instantiate(____practiceButton.gameObject, ____practiceButton.transform.parent);
 				deleteButton = newButton.GetComponentInChildren<Button>();
@@ -88,7 +96,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				);
 			}
 
-			lastLevel = ____level as CustomPreviewBeatmapLevel;
+			lastLevel = !____beatmapLevel.hasPrecalculatedData ? ____beatmapLevel : null;
 
 			UpdateState();
 		}

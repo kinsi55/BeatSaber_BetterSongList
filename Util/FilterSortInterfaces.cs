@@ -23,6 +23,6 @@ namespace BetterSongList.Interfaces {
 		/// </summary>
 		/// <param name="levelCategory"></param>
 		/// <param name="playlist"></param>
-		public void ContextSwitch(LevelCategory levelCategory, IAnnotatedBeatmapLevelCollection? playlist);
+		public void ContextSwitch(LevelCategory levelCategory, BeatmapLevelPack? playlist);
 	}
 }

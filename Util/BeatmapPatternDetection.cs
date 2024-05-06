@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace BetterSongList.Util {
 	public static class BeatmapPatternDetection {
-		public static bool CheckForCrouchWalls(List<BeatmapSaveDataVersion3.BeatmapSaveData.ObstacleData> obstacles) {
+		public static bool CheckForCrouchWalls(List<BeatmapSaveDataVersion3.ObstacleData> obstacles) {
 			if(obstacles == null || obstacles.Count == 0)
 				return false;
 

@@ -174,10 +174,10 @@ namespace BetterSongList.UI {
 
 			var ml = HookLevelCollectionTableSet.lastOutMapList ?? HookLevelCollectionTableSet.lastInMapList;
 
-			if(ml.Length < 2)
+			if(ml.Count < 2)
 				return;
 
-			x.SelectLevel(ml[ran.Next(0, ml.Length)]);
+			x.SelectLevel(ml[ran.Next(0, ml.Count)]);
 		}
 
 		readonly Queue<string> warnings = new Queue<string>();

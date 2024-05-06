@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BeatSaberPlaylistsLib.Types;
 using UnityEngine;
 
 namespace BetterSongList.Util {
@@ -10,15 +11,15 @@ namespace BetterSongList.Util {
 			hasPlaylistLib = IPA.Loader.PluginManager.GetPluginFromId("BeatSaberPlaylistsLib") != null;
 		}
 
-		public static Dictionary<string, IBeatmapLevelPack> packs = null;
+		public static Dictionary<string, BeatmapLevelPack> packs = null;
 
-		public static IBeatmapLevelPack GetPack(string packName) {
+		public static BeatmapLevelPack GetPack(string packName) {
 			if(packName == null)
 				return null;
 
 			if(packs == null) {
 				packs =
-					SongCore.Loader.BeatmapLevelsModelSO.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks
+					SongCore.Loader.BeatmapLevelsModelSO?._allLoadedBeatmapLevelsRepository.beatmapLevelPacks
 					// There shouldnt be any duplicate name basegame playlists... But better be safe
 					.GroupBy(x => x.shortPackName)
 					.Select(x => x.First())
@@ -28,12 +29,13 @@ namespace BetterSongList.Util {
 			if(packs.TryGetValue(packName, out var p)) {
 				return p;
 			} else if(hasPlaylistLib) {
-				IBeatmapLevelPack wrapper() {
+				BeatmapLevelPack wrapper() {
 					if(!SongCore.Loader.AreSongsLoaded)
 						return null;
 					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists(true)) {
-						if(x.packName == packName)
-							return x;
+						var playlistLevelPack = x.PlaylistLevelPack;
+						if(x.PlaylistLevelPack.packName == packName)
+							return playlistLevelPack;
 					}
 					return null;
 				}
@@ -42,15 +44,9 @@ namespace BetterSongList.Util {
 			return null;
 		}
 
-		public static bool IsCollection(IAnnotatedBeatmapLevelCollection levelCollection) {
-			return levelCollection is BeatSaberPlaylistsLib.Legacy.LegacyPlaylist || levelCollection is BeatSaberPlaylistsLib.Blist.BlistPlaylist;
-		}
-
-		public static IPreviewBeatmapLevel[] GetLevelsForLevelCollection(IAnnotatedBeatmapLevelCollection levelCollection) {
-			if(levelCollection is BeatSaberPlaylistsLib.Legacy.LegacyPlaylist legacyPlaylist)
-				return legacyPlaylist.BeatmapLevels;
-			if(levelCollection is BeatSaberPlaylistsLib.Blist.BlistPlaylist blistPlaylist)
-				return blistPlaylist.BeatmapLevels;
+		public static BeatmapLevel[] GetLevelsForLevelCollection(BeatmapLevelPack levelCollection) {
+			if(levelCollection is PlaylistLevelPack playlist)
+				return playlist.playlist.BeatmapLevels;
 			return null;
 		}
 	}

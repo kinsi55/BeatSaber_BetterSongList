@@ -4,6 +4,8 @@ using BetterSongList.Util;
 using SongDetailsCache.Structs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 
 namespace BetterSongList {
 	public static class SortMethods {
@@ -18,9 +20,15 @@ namespace BetterSongList {
 		);
 
 		public static readonly ISorter alphabeticalMapper = new ComparableFunctionSorterWithLegend(
-			(songa, songb) => string.Compare(songa.levelAuthorName, songb.levelAuthorName),
-			song => song.levelAuthorName.Length > 0 ? song.levelAuthorName.Substring(0, 1) : null
-		);
+			(songa, songb) => {
+				var songaAuthors = songa.allMappers.Concat(songa.allLighters).Distinct().Join();
+				var songaButhors = songb.allMappers.Concat(songb.allLighters).Distinct().Join();
+				return string.Compare(songaAuthors, songaButhors);
+			},
+			song => {
+				var authors = song.allMappers.Concat(song.allLighters).Distinct().Join();
+				return authors.Length > 0 ? authors.Substring(0, 1) : null;
+			});
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
 		internal static float? StarsProcessor(object xx) {

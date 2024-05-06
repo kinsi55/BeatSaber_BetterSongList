@@ -9,24 +9,24 @@ namespace BetterSongList.SortModels {
 	public class PrimitiveFunctionSorter : ISorterPrimitive {
 		public bool isReady => true;
 
-		Func<IPreviewBeatmapLevel, float?> sortValueGetter;
+		Func<BeatmapLevel, float?> sortValueGetter;
 
 		public Task Prepare(CancellationToken cancelToken) => Task.CompletedTask;
 
-		public float? GetValueFor(IPreviewBeatmapLevel x) => sortValueGetter(x);
+		public float? GetValueFor(BeatmapLevel x) => sortValueGetter(x);
 
-		public PrimitiveFunctionSorter(Func<IPreviewBeatmapLevel, float?> sortValueGetter) {
+		public PrimitiveFunctionSorter(Func<BeatmapLevel, float?> sortValueGetter) {
 			this.sortValueGetter = sortValueGetter;
 		}
 	}
 
 	public class PrimitiveFunctionSorterWithLegend : PrimitiveFunctionSorter, ISorterWithLegend {
-		Func<IPreviewBeatmapLevel, string> legendBuilder = null;
-		public PrimitiveFunctionSorterWithLegend(Func<IPreviewBeatmapLevel, float?> sortValueGetter, Func<IPreviewBeatmapLevel, string> legendBuilder) : base(sortValueGetter) {
+		Func<BeatmapLevel, string> legendBuilder = null;
+		public PrimitiveFunctionSorterWithLegend(Func<BeatmapLevel, float?> sortValueGetter, Func<BeatmapLevel, string> legendBuilder) : base(sortValueGetter) {
 			this.legendBuilder = legendBuilder;
 		}
 
-		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(BeatmapLevel[] levels) {
 			try {
 				return SongListLegendBuilder.BuildFor(levels, legendBuilder);
 			} catch(Exception ex) {
@@ -37,36 +37,36 @@ namespace BetterSongList.SortModels {
 		}
 	}
 
-	public class ComparableFunctionSorter : ISorter, ISorterCustom, IComparer<IPreviewBeatmapLevel> {
+	public class ComparableFunctionSorter : ISorter, ISorterCustom, IComparer<BeatmapLevel> {
 		public bool isReady => true;
 
-		Func<IPreviewBeatmapLevel, IPreviewBeatmapLevel, int> sortValueGetter;
+		Func<BeatmapLevel, BeatmapLevel, int> sortValueGetter;
 
 		public Task Prepare(CancellationToken cancelToken) => Task.CompletedTask;
 
-		public void DoSort(ref IEnumerable<IPreviewBeatmapLevel> levels, bool ascending) {
+		public void DoSort(ref IEnumerable<BeatmapLevel> levels, bool ascending) {
 			levels = ascending ?
 				levels.OrderBy(x => x, this) :
 				levels.OrderByDescending(x => x, this);
 		}
 
-		public int Compare(IPreviewBeatmapLevel x, IPreviewBeatmapLevel y) => sortValueGetter(x, y);
+		public int Compare(BeatmapLevel x, BeatmapLevel y) => sortValueGetter(x, y);
 
-		public ComparableFunctionSorter(Func<IPreviewBeatmapLevel, IPreviewBeatmapLevel, int> sortValueGetter) {
+		public ComparableFunctionSorter(Func<BeatmapLevel, BeatmapLevel, int> sortValueGetter) {
 			this.sortValueGetter = sortValueGetter;
 		}
 	}
 
 	public class ComparableFunctionSorterWithLegend : ComparableFunctionSorter, ISorterWithLegend {
-		Func<IPreviewBeatmapLevel, string> legendBuilder = null;
+		Func<BeatmapLevel, string> legendBuilder = null;
 		public ComparableFunctionSorterWithLegend(
-			Func<IPreviewBeatmapLevel, IPreviewBeatmapLevel, int> sortValueGetter, 
-			Func<IPreviewBeatmapLevel, string> legendBuilder) : base(sortValueGetter) 
+			Func<BeatmapLevel, BeatmapLevel, int> sortValueGetter,
+			Func<BeatmapLevel, string> legendBuilder) : base(sortValueGetter)
 		{
 			this.legendBuilder = legendBuilder;
 		}
 
-		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(BeatmapLevel[] levels) {
 			try {
 				return SongListLegendBuilder.BuildFor(levels, legendBuilder);
 			} catch(Exception ex) {
