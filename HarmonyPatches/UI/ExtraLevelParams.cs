@@ -20,7 +20,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static TextMeshProUGUI[] fields = null;
 
 		static HoverHintController hhc = null;
-		static readonly FieldInfo FIELD_LevelParamsPanel_obstaclesCount = AccessTools.Field(typeof(LevelParamsPanel), "_obstaclesCountText");
 		static IEnumerator ProcessFields() {
 			//Need to wait until the end of frame for reasons beyond my understanding
 			yield return new WaitForEndOfFrame();
@@ -50,13 +49,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 			fields[0].characterSpacing = -3f;
 		}
 
-		static StandardLevelDetailView lastInstance = null;
+		internal static StandardLevelDetailView lastInstance { get; private set; } = null;
 
 		public static void UpdateState() {
 			if(lastInstance != null && lastInstance.isActiveAndEnabled)
 				lastInstance.RefreshContent();
 		}
-
 
 		static void Postfix(BeatmapLevel ____beatmapLevel, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
 			var beatmapKey = __instance.beatmapKey;
@@ -74,30 +72,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 			lastInstance = __instance;
-
-			var obstaclesText = (TextMeshProUGUI)FIELD_LevelParamsPanel_obstaclesCount.GetValue(____levelParamsPanel);
-			obstaclesText.fontStyle = FontStyles.Italic;
-
-			// Crouchwalls HAHABALLS
-			if(Config.Instance.ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun) {
-				obstaclesText.richText = true;
-
-				// I am in a lot of pain 😀👍
-				if(beatmapKey is CustomDifficultyBeatmap customdiff) {
-					j(customdiff.beatmapSaveData.obstacles);
-				} else {
-					// Wont care about OST for now
-					j(null);
-				}
-
-				void j(List<BeatmapSaveDataVersion3.ObstacleData> obst) {
-					if(!BeatmapPatternDetection.CheckForCrouchWalls(obst))
-						return;
-
-					obstaclesText.fontStyle = FontStyles.Normal;
-					obstaclesText.text = $"<i>{obstaclesText.text}</i> <b><size=3.3><color=#FF0>⚠</color></size></b>";
-				}
-			}
 
 			if(fields != null) {
 				if(!SongDetailsUtil.isAvailable) {
