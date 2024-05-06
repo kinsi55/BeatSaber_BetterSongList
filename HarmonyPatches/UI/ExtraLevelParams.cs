@@ -62,6 +62,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 			if(extraUI == null) {
 				// I wanted to make a custom UI for this with bsml first... But this is MUCH easier and probably looks better
 				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
+				extraUI.GetComponentInChildren<CanvasGroup>().alpha = 1;
+
 				GameObject.Destroy(extraUI.GetComponent<LevelParamsPanel>());
 
 				____levelParamsPanel.transform.localPosition += new Vector3(0, 3.5f);
