@@ -60,7 +60,13 @@ namespace BetterSongList.HarmonyPatches {
 				restoreCategory = LevelCategory.None;
 
 			if(Config.Instance.LastSong == null || 
-			   !__instance.levelSelectionNavigationController._levelFilteringNavigationController._beatmapLevelsModel._loadedBeatmapLevels.TryGetValue(Config.Instance.LastSong, out var lastSelectedLevel))
+			   !__instance
+			   .levelSelectionNavigationController
+			   ._levelFilteringNavigationController
+			   ._beatmapLevelsModel
+			   ._allLoadedBeatmapLevelsRepository
+			   .TryGetBeatmapLevelById(Config.Instance.LastSong, out var lastSelectedLevel)
+			)
 				lastSelectedLevel = null;
 
 			PackPreselect.LoadPackFromCollectionName();
