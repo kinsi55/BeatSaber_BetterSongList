@@ -5,9 +5,6 @@ using HMUI;
 using IPA.Utilities;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
@@ -57,8 +54,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 		}
 
 		static void Postfix(BeatmapLevel ____beatmapLevel, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
-			var beatmapKey = __instance.beatmapKey;
-			
 			if(extraUI == null) {
 				// I wanted to make a custom UI for this with bsml first... But this is MUCH easier and probably looks better
 				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
@@ -76,6 +71,8 @@ namespace BetterSongList.HarmonyPatches.UI {
 			lastInstance = __instance;
 
 			if(fields != null) {
+				var beatmapKey = __instance.beatmapKey;
+
 				if(!SongDetailsUtil.isAvailable) {
 					fields[0].text = fields[1].text = "N/A";
 				} else if(SongDetailsUtil.songDetails != null) {

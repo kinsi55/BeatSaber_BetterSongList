@@ -1,7 +1,6 @@
 ﻿using BetterSongList.UI;
 using HarmonyLib;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 namespace BetterSongList.HarmonyPatches.UI {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BeatSaberPlaylistsLib.Types;
-using UnityEngine;
 
 namespace BetterSongList.Util {
 	public static class PlaylistsUtil {

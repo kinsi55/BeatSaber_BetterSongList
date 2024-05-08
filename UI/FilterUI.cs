@@ -4,23 +4,17 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BetterSongList.FilterModels;
 using BetterSongList.HarmonyPatches;
-using BetterSongList.HarmonyPatches.UI;
 using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
 using IPA.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BetterSongList.UI {
 #if DEBUG

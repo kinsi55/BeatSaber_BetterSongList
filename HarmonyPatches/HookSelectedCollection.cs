@@ -1,5 +1,4 @@
-﻿using BetterSongList.FilterModels;
-using BetterSongList.UI;
+﻿using BetterSongList.UI;
 using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {

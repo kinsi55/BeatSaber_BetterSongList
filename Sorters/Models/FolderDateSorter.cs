@@ -47,12 +47,12 @@ namespace BetterSongList.SortModels {
 						if(songTimes.ContainsKey(song.levelID) && !fullReload)
 							continue;
 
-						var levelFolderPath = SongCore.Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(song.levelID, out var savedata) 
-							? savedata.customLevelFolderInfo.folderPath 
+						var levelFolderPath = SongCore.Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(song.levelID, out var saveData)
+							? saveData.customLevelFolderInfo.folderPath
 							: null;
 						if(string.IsNullOrEmpty(levelFolderPath))
 							continue;
-						
+
 						/*
 						 * There isnt really any "good" setup - LastWriteTime is cloned when copying a file and retained when manually
 						 * extracing from a zip, but the createtime is obviously "reset" when you copy files
@@ -92,8 +92,6 @@ namespace BetterSongList.SortModels {
 		}
 
 		public IEnumerable<KeyValuePair<string, int>> BuildLegend(BeatmapLevel[] levels) {
-			var curUtc = (int)DateTime.UtcNow.ToUnixTime();
-
 			return SongListLegendBuilder.BuildFor(levels, (level) => {
 				if(!songTimes.ContainsKey(level.levelID))
 					return null;

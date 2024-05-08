@@ -1,5 +1,4 @@
-﻿using BetterSongList.FilterModels;
-using BetterSongList.Interfaces;
+﻿using BetterSongList.Interfaces;
 using BetterSongList.Util;
 using System;
 using System.Threading;
