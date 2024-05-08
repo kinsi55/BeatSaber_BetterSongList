@@ -4,7 +4,6 @@ using BetterSongList.UI;
 using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
-using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -154,10 +153,7 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		[HarmonyPriority(int.MaxValue)]
-		static void Prefix(
-			LevelCollectionTableView __instance, TableView ____tableView,
-			ref IReadOnlyList<BeatmapLevel> beatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortBeatmapLevels
-		) {
+		static void Prefix(LevelCollectionTableView __instance, ref IReadOnlyList<BeatmapLevel> beatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortBeatmapLevels) {
 #if TRACE
 			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
 #endif
@@ -205,7 +201,7 @@ namespace BetterSongList.HarmonyPatches {
 
 
 		static KeyValuePair<string, int>[] customLegend = null;
-		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IReadOnlyList<BeatmapLevel> beatmapLevels) {
+		static void Postfix(LevelCollectionTableView __instance, IReadOnlyList<BeatmapLevel> beatmapLevels) {
 			lastOutMapList = beatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
@@ -217,18 +213,17 @@ namespace BetterSongList.HarmonyPatches {
 			 * made the great decision to unnecessarily lock down the scrollbar to only
 			 * use characters, not strings
 			 */
-			____alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data('?', x.Value)).ToArray());
+			__instance._alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data('?', x.Value)).ToArray());
 
 			// Now that all labels are there we can insert the text we want there...
-			var x = ReflectionUtil.GetField<List<TextMeshProUGUI>, AlphabetScrollbar>(____alphabetScrollbar, "_texts");
 			for(var i = customLegend.Length; i-- != 0;)
-				x[i].text = customLegend[i].Key;
+				__instance._alphabetScrollbar._texts[i].text = customLegend[i].Key;
 
 			customLegend = null;
 
 			// Move the table a bit to the right to accomodate for alphabet scollbar (Basegame behaviour)
-			((RectTransform)____tableView.transform).offsetMin = new Vector2(((RectTransform)____alphabetScrollbar.transform).rect.size.x + 1f, 0f);
-			____alphabetScrollbar.gameObject.SetActive(true);
+			((RectTransform)__instance._tableView.transform).offsetMin = new Vector2(((RectTransform)__instance._alphabetScrollbar.transform).rect.size.x + 1f, 0f);
+			__instance._alphabetScrollbar.gameObject.SetActive(true);
 		}
 	}
 }

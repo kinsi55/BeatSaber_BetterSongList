@@ -22,12 +22,12 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		[HarmonyPriority(int.MinValue)]
-		static void Prefix(ref string ____levelPackIdToBeSelectedAfterPresent) {
-			if(____levelPackIdToBeSelectedAfterPresent != null)
+		static void Prefix(LevelFilteringNavigationController __instance) {
+			if(__instance._levelPackIdToBeSelectedAfterPresent != null)
 				return;
 
 			LoadPackFromCollectionName();
-			____levelPackIdToBeSelectedAfterPresent = restoredPack?.packID;
+			__instance._levelPackIdToBeSelectedAfterPresent = restoredPack?.packID;
 		}
 	}
 
@@ -47,11 +47,11 @@ namespace BetterSongList.HarmonyPatches {
 
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), nameof(LevelSelectionFlowCoordinator.DidActivate))]
 	static class LevelSelectionFlowCoordinator_DidActivate {
-		static void Prefix(LevelSelectionFlowCoordinator __instance, ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
+		static void Prefix(LevelSelectionFlowCoordinator __instance, bool addedToHierarchy) {
 			if(!addedToHierarchy)
 				return;
 
-			if(____startState != null) {
+			if(__instance._startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
 #endif
@@ -79,7 +79,7 @@ namespace BetterSongList.HarmonyPatches {
 			if(restoreCategory == LevelCategory.All || restoreCategory == LevelCategory.Favorites)
 				pack = SongCore.Loader.CustomLevelsPack;
 
-			____startState = new LevelSelectionFlowCoordinator.State(
+			__instance._startState = new LevelSelectionFlowCoordinator.State(
 				restoreCategory,
 				pack,
 				new BeatmapKey(),

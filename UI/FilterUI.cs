@@ -8,7 +8,6 @@ using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
-using IPA.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -275,7 +274,7 @@ namespace BetterSongList.UI {
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
 			var c = Mathf.Min(9, dropdown.tableViewDataSource.NumberOfCells());
-			ReflectionUtil.SetField(dropdown, "_numberOfVisibleCells", c);
+			dropdown._numberOfVisibleCells = c;
 			dropdown.ReloadData();
 		}
 	}

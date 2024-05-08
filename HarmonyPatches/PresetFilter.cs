@@ -3,9 +3,9 @@
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelSearchViewController), nameof(LevelSearchViewController.ResetOptionFilterSettings))]
 	static class PresetFilter {
-		static void Postfix(ref LevelFilter ____currentSearchFilter) {
+		static void Postfix(LevelSearchViewController __instance) {
 			if(Config.Instance.AutoFilterUnowned)
-				____currentSearchFilter.songOwned = true;
+				__instance._currentSearchFilter.songOwned = true;
 		}
 	}
 }

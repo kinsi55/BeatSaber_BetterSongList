@@ -43,10 +43,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var path = Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(lastLevel.levelID, out var loadedSaveData)
 					? loadedSaveData.customLevelFolderInfo.folderPath
 					: null;
-				
+
 				if(string.IsNullOrEmpty(path))
 					return;
-				
+
 				try {
 					Loader.Instance.DeleteSong(path, !isWip);
 				} catch {
@@ -65,9 +65,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 		}
 
 		[HarmonyPriority(int.MinValue)]
-		static void Postfix(StandardLevelDetailView __instance, Button ____practiceButton, BeatmapLevel ____beatmapLevel) {
-			if(deleteButton == null && ____practiceButton != null) {
-				var newButton = GameObject.Instantiate(____practiceButton.gameObject, ____practiceButton.transform.parent);
+		static void Postfix(StandardLevelDetailView __instance) {
+			if(deleteButton == null && __instance._practiceButton != null) {
+				var newButton = GameObject.Instantiate(__instance._practiceButton.gameObject, __instance._practiceButton.transform.parent);
 				deleteButton = newButton.GetComponentInChildren<Button>();
 
 				deleteButton.onClick.AddListener(DeleteConfirmHandler.instance.Value.ConfirmDelete);
@@ -83,7 +83,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var icon = iconG.AddComponent<ImageView>();
 
 				icon.color = t.color;
-				IPA.Utilities.ReflectionUtil.SetField(icon, "_skew", 0.2f);
+				icon._skew = 0.2f;
 				icon.material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == "UINoGlow");
 				icon.SetImage("#DeleteIcon");
 
@@ -96,7 +96,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				);
 			}
 
-			lastLevel = !____beatmapLevel.hasPrecalculatedData ? ____beatmapLevel : null;
+			lastLevel = !__instance._beatmapLevel.hasPrecalculatedData ? __instance._beatmapLevel : null;
 
 			UpdateState();
 		}

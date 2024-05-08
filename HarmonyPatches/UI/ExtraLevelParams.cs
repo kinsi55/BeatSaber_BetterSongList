@@ -2,11 +2,11 @@
 using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
-using IPA.Utilities;
 using System;
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using IPA.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -53,15 +53,15 @@ namespace BetterSongList.HarmonyPatches.UI {
 				lastInstance.RefreshContent();
 		}
 
-		static void Postfix(BeatmapLevel ____beatmapLevel, LevelParamsPanel ____levelParamsPanel, StandardLevelDetailView __instance) {
+		static void Postfix(StandardLevelDetailView __instance) {
 			if(extraUI == null) {
 				// I wanted to make a custom UI for this with bsml first... But this is MUCH easier and probably looks better
-				extraUI = GameObject.Instantiate(____levelParamsPanel, ____levelParamsPanel.transform.parent).gameObject;
+				extraUI = GameObject.Instantiate(__instance._levelParamsPanel, __instance._levelParamsPanel.transform.parent).gameObject;
 				extraUI.GetComponentInChildren<CanvasGroup>().alpha = 1;
 
 				GameObject.Destroy(extraUI.GetComponent<LevelParamsPanel>());
 
-				____levelParamsPanel.transform.localPosition += new Vector3(0, 3.5f);
+				__instance._levelParamsPanel.transform.localPosition += new Vector3(0, 3.5f);
 				extraUI.transform.localPosition -= new Vector3(0, 1f);
 
 				fields = extraUI.GetComponentsInChildren<CurvedTextMeshPro>();
@@ -83,7 +83,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 						if(ch != SongDetailsCache.Structs.MapCharacteristic.Standard) {
 							fields[0].text = fields[1].text = "-";
 						} else {
-							var mh = BeatmapsUtil.GetHashOfLevel(____beatmapLevel);
+							var mh = BeatmapsUtil.GetHashOfLevel(__instance._beatmapLevel);
 
 							if(mh == null ||
 								!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
@@ -127,7 +127,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				}
 
 				// Basegame maps have no NJS or JD
-				var basicData = ____beatmapLevel.GetDifficultyBeatmapData(beatmapKey.beatmapCharacteristic, beatmapKey.difficulty);
+				var basicData = __instance._beatmapLevel.GetDifficultyBeatmapData(beatmapKey.beatmapCharacteristic, beatmapKey.difficulty);
 				var njs = basicData?.noteJumpMovementSpeed ?? 0;
 				if(njs == 0)
 					njs = BeatmapDifficultyMethods.NoteJumpMovementSpeed(beatmapKey.difficulty);
