@@ -2,9 +2,6 @@
 using BetterSongList.Util;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using static SelectLevelCategoryViewController;
 
 namespace BetterSongList.HarmonyPatches {
@@ -42,6 +39,12 @@ namespace BetterSongList.HarmonyPatches {
 		}
 	}
 
+	// For some reason the collection is trying to be closed when it hasn't been opened yet.
+	[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsGridView), nameof(AnnotatedBeatmapLevelCollectionsGridView.CloseLevelCollection))]
+	static class CloseLevelCollectionFix {
+		static bool Prefix(AnnotatedBeatmapLevelCollectionsGridView __instance) => __instance._gridView.columnCount != 0;
+	}
+
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), nameof(LevelSelectionFlowCoordinator.DidActivate))]
 	static class LevelSelectionFlowCoordinator_DidActivate {
 		static void Prefix(LevelSelectionFlowCoordinator __instance, ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
@@ -59,7 +62,7 @@ namespace BetterSongList.HarmonyPatches {
 			if(!Enum.TryParse(Config.Instance.LastCategory, out LevelCategory restoreCategory))
 				restoreCategory = LevelCategory.None;
 
-			if(Config.Instance.LastSong == null || 
+			if(Config.Instance.LastSong == null ||
 			   !__instance
 			   .levelSelectionNavigationController
 			   ._levelFilteringNavigationController
@@ -77,9 +80,9 @@ namespace BetterSongList.HarmonyPatches {
 				pack = SongCore.Loader.CustomLevelsPack;
 
 			____startState = new LevelSelectionFlowCoordinator.State(
-				restoreCategory, 
-				pack, 
-				new BeatmapKey(), 
+				restoreCategory,
+				pack,
+				new BeatmapKey(),
 				lastSelectedLevel);
 		}
 	}
