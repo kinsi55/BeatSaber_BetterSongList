@@ -40,7 +40,7 @@ namespace BetterSongList.Util {
 			return false;
 		}
 
-		private static int ToIntLayer(this NoteLineLayer lineLayer) {
+		static int ToIntLayer(this NoteLineLayer lineLayer) {
 			switch(lineLayer) {
 				case NoteLineLayer.Base:
 					return 0;
