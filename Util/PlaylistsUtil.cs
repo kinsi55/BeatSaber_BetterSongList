@@ -33,7 +33,7 @@ namespace BetterSongList.Util {
 						return null;
 					foreach(var x in BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists(true)) {
 						var playlistLevelPack = x.PlaylistLevelPack;
-						if(x.PlaylistLevelPack.packName == packName)
+						if(playlistLevelPack.packName == packName)
 							return playlistLevelPack;
 					}
 					return null;
