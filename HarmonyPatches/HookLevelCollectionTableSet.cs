@@ -109,10 +109,11 @@ namespace BetterSongList.HarmonyPatches {
 #endif
 				}
 
-				previewBeatmapLevels = outV.ToArray();
+				var beatmapLevels = outV.ToArray();
+				previewBeatmapLevels = beatmapLevels;
 
 				if(sorter is ISorterWithLegend sl && Config.Instance.EnableAlphabetScrollbar)
-					customLegend = sl.BuildLegend((BeatmapLevel[])previewBeatmapLevels).ToArray();
+					customLegend = sl.BuildLegend(beatmapLevels).ToArray();
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
 			}
