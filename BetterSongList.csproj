@@ -80,6 +80,9 @@
     <Reference Include="Hive.Versioning">
       <HintPath>$(BeatSaberDir)\Libs\Hive.Versioning.dll</HintPath>
     </Reference>
+      <Reference Include="MonoMod.Utils">
+          <HintPath>$(BeatSaberDir)\Libs\MonoMod.Utils.dll</HintPath>
+      </Reference>
     <Reference Include="SongCore">
       <HintPath>$(BeatSaberDir)\Plugins\SongCore.dll</HintPath>
     </Reference>
