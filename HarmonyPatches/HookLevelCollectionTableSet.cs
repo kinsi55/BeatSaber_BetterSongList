@@ -205,8 +205,12 @@ namespace BetterSongList.HarmonyPatches {
 			lastOutMapList = beatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
-			if(customLegend == null || customLegend.Length == 0)
-				return;
+			if(customLegend == null || customLegend.Length == 0) {
+				// TODO: Base game issue. Remove when fixed.
+				if(beatmapLevels.Count == 0)
+                	__instance._alphabetScrollbar.gameObject.SetActive(false);
+                return;
+			}
 
 			/*
 			 * We essentially gotta double-init the alphabet scrollbar because basegame
