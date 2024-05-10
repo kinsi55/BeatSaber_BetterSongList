@@ -33,5 +33,12 @@
 
 			return (int)d + 1;
 		}
+
+		public static string ConcatMappers(string[] allmappers) {
+			if(allmappers.Length == 1)
+				return allmappers[0];
+
+			return string.Join(" ", allmappers);
+		}
 	}
 }

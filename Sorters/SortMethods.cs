@@ -22,9 +22,11 @@ namespace BetterSongList {
 
 		public static readonly ISorter alphabeticalMapper = new ComparableFunctionSorterWithLegend(
 			(songa, songb) => {
-				var songaAuthors = songa.allMappers.Concat(songa.allLighters).Distinct().Join();
-				var songaButhors = songb.allMappers.Concat(songb.allLighters).Distinct().Join();
-				return string.Compare(songaAuthors, songaButhors, StringComparison.Ordinal);
+				return string.Compare(
+					BeatmapsUtil.ConcatMappers(songa.allMappers),
+					BeatmapsUtil.ConcatMappers(songb.allMappers), 
+					StringComparison.Ordinal
+				);
 			},
 			song => {
 				var authors = song.allMappers.Concat(song.allLighters).Distinct().Join();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using BetterSongList.Util;
 
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilter), nameof(LevelFilter.FilterLevelByText))]
@@ -50,7 +51,7 @@ namespace BetterSongList.HarmonyPatches {
 				new CodeInstruction(OpCodes.Dup),
 				new CodeInstruction(OpCodes.Ldc_I4_2),
 				matcher.NamedMatch("L_beatmapLevel"),
-				Transpilers.EmitDelegate<Func<BeatmapLevel, string>>(level => level.allMappers.Concat(level.allLighters).Distinct().Join(null, " ")),
+				Transpilers.EmitDelegate<Func<BeatmapLevel, string>>(level => BeatmapsUtil.ConcatMappers(level.allMappers)),
 				new CodeInstruction(OpCodes.Stelem_Ref),
 
 				matcher.NamedMatch("Call_Concat")
