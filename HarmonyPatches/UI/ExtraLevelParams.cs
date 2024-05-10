@@ -69,8 +69,6 @@ namespace BetterSongList.HarmonyPatches.UI {
 			}
 
 			lastInstance = __instance;
-			var obstaclesText = __instance._levelParamsPanel._obstaclesCountText;
-			obstaclesText.fontStyle = FontStyles.Italic;
 
 			if(fields != null) {
 				var beatmapKey = __instance.beatmapKey;
