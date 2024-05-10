@@ -243,6 +243,7 @@ namespace BetterSongList.UI {
 
 		[UIAction("#post-parse")]
 		void Parsed() {
+			settingsViewParams = null;
 			UpdateVisibleTransformers();
 
 			foreach(var x in sortOptions) {
