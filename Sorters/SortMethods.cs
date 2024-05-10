@@ -17,7 +17,7 @@ namespace BetterSongList {
 
 		public static readonly ISorter bpm = new PrimitiveFunctionSorterWithLegend(
 			song => song.beatsPerMinute,
-			song => Math.Round(song.beatsPerMinute).ToString(CultureInfo.InvariantCulture)
+			song => Math.Round(song.beatsPerMinute).ToString()
 		);
 
 		public static readonly ISorter alphabeticalMapper = new ComparableFunctionSorterWithLegend(
@@ -75,7 +75,7 @@ namespace BetterSongList {
 		const float funnyOptim = 1 / 60f;
 		public static readonly ISorter songLength = new PrimitiveFunctionSorterWithLegend(
 			song => song.songDuration,
-			song => (song.songDuration < 60 ? "<1" : Math.Round(song.songDuration * funnyOptim).ToString(CultureInfo.InvariantCulture)) + " min"
+			song => (song.songDuration < 60 ? "<1" : Math.Round(song.songDuration * funnyOptim).ToString()) + " min"
 		);
 
 		static int GetQuarter(DateTime date) {
