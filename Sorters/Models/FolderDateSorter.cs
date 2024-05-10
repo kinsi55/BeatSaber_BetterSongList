@@ -50,6 +50,7 @@ namespace BetterSongList.SortModels {
 						var levelFolderPath = SongCore.Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(song.levelID, out var saveData)
 							? saveData.customLevelFolderInfo.folderPath
 							: null;
+
 						if(string.IsNullOrEmpty(levelFolderPath))
 							continue;
 
