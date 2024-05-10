@@ -45,12 +45,12 @@ namespace BetterSongList.HarmonyPatches.UI {
 					: null;
 
 				if(string.IsNullOrEmpty(path))
-					return;
+					goto FAILED;
 
 				try {
 					Loader.Instance.DeleteSong(path, !isWip);
 				} catch {
-					FilterUI.persistentNuts.ShowErrorASAP("Deleting the map failed because it failed. Deal with it");
+					goto FAILED;
 				}
 
 				if(!isWip)
@@ -61,6 +61,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 						WinApi.DeleteFileOrFolder(path);
 					} catch { }
 				});
+				return;
+
+				FAILED:
+					FilterUI.persistentNuts.ShowErrorASAP("Deleting the map failed because it failed. Deal with it");
 			}
 		}
 
