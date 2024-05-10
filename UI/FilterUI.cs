@@ -165,12 +165,24 @@ namespace BetterSongList.UI {
 			if(x == null)
 				return;
 
-			var ml = HookLevelCollectionTableSet.lastOutMapList ?? HookLevelCollectionTableSet.lastInMapList;
+			/*
+			 * I dont think theres any place in the game where SetData is not called with an Array
+			 * 
+			 * .Count (Enumerable/Linq) is slower than directly accessing and Arrays Length
+			 * 
+			 * Not that it matters, but for now we can do this.
+			 */
+			var ml = (HookLevelCollectionTableSet.lastOutMapList ?? 
+				HookLevelCollectionTableSet.lastInMapList)
+				as BeatmapLevel[];
 
-			if(ml.Count < 2)
+			if(ml == null)
 				return;
 
-			x.SelectLevel(ml[ran.Next(0, ml.Count)]);
+			if(ml.Length < 2)
+				return;
+
+			x.SelectLevel(ml[ran.Next(0, ml.Length)]);
 		}
 
 		readonly Queue<string> warnings = new Queue<string>();
