@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using IPA.Utilities;
 using TMPro;
 using UnityEngine;
+using System.Reflection;
 
 namespace BetterSongList.HarmonyPatches.UI {
 	[HarmonyPatch(typeof(StandardLevelDetailView), nameof(StandardLevelDetailView.RefreshContent))]
@@ -17,12 +18,20 @@ namespace BetterSongList.HarmonyPatches.UI {
 		static TextMeshProUGUI[] fields = null;
 
 		static HoverHintController hhc = null;
+		static Sprite favIcon = null;
 		static IEnumerator ProcessFields() {
 			//Need to wait until the end of frame for reasons beyond my understanding
 			yield return new WaitForEndOfFrame();
 
-			static void ModifyValue(TextMeshProUGUI text, string hoverHint, string icon) {
-				text.transform.parent.Find("Icon").GetComponent<ImageView>().SetImage($"#{icon}");
+			static void ModifyValue(TextMeshProUGUI text, string hoverHint, string iconName) {
+				var icon = text.transform.parent.Find("Icon").GetComponent<ImageView>();
+
+				if(iconName == "Favorites") {
+					icon.sprite = (favIcon ??= Utilities.LoadSpriteRaw(Utilities.GetResource(Assembly.GetExecutingAssembly(), "BetterSongList.UI.FavoritesIcon.png")));
+				} else {
+					icon.SetImage($"#{iconName}Icon");
+				}
+
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
 				var hhint = text.GetComponentInParent<HoverHint>();
 
@@ -37,10 +46,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 				hhint.text = hoverHint;
 			}
 
-			ModifyValue(fields[0], "ScoreSaber PP Value", "DifficultyIcon");
-			ModifyValue(fields[1], "Star Rating", "FavoritesIconStroke");
-			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotesIcon");
-			ModifyValue(fields[3], "BeatSaver upload age (Months)", "ClockIcon");
+			ModifyValue(fields[0], "ScoreSaber PP Value", "Difficulty");
+			ModifyValue(fields[1], "Star Rating", "Favorites");
+			ModifyValue(fields[2], "NJS (Note Jump Speed)", "FastNotes");
+			ModifyValue(fields[3], "BeatSaver upload age (Months)", "Clock");
 
 			fields[0].richText = true;
 			fields[0].characterSpacing = -3f;
