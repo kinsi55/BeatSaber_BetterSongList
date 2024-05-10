@@ -18,7 +18,6 @@ namespace BetterSongList {
 
 		public bool AllowWipDelete { get; set; } = false;
 		public bool AutoFilterUnowned { get; set; } = true;
-		public bool ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun { get; set; } = true;
 		public bool ClearFiltersOnPlaylistSelect { get; set; } = true;
 		public bool ModBasegameSearch { get; set; } = true;
 		public bool ExtendSongsScrollbar { get; set; } = true;

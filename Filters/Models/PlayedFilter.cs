@@ -1,5 +1,4 @@
-﻿using BetterSongList.FilterModels;
-using BetterSongList.Util;
+﻿using BetterSongList.Util;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace BetterSongList.FilterModels {
 
 		public string GetUnavailabilityReason() => SongDetailsUtil.GetUnavailabilityReason();
 
-		public bool GetValueFor(IPreviewBeatmapLevel level) {
+		public bool GetValueFor(BeatmapLevel level) {
 			if(!LocalScoresUtil.hasScores)
 				return true;
 

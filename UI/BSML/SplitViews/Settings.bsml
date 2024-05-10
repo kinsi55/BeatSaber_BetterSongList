@@ -15,10 +15,6 @@
 						hover-hint='Automatically filter out Unowned songs from the "All Songs" / "Filter" tab'
 				/>
 					<toggle-setting
-						text='Show Warning for Duck Walls' apply-on-change='true' value='ShowWarningIfMapHasCrouchWallsBecauseMappersThinkSprinklingThemInRandomlyIsFun'
-						hover-hint='Shows a Warning icon next to the Wall Count if the map contains any crouch walls'
-				/>
-					<toggle-setting
 						text='Clear Sort and Filter in Playlists' apply-on-change='true' value='ClearFiltersOnPlaylistSelect'
 						hover-hint='Automatically removes the Sort and Filter when selecting a playlist - Is restored when you leave Playlists again'
 				/>

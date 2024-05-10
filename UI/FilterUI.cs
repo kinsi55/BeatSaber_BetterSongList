@@ -4,23 +4,16 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BetterSongList.FilterModels;
 using BetterSongList.HarmonyPatches;
-using BetterSongList.HarmonyPatches.UI;
 using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using HMUI;
-using IPA.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BetterSongList.UI {
 #if DEBUG
@@ -172,7 +165,19 @@ namespace BetterSongList.UI {
 			if(x == null)
 				return;
 
-			var ml = HookLevelCollectionTableSet.lastOutMapList ?? HookLevelCollectionTableSet.lastInMapList;
+			/*
+			 * I dont think theres any place in the game where SetData is not called with an Array
+			 * 
+			 * .Count (Enumerable/Linq) is slower than directly accessing and Arrays Length
+			 * 
+			 * Not that it matters, but for now we can do this.
+			 */
+			var ml = (HookLevelCollectionTableSet.lastOutMapList ?? 
+				HookLevelCollectionTableSet.lastInMapList)
+				as BeatmapLevel[];
+
+			if(ml == null)
+				return;
 
 			if(ml.Length < 2)
 				return;
@@ -238,6 +243,7 @@ namespace BetterSongList.UI {
 
 		[UIAction("#post-parse")]
 		void Parsed() {
+			settingsViewParams = null;
 			UpdateVisibleTransformers();
 
 			foreach(var x in sortOptions) {
@@ -281,7 +287,7 @@ namespace BetterSongList.UI {
 
 		static void HackDropdown(DropdownWithTableView dropdown) {
 			var c = Mathf.Min(9, dropdown.tableViewDataSource.NumberOfCells());
-			ReflectionUtil.SetField(dropdown, "_numberOfVisibleCells", c);
+			dropdown._numberOfVisibleCells = c;
 			dropdown.ReloadData();
 		}
 	}

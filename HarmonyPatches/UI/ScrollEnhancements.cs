@@ -12,9 +12,9 @@ namespace BetterSongList.HarmonyPatches.UI {
 	[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.Init), new Type[] { })]
 	static class ScrollEnhancements {
 		static GameObject[] buttons = null;
-		static void Prefix(bool ____isInitialized, TableView ____tableView, LevelCollectionTableView __instance) {
-			if(!____isInitialized)
-				SharedCoroutineStarter.instance.StartCoroutine(DoTheFunny(____tableView, __instance.transform));
+		static void Prefix(LevelCollectionTableView __instance) {
+			if(!__instance._isInitialized)
+				SharedCoroutineStarter.instance.StartCoroutine(DoTheFunny(__instance._tableView, __instance.transform));
 
 			UpdateState();
 		}

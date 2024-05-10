@@ -5,6 +5,6 @@ namespace BetterSongList.FilterModels {
 	public interface IFilter {
 		public bool isReady { get; }
 		Task Prepare(CancellationToken cancelToken);
-		bool GetValueFor(IPreviewBeatmapLevel level);
+		bool GetValueFor(BeatmapLevel level);
 	}
 }

@@ -7,7 +7,7 @@ using System.Reflection;
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch]
 	static class RestoreTableScroll {
-		static IEnumerable<MethodBase> TargetMethods() => AccessTools.GetDeclaredMethods(typeof(LevelCollectionTableView)).Where(x => x.Name == "Init");
+		static IEnumerable<MethodBase> TargetMethods() => AccessTools.GetDeclaredMethods(typeof(LevelCollectionTableView)).Where(x => x.Name == nameof(LevelCollectionTableView.Init));
 
 		static int? scrollToIndex = null;
 		static bool doResetScrollOnNext = false;
@@ -22,9 +22,9 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		[HarmonyPriority(int.MaxValue)]
-		static void Prefix(bool ____isInitialized, TableView ____tableView, IPreviewBeatmapLevel[] ____previewBeatmapLevels) {
-			if(____isInitialized && ____tableView != null && ____previewBeatmapLevels != null && !doResetScrollOnNext)
-				scrollToIndex = ____tableView.GetVisibleCellsIdRange().Item1;
+		static void Prefix(LevelCollectionTableView __instance) {
+			if(__instance._isInitialized && __instance._tableView != null && __instance._beatmapLevels != null && !doResetScrollOnNext)
+				scrollToIndex = __instance._tableView.GetVisibleCellsIdRange().Item1;
 
 			doResetScrollOnNext = false;
 
@@ -36,7 +36,7 @@ namespace BetterSongList.HarmonyPatches {
 		[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.SetData))]
 		static class DoTheFunnySelect {
 			[HarmonyPriority(int.MinValue)]
-			static void Postfix(TableView ____tableView, IPreviewBeatmapLevel[] ____previewBeatmapLevels, bool ____showLevelPackHeader) {
+			static void Postfix(LevelCollectionTableView __instance) {
 #if TRACE
 				Plugin.Log.Warn(string.Format("DoTheFunnySelect -> LevelCollectionTableView.SetData():Postfix scrollToIndex: {0}", scrollToIndex));
 #endif
@@ -48,7 +48,7 @@ namespace BetterSongList.HarmonyPatches {
 				Plugin.Log.Warn(string.Format("-> Scrolling to {0}", scrollToIndex));
 #endif
 
-				____tableView.ScrollToCellWithIdx(
+				__instance._tableView.ScrollToCellWithIdx(
 					(int)scrollToIndex,
 					TableView.ScrollPositionType.Beginning,
 					false

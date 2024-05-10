@@ -13,7 +13,7 @@ namespace BetterSongList.SortModels {
 
 		/*
 		 * TODO: For now, I need to use LevelId : int because I have to cast Playlists in LevelCollectionTableSet
-		 * once that is gone (Fixed BS Playlist Lib) I can go back to IPreviewBeatmapLevel : int
+		 * once that is gone (Fixed BS Playlist Lib) I can go back to BeatmapLevel : int
 		 */
 		static ConcurrentDictionary<string, int> songTimes = null;
 
@@ -39,20 +39,26 @@ namespace BetterSongList.SortModels {
 
 					var fpath = Path.DirectorySeparatorChar + "info.dat";
 
-					foreach(var song in 
+					foreach(var song in
 						SongCore.Loader.BeatmapLevelsModelSO
-						.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks.Where(x => x is SongCore.OverrideClasses.SongCoreCustomBeatmapLevelPack)
-						.SelectMany(x => x.beatmapLevelCollection.beatmapLevels)
-						.Cast<CustomPreviewBeatmapLevel>()
+						._customLevelsRepository?.beatmapLevelPacks.Where(x => x is SongCore.OverrideClasses.SongCoreCustomBeatmapLevelPack)
+						.SelectMany(x => x.beatmapLevels) ?? new List<BeatmapLevel>()
 					) {
 						if(songTimes.ContainsKey(song.levelID) && !fullReload)
+							continue;
+
+						var levelFolderPath = SongCore.Loader.CustomLevelLoader._loadedBeatmapSaveData.TryGetValue(song.levelID, out var saveData)
+							? saveData.customLevelFolderInfo.folderPath
+							: null;
+
+						if(string.IsNullOrEmpty(levelFolderPath))
 							continue;
 
 						/*
 						 * There isnt really any "good" setup - LastWriteTime is cloned when copying a file and retained when manually
 						 * extracing from a zip, but the createtime is obviously "reset" when you copy files
 						 */
-						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(song.customLevelPath + fpath).ToUnixTime();
+						songTimes[song.levelID] = (int)File.GetCreationTimeUtc(levelFolderPath + fpath).ToUnixTime();
 					}
 
 					Plugin.Log.Debug(string.Format("Getting SongFolder dates took {0}ms", xy.ElapsedMilliseconds));
@@ -65,7 +71,7 @@ namespace BetterSongList.SortModels {
 			return wipTask.Task;
 		}
 
-		public float? GetValueFor(IPreviewBeatmapLevel level) {
+		public float? GetValueFor(BeatmapLevel level) {
 			if(songTimes.TryGetValue(level.levelID, out var oVal))
 				return oVal;
 
@@ -86,9 +92,7 @@ namespace BetterSongList.SortModels {
 			return Math.Round(months) + " M";
 		}
 
-		public IEnumerable<KeyValuePair<string, int>> BuildLegend(IPreviewBeatmapLevel[] levels) {
-			var curUtc = (int)DateTime.UtcNow.ToUnixTime();
-
+		public IEnumerable<KeyValuePair<string, int>> BuildLegend(BeatmapLevel[] levels) {
 			return SongListLegendBuilder.BuildFor(levels, (level) => {
 				if(!songTimes.ContainsKey(level.levelID))
 					return null;

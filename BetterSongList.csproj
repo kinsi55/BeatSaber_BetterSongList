@@ -48,6 +48,7 @@
     <None Remove="UI\BSML\SongDeleteConfirm.bsml" />
     <None Remove="UI\BSML\SplitViews\Settings.bsml" />
     <None Remove="UI\DoubleArrowIcon.png" />
+    <None Remove="UI\FavoritesIcon.png" />
     <None Remove="UI\SongListBottomUI.bsml" />
   </ItemGroup>
 
@@ -65,8 +66,14 @@
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.DotnetExtension.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BGLib.Polyglot">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.Polyglot.dll</HintPath>
+    </Reference>
     <Reference Include="BSML">
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
+    </Reference>
+    <Reference Include="DataModels" Publicize="true">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\DataModels.dll</HintPath>
     </Reference>
     <Reference Include="GameplayCore">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\GameplayCore.dll</HintPath>
@@ -74,12 +81,9 @@
     <Reference Include="Hive.Versioning">
       <HintPath>$(BeatSaberDir)\Libs\Hive.Versioning.dll</HintPath>
     </Reference>
-    <Reference Include="Polyglot">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Polyglot.dll</HintPath>
-    </Reference>
-    <Reference Include="SemVer">
-      <HintPath>$(BeatSaberDir)\Libs\SemVer.dll</HintPath>
-    </Reference>
+      <Reference Include="MonoMod.Utils">
+          <HintPath>$(BeatSaberDir)\Libs\MonoMod.Utils.dll</HintPath>
+      </Reference>
     <Reference Include="SongCore">
       <HintPath>$(BeatSaberDir)\Plugins\SongCore.dll</HintPath>
     </Reference>
@@ -113,20 +117,11 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.VRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +130,7 @@
     <EmbeddedResource Include="UI\BSML\MainUI.bsml" />
     <EmbeddedResource Include="UI\BSML\SplitViews\Settings.bsml" />
     <EmbeddedResource Include="UI\DoubleArrowIcon.png" />
+    <EmbeddedResource Include="UI\FavoritesIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks">

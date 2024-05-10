@@ -17,21 +17,21 @@ namespace BetterSongList.Util {
 				if(!x.Value.validScore)
 					continue;
 
-				playedMaps.Add(x.Key.songId);
+				playedMaps.Add(x.Key.levelId);
 			}
 		}
 
 		[HarmonyPatch(typeof(PlayerLevelStatsData), nameof(PlayerLevelStatsData.UpdateScoreData))]
 		static class InterceptNewScores {
-			static void Prefix(bool ____validScore, string ____levelID) {
+			static void Prefix(PlayerLevelStatsData __instance) {
 				// Will become valid after this UpdateScoreData() call
-				if(!____validScore)
-					playedMaps.Add(____levelID);
+				if(!__instance._validScore)
+					playedMaps.Add(__instance._levelID);
 			}
 		}
 
 		public static bool HasLocalScore(string levelId) => playedMaps.Contains(levelId);
 
-		public static bool HasLocalScore(IPreviewBeatmapLevel level) => HasLocalScore(level.levelID);
+		public static bool HasLocalScore(BeatmapLevel level) => HasLocalScore(level.levelID);
 	}
 }

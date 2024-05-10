@@ -4,7 +4,6 @@ using BetterSongList.UI;
 using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
-using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +22,12 @@ namespace BetterSongList.HarmonyPatches {
 		public static ISorter sorter;
 		public static IFilter filter;
 
-		public static IPreviewBeatmapLevel[] lastInMapList { get; private set; }
-		public static IPreviewBeatmapLevel[] lastOutMapList { get; private set; }
-		static Action<IPreviewBeatmapLevel[]> recallLast = null;
+		public static IReadOnlyList<BeatmapLevel> lastInMapList { get; private set; }
+		public static IReadOnlyList<BeatmapLevel> lastOutMapList { get; private set; }
+		static Action<IReadOnlyList<BeatmapLevel>> recallLast = null;
 
 
-		static IPreviewBeatmapLevel[] asyncPreprocessed;
+		static IReadOnlyList<BeatmapLevel> asyncPreprocessed;
 
 		/// <summary>
 		/// Refresh the SongList with the last used BeatMaps array
@@ -67,7 +66,7 @@ namespace BetterSongList.HarmonyPatches {
 			recallLast(ml);
 		}
 
-		static void FilterWrapper(ref IPreviewBeatmapLevel[] previewBeatmapLevels) {
+		static void FilterWrapper(ref IReadOnlyList<BeatmapLevel> previewBeatmapLevels) {
 			if(filter?.isReady != true && sorter?.isReady != true)
 				return;
 
@@ -110,10 +109,11 @@ namespace BetterSongList.HarmonyPatches {
 #endif
 				}
 
-				previewBeatmapLevels = outV.ToArray();
+				var beatmapLevels = outV.ToArray();
+				previewBeatmapLevels = beatmapLevels;
 
 				if(sorter is ISorterWithLegend sl && Config.Instance.EnableAlphabetScrollbar)
-					customLegend = sl.BuildLegend(previewBeatmapLevels).ToArray();
+					customLegend = sl.BuildLegend(beatmapLevels).ToArray();
 			} catch(Exception ex) {
 				Plugin.Log.Warn(string.Format("FilterWrapper() Exception: {0}", ex));
 			}
@@ -154,29 +154,26 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		[HarmonyPriority(int.MaxValue)]
-		static void Prefix(
-			LevelCollectionTableView __instance, TableView ____tableView,
-			ref IPreviewBeatmapLevel[] previewBeatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortPreviewBeatmapLevels
-		) {
+		static void Prefix(LevelCollectionTableView __instance, ref IReadOnlyList<BeatmapLevel> beatmapLevels, HashSet<string> favoriteLevelIds, ref bool beatmapLevelsAreSorted, bool sortBeatmapLevels) {
 #if TRACE
 			Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix");
 #endif
 			// If SetData is called with the literal same maplist as before we might as well ignore it
-			if(previewBeatmapLevels == lastInMapList) {
+			if(beatmapLevels == lastInMapList) {
 #if TRACE
-				Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix => previewBeatmapLevels == lastInMapList");
+				Plugin.Log.Debug("LevelCollectionTableView.SetData():Prefix => beatmapLevels == lastInMapList");
 #endif
-				previewBeatmapLevels = lastOutMapList;
+				beatmapLevels = lastOutMapList;
 				return;
 			}
 
 			// Playlistlib has its own custom wrapping class for Playlists so it can properly track duplicates, so we need to use its collection
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
-				previewBeatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? previewBeatmapLevels;
+				beatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? beatmapLevels;
 
-			lastInMapList = previewBeatmapLevels;
+			lastInMapList = beatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
-			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortPreviewBeatmapLevels);
+			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortBeatmapLevels);
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
@@ -191,7 +188,7 @@ namespace BetterSongList.HarmonyPatches {
 			XD.FunnyNull(FilterUI.persistentNuts._filterLoadingIndicator)?.gameObject.SetActive(false);
 
 			if(asyncPreprocessed != null) {
-				previewBeatmapLevels = asyncPreprocessed;
+				beatmapLevels = asyncPreprocessed;
 				asyncPreprocessed = null;
 #if TRACE
 				Plugin.Log.Notice("Used Async-Prefiltered");
@@ -200,35 +197,38 @@ namespace BetterSongList.HarmonyPatches {
 			}
 
 			// Passing these explicitly for thread safety
-			FilterWrapper(ref previewBeatmapLevels);
+			FilterWrapper(ref beatmapLevels);
 		}
 
 
 		static KeyValuePair<string, int>[] customLegend = null;
-		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
-			lastOutMapList = previewBeatmapLevels;
+		static void Postfix(LevelCollectionTableView __instance, IReadOnlyList<BeatmapLevel> beatmapLevels) {
+			lastOutMapList = beatmapLevels;
 
 			// Basegame already handles cleaning up the legend etc
-			if(customLegend == null || customLegend.Length == 0)
-				return;
+			if(customLegend == null || customLegend.Length == 0) {
+				// TODO: Base game issue. Remove when fixed.
+				if(beatmapLevels.Count == 0)
+                	__instance._alphabetScrollbar.gameObject.SetActive(false);
+                return;
+			}
 
 			/*
 			 * We essentially gotta double-init the alphabet scrollbar because basegame
 			 * made the great decision to unnecessarily lock down the scrollbar to only
 			 * use characters, not strings
 			 */
-			____alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data('?', x.Value)).ToArray());
+			__instance._alphabetScrollbar.SetData(customLegend.Select(x => new AlphabetScrollInfo.Data('?', x.Value)).ToArray());
 
 			// Now that all labels are there we can insert the text we want there...
-			var x = ReflectionUtil.GetField<List<TextMeshProUGUI>, AlphabetScrollbar>(____alphabetScrollbar, "_texts");
 			for(var i = customLegend.Length; i-- != 0;)
-				x[i].text = customLegend[i].Key;
+				__instance._alphabetScrollbar._texts[i].text = customLegend[i].Key;
 
 			customLegend = null;
 
 			// Move the table a bit to the right to accomodate for alphabet scollbar (Basegame behaviour)
-			((RectTransform)____tableView.transform).offsetMin = new Vector2(((RectTransform)____alphabetScrollbar.transform).rect.size.x + 1f, 0f);
-			____alphabetScrollbar.gameObject.SetActive(true);
+			((RectTransform)__instance._tableView.transform).offsetMin = new Vector2(((RectTransform)__instance._alphabetScrollbar.transform).rect.size.x + 1f, 0f);
+			__instance._alphabetScrollbar.gameObject.SetActive(true);
 		}
 	}
 }

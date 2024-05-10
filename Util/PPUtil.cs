@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BetterSongList.Util {
+﻿namespace BetterSongList.Util {
     // THANK YOU PULSELANE <3
     static class PPUtil {
         private static (float, float)[] ppCurve = new (float, float)[] {

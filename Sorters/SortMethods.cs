@@ -4,11 +4,14 @@ using BetterSongList.Util;
 using SongDetailsCache.Structs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using HarmonyLib;
 
 namespace BetterSongList {
 	public static class SortMethods {
 		public static readonly ISorter alphabeticalSongname = new ComparableFunctionSorterWithLegend(
-			(songa, songb) => string.Compare(songa.songName, songb.songName),
+			(songa, songb) => string.Compare(songa.songName, songb.songName, StringComparison.Ordinal),
 			song => song.songName.Length > 0 ? song.songName.Substring(0, 1) : null
 		);
 
@@ -18,9 +21,17 @@ namespace BetterSongList {
 		);
 
 		public static readonly ISorter alphabeticalMapper = new ComparableFunctionSorterWithLegend(
-			(songa, songb) => string.Compare(songa.levelAuthorName, songb.levelAuthorName),
-			song => song.levelAuthorName.Length > 0 ? song.levelAuthorName.Substring(0, 1) : null
-		);
+			(songa, songb) => {
+				return string.Compare(
+					BeatmapsUtil.ConcatMappers(songa.allMappers),
+					BeatmapsUtil.ConcatMappers(songb.allMappers), 
+					StringComparison.Ordinal
+				);
+			},
+			song => {
+				var authors = song.allMappers.Concat(song.allLighters).Distinct().Join();
+				return authors.Length > 0 ? authors.Substring(0, 1) : null;
+			});
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
 		internal static float? StarsProcessor(object xx) {

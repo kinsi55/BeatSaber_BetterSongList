@@ -2,15 +2,12 @@
 using BetterSongList.Util;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using static SelectLevelCategoryViewController;
 
 namespace BetterSongList.HarmonyPatches {
 	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.ShowPacksInSecondChildController))]
 	static class PackPreselect {
-		public static IBeatmapLevelPack restoredPack = null;
+		public static BeatmapLevelPack restoredPack = null;
 
 		public static void LoadPackFromCollectionName() {
 			if(restoredPack?.shortPackName == Config.Instance.LastPack)
@@ -25,34 +22,36 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		[HarmonyPriority(int.MinValue)]
-		static void Prefix(ref string ____levelPackIdToBeSelectedAfterPresent) {
-			if(____levelPackIdToBeSelectedAfterPresent != null)
+		static void Prefix(LevelFilteringNavigationController __instance) {
+			if(__instance._levelPackIdToBeSelectedAfterPresent != null)
 				return;
 
 			LoadPackFromCollectionName();
-			____levelPackIdToBeSelectedAfterPresent = restoredPack?.packID;
+			__instance._levelPackIdToBeSelectedAfterPresent = restoredPack?.packID;
 		}
 	}
 
 	// Animation might get stuck when switching category if it hasn't finished.
-	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.SelectLevelCategoryViewControllerDidSelectLevelCategory))]
+	[HarmonyPatch(typeof(LevelFilteringNavigationController), nameof(LevelFilteringNavigationController.HandleSelectLevelCategoryViewControllerDidSelectLevelCategory))]
 	static class PackPreselectAnimationFix {
 		static void Postfix(LevelFilteringNavigationController __instance) {
 			__instance._annotatedBeatmapLevelCollectionsViewController._annotatedBeatmapLevelCollectionsGridView._animator.DespawnAllActiveTweens();
 		}
 	}
 
-	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), "DidActivate")]
+	// For some reason the collection is trying to be closed when it hasn't been opened yet.
+	[HarmonyPatch(typeof(AnnotatedBeatmapLevelCollectionsGridView), nameof(AnnotatedBeatmapLevelCollectionsGridView.CloseLevelCollection))]
+	static class CloseLevelCollectionFix {
+		static bool Prefix(AnnotatedBeatmapLevelCollectionsGridView __instance) => __instance._gridView.columnCount != 0;
+	}
+
+	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), nameof(LevelSelectionFlowCoordinator.DidActivate))]
 	static class LevelSelectionFlowCoordinator_DidActivate {
-		static readonly ConstructorInfo thingy = AccessTools.FirstConstructor(typeof(LevelSelectionFlowCoordinator.State), x => x.GetParameters().Length == 4);
-
-		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
-
-		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
+		static void Prefix(LevelSelectionFlowCoordinator __instance, bool addedToHierarchy) {
 			if(!addedToHierarchy)
 				return;
 
-			if(____startState != null) {
+			if(__instance._startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");
 #endif
@@ -63,8 +62,15 @@ namespace BetterSongList.HarmonyPatches {
 			if(!Enum.TryParse(Config.Instance.LastCategory, out LevelCategory restoreCategory))
 				restoreCategory = LevelCategory.None;
 
-			if(Config.Instance.LastSong == null || !beatmapLevelsModel._loadedPreviewBeatmapLevels.TryGetValue(Config.Instance.LastSong, out var m))
-				m = null;
+			if(Config.Instance.LastSong == null ||
+			   !__instance
+			   .levelSelectionNavigationController
+			   ._levelFilteringNavigationController
+			   ._beatmapLevelsModel
+			   ._allLoadedBeatmapLevelsRepository
+			   .TryGetBeatmapLevelById(Config.Instance.LastSong, out var lastSelectedLevel)
+			)
+				lastSelectedLevel = null;
 
 			PackPreselect.LoadPackFromCollectionName();
 
@@ -73,12 +79,11 @@ namespace BetterSongList.HarmonyPatches {
 			if(restoreCategory == LevelCategory.All || restoreCategory == LevelCategory.Favorites)
 				pack = SongCore.Loader.CustomLevelsPack;
 
-			____startState = (LevelSelectionFlowCoordinator.State)thingy.Invoke(new object[] {
+			__instance._startState = new LevelSelectionFlowCoordinator.State(
 				restoreCategory,
 				pack,
-				m,
-				null
-			});
+				new BeatmapKey(),
+				lastSelectedLevel);
 		}
 	}
 }
