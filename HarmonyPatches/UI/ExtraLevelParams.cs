@@ -55,7 +55,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			fields[0].characterSpacing = -3f;
 		}
 
-		internal static StandardLevelDetailView lastInstance { get; private set; } = null;
+		static StandardLevelDetailView lastInstance = null;
 
 		public static void UpdateState() {
 			if(lastInstance != null && lastInstance.isActiveAndEnabled)
