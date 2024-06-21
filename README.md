@@ -18,7 +18,7 @@ The Game version(s) specific releases are compatible with are mentioned in the R
 
 ## Features
 
-- Adds various sorting and filtering methods
+- Adds various sorting and filtering methods as well as a "Random Song" button
 - Rembers 😁 your last selected Category / Playlist / Song and returns there
 - Context-Aware legend-scrollbar whose steps are determined by your sorting method
 - Fixes the shifting around of Practice / Play buttons when using Scoresaber
