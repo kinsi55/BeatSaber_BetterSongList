@@ -42,7 +42,7 @@ namespace BetterSongList.SortModels {
 					foreach(var song in
 						SongCore.Loader.BeatmapLevelsModelSO
 						._customLevelsRepository?.beatmapLevelPacks.Where(x => x is SongCore.OverrideClasses.SongCoreCustomBeatmapLevelPack)
-						.SelectMany(x => x.beatmapLevels) ?? new List<BeatmapLevel>()
+						.SelectMany(x => x._beatmapLevels) ?? new List<BeatmapLevel>()
 					) {
 						if(songTimes.ContainsKey(song.levelID) && !fullReload)
 							continue;

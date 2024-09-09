@@ -87,13 +87,14 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var icon = iconG.AddComponent<ImageView>();
 
 				icon.color = t.color;
-				icon._skew = 0.2f;
+				// This is private now? idk
+				// icon.skew = 0.2f;
 				icon.material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == "UINoGlow");
 				icon.SetImage("#DeleteIcon");
 
 				GameObject.DestroyImmediate(t.gameObject);
 
-				BSMLParser.instance.Parse(
+				BSMLParser.Instance.Parse(
 					Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "BetterSongList.UI.BSML.SongDeleteConfirm.bsml"),
 					__instance.transform.parent.gameObject,
 					DeleteConfirmHandler.instance.Value
