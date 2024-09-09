@@ -87,8 +87,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var icon = iconG.AddComponent<ImageView>();
 
 				icon.color = t.color;
-				// This is private now? idk
-				// icon.skew = 0.2f;
+				icon._skew = 0.2f;
 				icon.material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == "UINoGlow");
 				icon.SetImage("#DeleteIcon");
 

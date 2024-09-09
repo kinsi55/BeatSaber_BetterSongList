@@ -59,7 +59,7 @@
     <Reference Include="BeatmapCore">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
     </Reference>
-    <Reference Include="BeatSaber.ViewSystem">
+    <Reference Include="BeatSaber.ViewSystem" Publicize="true">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
     </Reference>
     <Reference Include="BeatSaberPlaylistsLib">
