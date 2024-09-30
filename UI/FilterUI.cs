@@ -224,7 +224,7 @@ namespace BetterSongList.UI {
 		}
 
 		internal static void AttachTo(Transform target) {
-			BSMLParser.instance.Parse(Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "BetterSongList.UI.BSML.MainUI.bsml"), target.gameObject, persistentNuts);
+			BSMLParser.Instance.Parse(Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "BetterSongList.UI.BSML.MainUI.bsml"), target.gameObject, persistentNuts);
 			persistentNuts.rootTransform.localScale *= 0.7f;
 
 			(target as RectTransform).sizeDelta += new Vector2(0, 2);

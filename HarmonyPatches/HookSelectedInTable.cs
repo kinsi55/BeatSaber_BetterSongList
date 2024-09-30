@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 
 namespace BetterSongList.HarmonyPatches {
-	[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.HandleDidSelectRowEvent))]
+	[HarmonyPatch(typeof(LevelCollectionTableView), nameof(LevelCollectionTableView.HandleDidSelectCellWithIndex))]
 	static class HookSelectedInTable {
 		[HarmonyPriority(int.MinValue)]
 		static void Postfix(LevelCollectionTableView __instance) {

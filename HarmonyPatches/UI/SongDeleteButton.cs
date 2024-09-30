@@ -93,7 +93,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 				GameObject.DestroyImmediate(t.gameObject);
 
-				BSMLParser.instance.Parse(
+				BSMLParser.Instance.Parse(
 					Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "BetterSongList.UI.BSML.SongDeleteConfirm.bsml"),
 					__instance.transform.parent.gameObject,
 					DeleteConfirmHandler.instance.Value
