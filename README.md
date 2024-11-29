@@ -25,7 +25,6 @@ The Game version(s) specific releases are compatible with are mentioned in the R
 - Displays the map Default Jump Distance (Can be changed to show the maps Offset if you prefer that)
 - Extended Scroll buttons
 - Adds various extra details about the Song Like Ranked Information and NJS
-- Warns you if a map contains Crouch walls (⚠ Next to Obstacle count)
 - Plugin system - You can add your own Sorts & Filters to Better Song List!
 - Probably other minor things I Forgor 💀
 
