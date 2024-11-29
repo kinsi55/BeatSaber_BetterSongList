@@ -29,8 +29,8 @@ namespace BetterSongList {
 				);
 			},
 			song => {
-				var authors = song.allMappers.Concat(song.allLighters).Distinct().Join();
-				return authors.Length > 0 ? authors.Substring(0, 1) : null;
+				var authors = song.allMappers;
+				return authors.Length > 0 && authors[0].Length > 0 ? authors[0].Substring(0, 1) : null;
 			});
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
