@@ -94,10 +94,10 @@ namespace BetterSongList.HarmonyPatches.UI {
 				btnDownFast
 			}.Select(x => x.gameObject).ToArray();
 
-			var sp =  Utilities.LoadSpriteRaw(Utilities.GetResource(Assembly.GetExecutingAssembly(), "BetterSongList.UI.DoubleArrowIcon.png"));
-
-			btnUpFast.GetComponentInChildren<ImageView>().sprite = sp;
-			btnDownFast.GetComponentInChildren<ImageView>().sprite = sp;
+			Utilities.LoadSpriteFromAssemblyAsync("BetterSongList.UI.DoubleArrowIcon.png").ContinueWith(x => {
+				btnUpFast.GetComponentInChildren<ImageView>().sprite = x.Result;
+				btnDownFast.GetComponentInChildren<ImageView>().sprite = x.Result;
+			});
 		}
 	}
 }

@@ -36,7 +36,7 @@ namespace BetterSongList {
 
 		internal static float? StarsProcessor(object xx) {
 			var x = (Song)xx;
-			if(x.rankedStatus != RankedStatus.Ranked)
+			if(!x.rankedStates.HasFlag(RankedStates.ScoresaberRanked))
 				return null;
 
 			float ret = 0;

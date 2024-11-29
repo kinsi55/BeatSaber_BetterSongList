@@ -30,7 +30,7 @@
 				<list-setting
 					text='Preferred Leaderboard' apply-on-change="true" value="preferredLeaderboard"
 					choices="preferredLeaderboardChoices" bind-value="true"
-					hover-hint="Which leaderboards Star value to display"
+					hover-hint="Which leaderboards Star value should be displayed?"
 				/>
 				<macro.as-host host='cfgi'>
 					<slider-setting

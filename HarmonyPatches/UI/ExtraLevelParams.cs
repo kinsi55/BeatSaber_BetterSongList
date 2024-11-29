@@ -27,7 +27,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var icon = text.transform.parent.Find("Icon").GetComponent<ImageView>();
 
 				if(iconName == "Favorites") {
-					icon.sprite = (favIcon ??= Utilities.LoadSpriteRaw(Utilities.GetResource(Assembly.GetExecutingAssembly(), "BetterSongList.UI.FavoritesIcon.png")));
+					if(favIcon != null) {
+						icon.sprite = favIcon;
+					} else {
+						Utilities.LoadSpriteFromAssemblyAsync("BetterSongList.UI.FavoritesIcon.png").ContinueWith(x => {
+							icon.sprite = favIcon = x.Result;
+						});
+					}
 				} else {
 					icon.SetImage($"#{iconName}Icon");
 				}
