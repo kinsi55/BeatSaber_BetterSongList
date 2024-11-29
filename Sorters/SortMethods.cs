@@ -21,17 +21,16 @@ namespace BetterSongList {
 		);
 
 		public static readonly ISorter alphabeticalMapper = new ComparableFunctionSorterWithLegend(
-			(songa, songb) => {
-				return string.Compare(
-					BeatmapsUtil.ConcatMappers(songa.allMappers),
-					BeatmapsUtil.ConcatMappers(songb.allMappers), 
-					StringComparison.Ordinal
-				);
-			},
+			(songa, songb) => string.Compare(
+				BeatmapsUtil.ConcatMappers(songa.allMappers),
+				BeatmapsUtil.ConcatMappers(songb.allMappers), 
+				StringComparison.Ordinal
+			),
 			song => {
 				var authors = song.allMappers;
 				return authors.Length > 0 && authors[0].Length > 0 ? authors[0].Substring(0, 1) : null;
-			});
+			}
+		);
 		public static readonly ISorter downloadTime = new FolderDateSorter();
 
 		internal static float? StarsProcessor(object xx) {
