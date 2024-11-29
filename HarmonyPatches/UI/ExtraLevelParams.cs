@@ -105,42 +105,38 @@ namespace BetterSongList.HarmonyPatches.UI {
 						// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
 						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
 
-						if(ch != SongDetailsCache.Structs.MapCharacteristic.Standard) {
-							fields[0].text = fields[1].text = "-";
+						var mh = BeatmapsUtil.GetHashOfLevel(__instance._beatmapLevel);
+
+						if(mh == null ||
+							!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
+							!song.GetDifficulty(
+								out var diff,
+								(SongDetailsCache.Structs.MapDifficulty)beatmapKey.difficulty,
+								ch
+							)
+						) {
+							fields[0].text = fields[1].text = fields[3].text = "?";
+							return;
 						} else {
-							var mh = BeatmapsUtil.GetHashOfPreview(____level);
+							var isSs = Config.Instance.PreferredLeaderboard == "ScoreSaber";
+							float stars = isSs ? diff.stars : diff.starsBeatleader;
 
-							if(mh == null ||
-								!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
-								!song.GetDifficulty(
-									out var diff,
-									(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
-									ch
-								)
-							) {
-								fields[0].text = fields[1].text = fields[3].text = "?";
-								return;
+							if(stars <= 0) {
+								fields[0].text = fields[1].text = "-";
+							} else if(isSs) {
+								var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (12.5f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
+								//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
+								var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
+
+								fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
+								fields[1].text = diff.stars.ToString("0.0#");
 							} else {
-								var isSs = Config.Instance.PreferredLeaderboard == "ScoreSaber";
-								float stars = isSs ? diff.stars : diff.starsBeatleader;
-
-								if(stars <= 0) {
-									fields[0].text = fields[1].text = "-";
-								} else if(isSs) {
-									var acc = .984f - (Math.Max(0, (diff.stars - 1.5f) / (12.5f - 1.5f) / Config.Instance.AccuracyMultiplier) * .027f);
-									//acc *= 1 - ((1 - Config.Instance.AccuracyMultiplier) * 0.5f);
-									var pp = PPUtil.PPPercentage(acc) * diff.stars * 42.1f;
-
-									fields[0].text = string.Format("{0:0} <size=2.5>({1:0.0%})</size>", pp, acc);
-									fields[1].text = diff.stars.ToString("0.0#");
-								} else {
-									fields[0].text = "?";
-									fields[1].text = diff.starsBeatleader.ToString("0.0#");
-								}
+								fields[0].text = "?";
+								fields[1].text = diff.starsBeatleader.ToString("0.0#");
 							}
-
-							fields[3].text = SortModels.FolderDateSorter.GetMapAgeMonths((int)song.uploadTimeUnix);
 						}
+
+						fields[3].text = SortModels.FolderDateSorter.GetMapAgeMonths((int)song.uploadTimeUnix);
 					}
 					wrapper();
 				// This might end up Double-Initing SongDetails but SongDetails handles that internally and only does it once so whatever
