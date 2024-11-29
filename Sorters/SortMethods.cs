@@ -102,7 +102,7 @@ namespace BetterSongList {
 		internal static Dictionary<string, ISorter> methods = new Dictionary<string, ISorter>() {
 			{ "Song Name", alphabeticalSongname },
 			{ "Download Date", downloadTime },
-			{ "Ranked Stars", stars },
+			{ "SS Stars", stars },
 			{ "Song Length", songLength },
 			{ "BPM", bpm },
 			{ "BeatSaver Date", beatSaverDate },
