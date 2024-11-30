@@ -38,7 +38,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 
 			var i = newBtn.GetComponentInChildren<ImageView>();
 			if(Icon?[0] == '#')
-				i.SetImage(Icon);
+				i.SetImageAsync(Icon);
 
 			// Put the Icon in the middle of the touchable rect
 			r = (RectTransform)i.transform;

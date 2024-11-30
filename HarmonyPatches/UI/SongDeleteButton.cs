@@ -89,7 +89,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				icon.color = t.color;
 				icon._skew = 0.2f;
 				icon.material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == "UINoGlow");
-				icon.SetImage("#DeleteIcon");
+				icon.SetImageAsync("#DeleteIcon");
 
 				GameObject.DestroyImmediate(t.gameObject);
 

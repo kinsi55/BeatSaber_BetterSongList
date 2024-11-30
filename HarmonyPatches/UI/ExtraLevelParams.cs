@@ -35,7 +35,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 						});
 					}
 				} else {
-					icon.SetImage($"#{iconName}Icon");
+					icon.SetImageAsync($"#{iconName}Icon");
 				}
 
 				GameObject.DestroyImmediate(text.GetComponentInParent<LocalizedHoverHint>());
