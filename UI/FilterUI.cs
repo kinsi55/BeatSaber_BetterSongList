@@ -134,7 +134,7 @@ namespace BetterSongList.UI {
 		void _SetFilter(string selected) => SetFilter(selected);
 		internal static void SetFilter(string selected, bool storeToConfig = true, bool refresh = true) {
 #if DEBUG
-			Plugin.Log.Warn(string.Format("Trying to set Filter to {0} (store: {1}, refresh: {2}):\n{3}", selected, storeToConfig, refresh, new StackTrace().ToString()));
+			Plugin.Log.Warn(string.Format("Trying to set Filter to {0} (store: {1}, refresh: {2}):", selected, storeToConfig, refresh));
 #endif
 			if(selected == null || !filterOptions.ContainsKey(selected))
 				selected = filterOptions.Keys.Last();
