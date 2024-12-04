@@ -31,6 +31,8 @@ namespace BetterSongList.HarmonyPatches {
 
 		static IPreviewBeatmapLevel[] asyncPreprocessed;
 
+		static bool tryReselectLastSelectedLevel = false;
+
 		/// <summary>
 		/// Refresh the SongList with the last used BeatMaps array
 		/// </summary>
@@ -101,7 +103,7 @@ namespace BetterSongList.HarmonyPatches {
 						customSorter.DoSort(ref outV, Config.Instance.SortAsc);
 					} else {
 						var pSorter = (ISorterPrimitive)sorter;
-						outV = Config.Instance.SortAsc ? 
+						outV = Config.Instance.SortAsc ?
 							outV.OrderBy(x => pSorter.GetValueFor(x) ?? float.MaxValue) :
 							outV.OrderByDescending(x => pSorter.GetValueFor(x) ?? float.MinValue);
 					}
@@ -177,7 +179,11 @@ namespace BetterSongList.HarmonyPatches {
 
 			lastInMapList = previewBeatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
-			recallLast = (overrideData) => __instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted);
+			recallLast = (overrideData) => {
+				tryReselectLastSelectedLevel = true;
+
+				__instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortBeatmapLevels);
+			};
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
 
@@ -223,7 +229,10 @@ namespace BetterSongList.HarmonyPatches {
 		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
 			lastOutMapList = previewBeatmapLevels;
 
-			SharedCoroutineStarter.instance.StartCoroutine(TryReselectLastSelectedSong(__instance));
+			if(tryReselectLastSelectedLevel) {
+				SharedCoroutineStarter.instance.StartCoroutine(TryReselectLastSelectedSong(__instance));
+				tryReselectLastSelectedLevel = false;
+			}
 
 			// Basegame already handles cleaning up the legend etc
 			if(customLegend == null)
