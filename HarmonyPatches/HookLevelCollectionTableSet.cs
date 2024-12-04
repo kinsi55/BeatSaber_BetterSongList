@@ -210,10 +210,10 @@ namespace BetterSongList.HarmonyPatches {
 		static IEnumerator TryReselectLastSelectedSong(LevelCollectionTableView __instance) {
 			yield return null;
 
-			if(__instance == null)
+			if(__instance == null || (lastOutMapList?.Count ?? 0) == 0)
 				yield break;
 
-			var idx = Math.Max(0, lastOutMapList?.FindIndex(x => x.levelID == Config.Instance.LastSong) + (__instance._showLevelPackHeader ? 1 : 0) ?? 0);
+			var idx = Math.Max(0, lastOutMapList.FindIndex(x => x.levelID == Config.Instance.LastSong) + (__instance._showLevelPackHeader ? 1 : 0));
 
 			Plugin.Log.Debug(string.Format("LevelCollectionTableView.SetData():Postfix => TryReselectLastSelectedSong: Scrolling to song with idx {0}", idx));
 
