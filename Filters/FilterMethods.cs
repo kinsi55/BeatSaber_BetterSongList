@@ -1,5 +1,6 @@
 ﻿using BetterSongList.FilterModels;
 using BetterSongList.Interfaces;
+using BetterSongList.UI;
 using SongDetailsCache.Structs;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,16 @@ namespace BetterSongList {
 			if(!Config.Instance.AllowPluginSortsAndFilters)
 				return false;
 
+			if(FilterUI.initialized)
+				throw new ArgumentException("You must register your Transformer before the Song List UI is initialized / parsed");
+
 			name = $"🔌{name}";
 
 			methods.Add(name, filter);
+
+#if DEBUG
+			Plugin.Log.Info(string.Format("Registered Filter {0}", name));
+#endif
 
 			return true;
 		}

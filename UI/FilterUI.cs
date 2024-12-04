@@ -27,6 +27,8 @@ namespace BetterSongList.UI {
 	public
 #endif
 	class FilterUI {
+		internal static bool initialized { get; private set; }
+
 		internal static readonly FilterUI persistentNuts = new FilterUI();
 #pragma warning disable 649
 		[UIComponent("root")] private readonly RectTransform rootTransform;
@@ -42,8 +44,8 @@ namespace BetterSongList.UI {
 		static Dictionary<string, ISorter> sortOptions = null;
 		static Dictionary<string, IFilter> filterOptions = null;
 
-		[UIValue("_sortOptions")] static List<object> _sortOptions = null;
-		[UIValue("_filterOptions")] static List<object> _filterOptions = null;
+		[UIValue("_sortOptions")] static List<object> _sortOptions = new List<object>();
+		[UIValue("_filterOptions")] static List<object> _filterOptions = new List<object>();
 
 		static void UpdateVisibleTransformers() {
 			static bool CheckIsVisible(ITransformerPlugin plugin) {
@@ -55,25 +57,24 @@ namespace BetterSongList.UI {
 				.Where(x => !(x.Value is ITransformerPlugin plugin) || CheckIsVisible(plugin))
 				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1).ToDictionary(x => x.Key, x => x.Value);
 
-			_sortOptions = sortOptions.Select(x => x.Key).ToList<object>();
+			_sortOptions.Clear();
+			_sortOptions.AddRange(sortOptions.Select(x => x.Key));
 
 			filterOptions = FilterMethods.methods
 				.Where(x => !(x.Value is ITransformerPlugin plugin) || CheckIsVisible(plugin))
 				.OrderBy(x => (x.Value is ITransformerPlugin) ? 0 : 1)
 				.ToDictionary(x => x.Key, x => x.Value);
 
-			_filterOptions = filterOptions.Select(x => x.Key).ToList<object>();
+			_filterOptions.Clear();
+			_filterOptions.AddRange(filterOptions.Select(x => x.Key));
 		}
 
 		public void UpdateDropdowns() {
-			if(_sortDropdown != null) {
-				_sortDropdown.ReloadData();
+			if(_sortDropdown != null)
 				HackDropdown(_sortDropdown);
-			}
-			if(_filterDropdown != null) {
-				_filterDropdown.ReloadData();
+
+			if(_filterDropdown != null)
 				HackDropdown(_filterDropdown);
-			}
 		}
 
 		public void UpdateTransformerOptionsAndDropdowns() {
@@ -81,9 +82,26 @@ namespace BetterSongList.UI {
 			UpdateDropdowns();
 		}
 
+		public void InitializeSortsAndFilters() {
+			initialized = true;
+
+			T BLA<T>(string x, Dictionary<string, T> y) where T : class {
+				if(y.TryGetValue(x, out var z))
+					return z;
+
+				return null;
+			}
+
+			_sortDropdown.selectedIndex = Math.Max(0, _sortOptions.IndexOf(BLA(Config.Instance.LastSort, sortOptions)));
+			_filterDropdown.selectedIndex = Math.Max(0, _filterOptions.IndexOf(BLA(Config.Instance.LastFilter, filterOptions)));
+		}
+
 
 		void _SetSort(string selected) => SetSort(selected);
 		internal static void SetSort(string selected, bool storeToConfig = true, bool refresh = true) {
+#if DEBUG
+			Plugin.Log.Warn(string.Format("Trying to set Sort to {0}", selected));
+#endif
 			if(selected == null || !sortOptions.ContainsKey(selected))
 				selected = sortOptions.Keys.Last();
 
@@ -115,6 +133,9 @@ namespace BetterSongList.UI {
 		public static void ClearFilter(bool reloadTable = false) => SetFilter(null, false, reloadTable);
 		void _SetFilter(string selected) => SetFilter(selected);
 		internal static void SetFilter(string selected, bool storeToConfig = true, bool refresh = true) {
+#if DEBUG
+			Plugin.Log.Warn(string.Format("Trying to set Filter to {0} (store: {1}, refresh: {2}):\n{3}", selected, storeToConfig, refresh, new StackTrace().ToString()));
+#endif
 			if(selected == null || !filterOptions.ContainsKey(selected))
 				selected = filterOptions.Keys.Last();
 
@@ -212,6 +233,7 @@ namespace BetterSongList.UI {
 		[UIComponent("failTextLabel")] readonly TextMeshProUGUI _failTextLabel = null;
 
 		internal static void Init() {
+			initialized = true;
 			UpdateVisibleTransformers();
 			SetSort(Config.Instance.LastSort, false, false);
 			SetFilter(Config.Instance.LastFilter, false, false);

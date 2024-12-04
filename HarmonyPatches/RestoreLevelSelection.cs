@@ -44,6 +44,9 @@ namespace BetterSongList.HarmonyPatches {
 			if(!addedToHierarchy)
 				return;
 
+			if(firstActivation)
+				FilterUI.Init();
+
 			if(____startState != null) {
 #if DEBUG
 				Plugin.Log.Warn("Not restoring last state because we are starting off from somewhere!");

@@ -26,7 +26,7 @@ namespace BetterSongList.HarmonyPatches {
 					FilterUI.SetSort(null, false, false);
 
 					if(doRestoreFilter = HookLevelCollectionTableSet.filter != null)
-						FilterUI.SetFilter(null, false, false);
+						FilterUI.ClearFilter(false);
 					// Restore previously used Sort and filter for non-playlists
 				} else if(lastSelectedCollection != null) {
 					FilterUI.SetSort(Config.Instance.LastSort, false, false);

@@ -1,4 +1,4 @@
-﻿using BetterSongList.Interfaces;
+using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
 using BetterSongList.Util;
 using SongDetailsCache.Structs;
@@ -106,6 +106,9 @@ namespace BetterSongList {
 
 			if(!Config.Instance.AllowPluginSortsAndFilters)
 				return false;
+
+			if(FilterUI.initialized)
+				throw new ArgumentException("You must register your Transformer before the Song List UI is initialized / parsed");
 
 			name = $"🔌{name}";
 

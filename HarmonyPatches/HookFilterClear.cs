@@ -18,7 +18,7 @@ namespace BetterSongList.HarmonyPatches {
 #if DEBUG
 			Plugin.Log.Debug(string.Format("HookFilterClear(): Filter clear requested from other assembly ({0})", System.Reflection.Assembly.GetCallingAssembly().GetName()));
 #endif
-			FilterUI.SetFilter(null, false, false);
+			FilterUI.ClearFilter(false);
 		}
 	}
 }
