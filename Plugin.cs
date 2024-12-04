@@ -25,7 +25,6 @@ namespace BetterSongList {
 		public void OnApplicationStart() {
 			harmony = new Harmony("Kinsi55.BeatSaber.BetterSongList");
 			harmony.PatchAll(Assembly.GetExecutingAssembly());
-			FilterUI.Init();
 
 			PlaylistsUtil.Init();
 

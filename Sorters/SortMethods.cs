@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using HarmonyLib;
+using BetterSongList.UI;
 
 namespace BetterSongList {
 	public static class SortMethods {
@@ -116,6 +117,9 @@ namespace BetterSongList {
 
 			if(!Config.Instance.AllowPluginSortsAndFilters)
 				return false;
+
+			if(FilterUI.initialized)
+				throw new ArgumentException("You must register your Transformer before the Song List UI is initialized / parsed");
 
 			name = $"🔌{name}";
 

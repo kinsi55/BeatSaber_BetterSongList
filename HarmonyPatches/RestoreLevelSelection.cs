@@ -47,9 +47,12 @@ namespace BetterSongList.HarmonyPatches {
 
 	[HarmonyPatch(typeof(LevelSelectionFlowCoordinator), nameof(LevelSelectionFlowCoordinator.DidActivate))]
 	static class LevelSelectionFlowCoordinator_DidActivate {
-		static void Prefix(LevelSelectionFlowCoordinator __instance, bool addedToHierarchy) {
+		static void Prefix(LevelSelectionFlowCoordinator __instance, bool addedToHierarchy, bool firstActivation) {
 			if(!addedToHierarchy)
 				return;
+
+			if(firstActivation)
+				FilterUI.Init();
 
 			if(__instance._startState != null) {
 #if DEBUG
