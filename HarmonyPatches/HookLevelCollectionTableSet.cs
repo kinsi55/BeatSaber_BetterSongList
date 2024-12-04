@@ -5,6 +5,7 @@ using BetterSongList.Util;
 using HarmonyLib;
 using HMUI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -200,10 +201,26 @@ namespace BetterSongList.HarmonyPatches {
 			FilterWrapper(ref beatmapLevels);
 		}
 
+		static IEnumerator TryReselectLastSelectedSong(LevelCollectionTableView __instance) {
+			yield return null;
+
+			if(__instance == null)
+				yield break;
+
+			var idx = Math.Max(0, lastOutMapList?.FindIndex(x => x.levelID == Config.Instance.LastSong) + (__instance._showLevelPackHeader ? 1 : 0) ?? 0);
+
+			Plugin.Log.Debug(string.Format("LevelCollectionTableView.SetData():Postfix => TryReselectLastSelectedSong: Scrolling to song with idx {0}", idx));
+
+			__instance._selectedRow = idx;
+			__instance._tableView.SelectCellWithIdx(idx, false);
+			__instance._tableView.ScrollToCellWithIdx(idx, TableView.ScrollPositionType.Center, false);
+		}
 
 		static KeyValuePair<string, int>[] customLegend = null;
 		static void Postfix(LevelCollectionTableView __instance, IReadOnlyList<BeatmapLevel> beatmapLevels) {
 			lastOutMapList = beatmapLevels;
+
+			SharedCoroutineStarter.instance.StartCoroutine(TryReselectLastSelectedSong(__instance));
 
 			// Basegame already handles cleaning up the legend etc
 			if(customLegend == null || customLegend.Length == 0) {
