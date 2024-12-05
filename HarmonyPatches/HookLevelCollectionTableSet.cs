@@ -89,8 +89,7 @@ namespace BetterSongList.HarmonyPatches {
 					outV = outV.Where(filter.GetValueFor);
 
 #if DEBUG
-					outV = outV.ToList();
-					Plugin.Log.Info(string.Format("Filtering with {0} took {1}ms", filter, sw.Elapsed.TotalMilliseconds));
+					Plugin.Log.Info(string.Format("Filtering with {0} took {1}ms and yielded {2} levels", filter, sw.Elapsed.TotalMilliseconds, outV.Count()));
 #endif
 				}
 
@@ -107,7 +106,6 @@ namespace BetterSongList.HarmonyPatches {
 							outV.OrderByDescending(x => pSorter.GetValueFor(x) ?? float.MinValue);
 					}
 #if DEBUG
-					outV = outV.ToList();
 					Plugin.Log.Info(string.Format("Sorting with {0} took {1}ms", sorter, sw.Elapsed.TotalMilliseconds));
 #endif
 				}
@@ -174,6 +172,9 @@ namespace BetterSongList.HarmonyPatches {
 			if(HookSelectedCollection.lastSelectedCollection != null && PlaylistsUtil.hasPlaylistLib)
 				beatmapLevels = PlaylistsUtil.GetLevelsForLevelCollection(HookSelectedCollection.lastSelectedCollection) ?? beatmapLevels;
 
+#if TRACE
+			Plugin.Log.Info(string.Format("LevelCollectionTableView.SetData():Prefix => beatmapLevels.Count: {0}", beatmapLevels.Count));
+#endif
 			lastInMapList = beatmapLevels;
 			var _isSorted = beatmapLevelsAreSorted;
 			recallLast = (overrideData) => {
