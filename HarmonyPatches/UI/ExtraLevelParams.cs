@@ -105,13 +105,13 @@ namespace BetterSongList.HarmonyPatches.UI {
 						// For now we can assume non-standard diff is unranked. Probably not changing any time soon i guess
 						var ch = (SongDetailsCache.Structs.MapCharacteristic)BeatmapsUtil.GetCharacteristicFromDifficulty(____selectedDifficultyBeatmap);
 
-						var mh = BeatmapsUtil.GetHashOfLevel(__instance._beatmapLevel);
+						var mh = BeatmapsUtil.GetHashOfPreview(____level);
 
 						if(mh == null ||
 							!SongDetailsUtil.songDetails.instance.songs.FindByHash(mh, out var song) ||
 							!song.GetDifficulty(
 								out var diff,
-								(SongDetailsCache.Structs.MapDifficulty)beatmapKey.difficulty,
+								(SongDetailsCache.Structs.MapDifficulty)____selectedDifficultyBeatmap.difficulty,
 								ch
 							)
 						) {
