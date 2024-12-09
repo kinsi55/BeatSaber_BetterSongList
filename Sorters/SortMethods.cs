@@ -1,5 +1,6 @@
 using BetterSongList.Interfaces;
 using BetterSongList.SortModels;
+using BetterSongList.UI;
 using BetterSongList.Util;
 using SongDetailsCache.Structs;
 using System;

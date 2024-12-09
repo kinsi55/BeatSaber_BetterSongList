@@ -40,7 +40,7 @@ namespace BetterSongList.HarmonyPatches {
 
 		static BeatmapLevelsModel beatmapLevelsModel = UnityEngine.Object.FindObjectOfType<BeatmapLevelsModel>();
 
-		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool addedToHierarchy) {
+		static void Prefix(ref LevelSelectionFlowCoordinator.State ____startState, bool firstActivation, bool addedToHierarchy) {
 			if(!addedToHierarchy)
 				return;
 

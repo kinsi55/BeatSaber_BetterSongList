@@ -180,7 +180,7 @@ namespace BetterSongList.HarmonyPatches {
 			recallLast = (overrideData) => {
 				tryReselectLastSelectedLevel = true;
 
-				__instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted, sortBeatmapLevels);
+				__instance.SetData(overrideData ?? lastInMapList, favoriteLevelIds, _isSorted);
 			};
 
 			//Console.WriteLine("=> {0}", new System.Diagnostics.StackTrace().ToString());
@@ -211,10 +211,10 @@ namespace BetterSongList.HarmonyPatches {
 		static IEnumerator TryReselectLastSelectedSong(LevelCollectionTableView __instance) {
 			yield return null;
 
-			if(__instance == null || (lastOutMapList?.Count ?? 0) == 0)
+			if(__instance == null || (lastOutMapList?.Length ?? 0) == 0)
 				yield break;
 
-			var idx = Math.Max(0, lastOutMapList.FindIndex(x => x.levelID == Config.Instance.LastSong) + (__instance._showLevelPackHeader ? 1 : 0));
+			var idx = Math.Max(0, Array.FindIndex(lastOutMapList, x => x.levelID == Config.Instance.LastSong) + (__instance._showLevelPackHeader ? 1 : 0));
 
 			Plugin.Log.Debug(string.Format("LevelCollectionTableView.SetData():Postfix => TryReselectLastSelectedSong: Scrolling to song with idx {0}", idx));
 
@@ -224,7 +224,7 @@ namespace BetterSongList.HarmonyPatches {
 		}
 
 		static KeyValuePair<string, int>[] customLegend = null;
-		static void Postfix(TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
+		static void Postfix(LevelCollectionTableView __instance, TableView ____tableView, AlphabetScrollbar ____alphabetScrollbar, IPreviewBeatmapLevel[] previewBeatmapLevels) {
 			lastOutMapList = previewBeatmapLevels;
 
 			if(tryReselectLastSelectedLevel) {
