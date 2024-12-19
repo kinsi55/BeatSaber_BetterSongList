@@ -141,7 +141,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 				var basicData = __instance._beatmapLevel.GetDifficultyBeatmapData(beatmapKey.beatmapCharacteristic, beatmapKey.difficulty);
 				var njs = basicData?.noteJumpMovementSpeed ?? 0;
 				if(njs == 0)
-					njs = BeatmapDifficultyMethods.NoteJumpMovementSpeed(beatmapKey.difficulty);
+					njs = beatmapKey.difficulty.DefaultNoteJumpMovementSpeed();
 
 				fields[2].text = njs.ToString("0.0#");
 
