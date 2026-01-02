@@ -53,6 +53,10 @@
   </ItemGroup>
 
   <ItemGroup>
+      <None Include="BetterSongList.csproj.user" Condition="Exists('BetterSongList.csproj.user')"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
     </Reference>
