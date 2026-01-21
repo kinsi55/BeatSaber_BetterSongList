@@ -32,7 +32,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 					} else {
 						Utilities.LoadSpriteFromAssemblyAsync("BetterSongList.UI.FavoritesIcon.png").ContinueWith(x => {
 							icon.sprite = favIcon = x.Result;
-						});
+						}, TaskScheduler.FromCurrentSynchronizationContext());
 					}
 				} else {
 					icon.SetImageAsync($"#{iconName}Icon");

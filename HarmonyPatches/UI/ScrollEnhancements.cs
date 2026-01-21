@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -97,7 +98,7 @@ namespace BetterSongList.HarmonyPatches.UI {
 			Utilities.LoadSpriteFromAssemblyAsync("BetterSongList.UI.DoubleArrowIcon.png").ContinueWith(x => {
 				btnUpFast.GetComponentInChildren<ImageView>().sprite = x.Result;
 				btnDownFast.GetComponentInChildren<ImageView>().sprite = x.Result;
-			});
+			}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 	}
 }
