@@ -21,12 +21,7 @@ namespace BetterSongList.FilterModels {
 		}
 
 		public bool GetValueFor(BeatmapLevel level) {
-			var mid = BeatmapsUtil.GetHashOfLevel(level);
-
-			if(mid == null)
-				return false;
-
-			return SongCore.Collections.GetCustomLevelSongData(mid)?
+			return SongCore.Collections.GetCustomLevelSongData(level.levelID)?
 				._difficulties?.Any(x => x.additionalDifficultyData._requirements.Any(x => x.Length != 0)) == true;
 		}
 	}
